@@ -14,14 +14,13 @@ public class Stock extends FinanceItem{
     float dividendoAcumulado;
 
     public Stock(String nombre, String descripcion, float tasaInteres, LocalDate fechaInicio,
-                 String nombreEmpresa, String simbolo, int cantidad, float precioCompra, String sector, float precioActual, float dividendoPorAccion){
+                 String nombreEmpresa, String simbolo, int cantidad, float precioCompra, String sector, float dividendoPorAccion){
         super(nombre, descripcion, (cantidad*precioCompra), "Activo", tasaInteres, fechaInicio);
         this.nombreEmpresa = nombreEmpresa;
         this.simbolo = simbolo;
         this.cantidad = cantidad;
         this.precioCompra = precioCompra;
         this.sector = sector;
-        this.precioActual = precioActual;
         this.dividendoPorAccion = dividendoPorAccion;
     }
 
