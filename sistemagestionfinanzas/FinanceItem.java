@@ -1,8 +1,9 @@
 package sistemagestionfinanzas;
 
+import javax.swing.*;
 import java.time.LocalDate;
 
-public class FinanceItem {
+public abstract class FinanceItem {
     //Atributos de la superclase
     protected String nombre;
     protected String descripcion;
@@ -55,6 +56,51 @@ public class FinanceItem {
     public void setFechaInicio(LocalDate fechaInicio) {this.fechaInicio = fechaInicio;}
     public void setMontoTotal(float montoTotal) {this.montoTotal = montoTotal;}
     public void setPromedio(float promedio) {this.promedio = promedio;}
+
+    //Metodos propios de la superclase
+    protected abstract float calcularValorActual();
+
+    protected float calcularGanaciaPerdida(){
+        return calcularValorActual() - monto;
+    }
+
+    protected float calcularPorcentajeGananciaPerdida(){
+        return (calcularGanaciaPerdida()/monto) * 100;
+    }
+
+    //Metodo para imprimir los atributos de la clase
+    protected abstract StringBuilder obtenerInformacion();
+
+    //Metodo para obtener el porcentaje que representa este elemento del total
+    protected abstract void calcularPorcentajeRepresentacion(FinanceItem[] activosPasivos);
+
+    protected abstract float calcularPromedio();
+
+    protected void generarGrafica(){
+        return;
+    }
+
+    protected JTable generarTabla(){
+        return null;
+    }
+
+    protected float calcularInteres(){
+        setInteres(monto*(tasaInteres/100));
+        return getInteres();
+    }
+
+    protected void calcularProyeccion(int tiempo, String unidadTiempo){
+        return;
+    }
+
+    protected void mostrarInformacion(){
+        return;
+    }
+
+    protected abstract void actualizarInformacion();
+
+
+
 
 
 }
