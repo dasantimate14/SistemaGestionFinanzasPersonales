@@ -18,19 +18,14 @@ public abstract class FinanceItem {
     protected float promedio;
 
     //Constructor de la superclase
-    protected FinanceItem(String nombre, String descripcion, float monto, String tipo, float porcentajeGanancia, String id,
-                          float tasaInteres, float interes, LocalDate fechaInicio, float promedio) {
+    public FinanceItem(String nombre, String descripcion, float monto, String tipo,
+                          float tasaInteres, LocalDate fechaInicio) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.monto = monto;
         this.tipo = tipo;
-        this.porcentajeGanancia = porcentajeGanancia;
-        this.id = id;
         this.tasaInteres = tasaInteres;
-        this.interes = interes;
         this.fechaInicio = fechaInicio;
-        this.montoTotal = montoTotal;
-        this.promedio = promedio;
     }
     //Metodos get y set de la superclase
     public String getNombre() {return nombre;}
