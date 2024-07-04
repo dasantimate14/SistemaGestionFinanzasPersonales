@@ -50,9 +50,19 @@ public class Stock extends FinanceItem{
     }
 
     @Override
-    protected StringBuilder obtenerInformacion() {
-        return null;
+    protected StringBuilder obtenerInformacionSubclase() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Nombre Empresa: ").append(nombreEmpresa).append("\n");
+        sb.append("Símbolo: ").append(simbolo).append("\n");
+        sb.append("Cantidad: ").append(cantidad).append("\n");
+        sb.append("Precio de Compra: ").append(precioCompra).append("\n");
+        sb.append("Dividendo por Acción: ").append(dividendoPorAccion).append("\n");
+        sb.append("Precio Actual: ").append(precioActual).append("\n");
+        sb.append("Dividendo Acumulado: ").append(dividendoAcumulado).append("\n");
+        sb.append("Sector: ").append(sector).append("\n");
+        return sb;
     }
+
 
     @Override
     protected void calcularPorcentajeRepresentacion(FinanceItem[] activosPasivos) {
@@ -61,6 +71,11 @@ public class Stock extends FinanceItem{
 
     @Override
     protected float calcularPromedioMensual() {
+        return 0;
+    }
+
+    @Override
+    protected float calcularPromedioAnual() {
         return 0;
     }
 

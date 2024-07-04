@@ -27,6 +27,11 @@ public abstract class FinanceItem {
         this.tasaInteres = tasaInteres;
         this.fechaInicio = fechaInicio;
     }
+    // Segundo constructor sin tasaInteres, asignando un valor por defecto
+    public FinanceItem(String nombre, String descripcion, float monto, String tipo,
+                       LocalDate fechaInicio) {
+        this(nombre, descripcion, monto, tipo, 0.0f, fechaInicio);
+    }
     //Metodos get y set de la superclase
     public String getNombre() {return nombre;}
     public String getDescripcion() {return descripcion;}
@@ -64,24 +69,31 @@ public abstract class FinanceItem {
     }
 
     //Metodo para imprimir los atributos de la clase
-    protected final StringBuilder obtenerInformacionGeneral(){
+    protected StringBuilder obtenerInformacionGeneral(){
         StringBuilder sb = new StringBuilder();
-        sb.append("Nombre: " + nombre + "\n");
-        sb.append("ID: " + id + "\n");
-        sb.append("Descripcion: " + descripcion + "\n");
-        sb.append("Tipo: " + tipo + "\n");
-        sb.append("Monto: " + monto + "\n");
-        sb.append("Interes: " + interes + "\n");
-        sb.append("Tasa interes: " + tasaInteres + "%\n");
-        sb.append("Monto Total: " + montoTotal + "\n");
-        sb.append("Porcentaje de ganancia: " + porcentajeGanancia + "%\n");
-        sb.append("Valor Mensual Promedio : " + promedioMensual + "\n");
-        sb.append("Fecha inicio: " + fechaInicio + "\n");
+        sb.append("Nombre: ").append(nombre).append("\n");
+        sb.append("ID: ").append(id).append("\n");
+        sb.append("Descripcion: ").append(descripcion).append("\n");
+        sb.append("Tipo: ").append(tipo).append("\n");
+        sb.append("Monto: ").append(monto).append("\n");
+        sb.append("Interes: ").append(interes).append("\n");
+        sb.append("Tasa interes: ").append(tasaInteres).append("%\n");
+        sb.append("Monto Total: ").append(montoTotal).append("\n");
+        sb.append("Porcentaje de ganancia: ").append(porcentajeGanancia).append("%\n");
+        sb.append("Valor Mensual Promedio: ").append(promedioMensual).append("\n");
+        sb.append("Fecha inicio: ").append(fechaInicio).append("\n");
         return sb;
     }
 
-    //Metodo para obtener toda la informacion
+    //Metodo para obtener informacion especifica de la subclases
+    protected abstract StringBuilder obtenerInformacionSubclase();
 
+    //Metodo para obtener toda la informacion
+    protected final void obtenerInformacionCompleta(){
+        StringBuilder informacionGeneral = obtenerInformacionGeneral();
+        StringBuilder informacionSubclase = obtenerInformacionSubclase();
+
+    }
 
     //Metodo para obtener el porcentaje que representa este elemento del total
     protected abstract void calcularPorcentajeRepresentacion(FinanceItem[] activosPasivos);
