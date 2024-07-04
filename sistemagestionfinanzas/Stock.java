@@ -29,6 +29,13 @@ public class Stock extends FinanceItem{
                  String nombreEmpresa, String simbolo, int cantidad, float precioCompra, String sector) {
         this(nombre, descripcion, tasaInteres, fechaInicio, nombreEmpresa, simbolo, cantidad, precioCompra, sector, 0.0f);
     }
+    //Metodos get y set de la clase
+    public String getNombreEmpresa() {return nombreEmpresa;}
+    public String getSimbolo() {return simbolo;}
+    public int getCantidad() {return cantidad;}
+    public float getPrecioCompra() {return precioCompra;}
+    public String getSector() {return sector;}
+    public float getDividendoPorAccion() {return dividendoPorAccion;}
 
     @Override
     protected float calcularValorActual() {
