@@ -47,6 +47,7 @@ public class Stock extends FinanceItem{
     public float getPrecioCompra() {return precioCompra;}
     public String getSector() {return sector;}
     public float getDividendoPorAccion() {return dividendoPorAccion;}
+    public float getPrecioActual(){return precioActual;}
 
     public void setNombreEmpresa(String nombreEmpresa){this.nombreEmpresa = nombreEmpresa;}
     public void setSimbolo(String simbolo){this.simbolo = simbolo;}
@@ -54,10 +55,12 @@ public class Stock extends FinanceItem{
     public void setPrecioCompra(float precioCompra){this.precioCompra = precioCompra;}
     public void setSector(String sector){this.sector = sector;}
     public void setDividendoPorAccion(float dividendoPorAccion){this.dividendoPorAccion = dividendoPorAccion;}
+    public void setPrecioActual(float precioActual){this.precioActual = precioActual;}
 
     @Override
     protected float calcularValorActual() {
-        return 0;
+        setPrecioActual(obtenerPrecioActual() + calcularDividendoAcumulado());
+        return getPrecioActual();
     }
 
     @Override
@@ -105,7 +108,8 @@ public class Stock extends FinanceItem{
 
     @Override
     protected void actualizarInformacion() {
-
+        setGanaciaPerdida(calcularGanaciaPerdida());
+        setMontoActual(calcularValorActual());
     }
 
     //Metodo para obtener el porcentaje de representacion de una instancia de stock
@@ -123,6 +127,14 @@ public class Stock extends FinanceItem{
         //Calcular Porcentaje
         porcentajeRepresentacion = (valorStockSimbolo/valorTotalStocks)*100;
         System.out.println("El porcentaje de representación de todos los Stocks con símbolo " + simbolo +  " es " + porcentajeRepresentacion + "% con un valor de " + valorStockSimbolo);
+    }
+
+    public float calcularDividendoAcumulado(){
+        return dividendoAcumulado;
+    }
+
+    public float obtenerPrecioActual(){
+        return precioActual;
     }
 
 

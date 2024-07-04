@@ -131,6 +131,7 @@ public abstract class FinanceItem {
         obtenerInformacionCompleta();
     }
 
+    //Metodo que usa todos los otros metodos que calculan valores que cambian con el tiempo y se actualizen al momento actual
     protected abstract void actualizarInformacion();
 
 
