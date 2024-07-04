@@ -80,14 +80,15 @@ public class Stock extends FinanceItem{
         float valorTotalActivos = 0;
         float valorTotalStocks = 0;
         float porcentajeRepresentacion = 0;
+        //Por cada activo en el arreglo acumular su valor y si es de la instancia de stock se acumula en su respectiva variable
         for(FinanceItem item : activosPasivos){
             valorTotalActivos = item.getMontoActual() + valorTotalActivos;
-            item.getMontoActual();
             if(item instanceof Stock){
                 Stock stock = (Stock)item;
                 valorTotalStocks = stock.getMontoActual() + valorTotalStocks;
             }
         }
+        //Calculo de porcentaje
         porcentajeRepresentacion = (valorTotalStocks/valorTotalActivos)*100;
         System.out.println("El porcentaje de representación de todos los Stocks es " + porcentajeRepresentacion + "% con un valor de " + valorTotalStocks);
     }
@@ -106,4 +107,24 @@ public class Stock extends FinanceItem{
     protected void actualizarInformacion() {
 
     }
+
+    //Metodo para obtener el porcentaje de representacion de una instancia de stock
+    public void calcularPorcentajeRepresentacionPorSimbolo(String simbolo){
+        float valorTotalStocks = 0;
+        float valorStockSimbolo = 0;
+        float porcentajeRepresentacion = 0;
+        //Por cada stock que coincida con el simbolo se suma su monto del simbolo y por cada stock se suma a una variable de todos los stocks
+        for(Stock instanciaStock : instanciasStocks){
+            valorTotalStocks = instanciaStock.getMontoActual() + valorTotalStocks;
+            if(instanciaStock.getSimbolo().equals(simbolo)){
+                valorStockSimbolo = instanciaStock.getMontoActual() + valorStockSimbolo;
+            }
+        }
+        //Calcular Porcentaje
+        porcentajeRepresentacion = (valorStockSimbolo/valorTotalStocks)*100;
+        System.out.println("El porcentaje de representación de todos los Stocks con símbolo " + simbolo +  " es " + porcentajeRepresentacion + "% con un valor de " + valorStockSimbolo);
+    }
+
+
+
 }
