@@ -37,6 +37,13 @@ public class Stock extends FinanceItem{
     public String getSector() {return sector;}
     public float getDividendoPorAccion() {return dividendoPorAccion;}
 
+    public void setNombreEmpresa(String nombreEmpresa){this.nombreEmpresa = nombreEmpresa;}
+    public void setSimbolo(String simbolo){this.simbolo = simbolo;}
+    public void setCantidad(int cantidad){this.cantidad = cantidad;}
+    public void setPrecioCompra(float precioCompra){this.precioCompra = precioCompra;}
+    public void setSector(String sector){this.sector = sector;}
+    public void setDividendoPorAccion(float dividendoPorAccion){this.dividendoPorAccion = dividendoPorAccion;}
+
     @Override
     protected float calcularValorActual() {
         return 0;
@@ -53,7 +60,7 @@ public class Stock extends FinanceItem{
     }
 
     @Override
-    protected float calcularPromedio() {
+    protected float calcularPromedioMensual() {
         return 0;
     }
 

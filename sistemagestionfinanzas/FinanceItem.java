@@ -15,7 +15,7 @@ public abstract class FinanceItem {
     protected float interes;
     protected LocalDate fechaInicio;
     protected float montoTotal;
-    protected float promedio;
+    protected float promedioMensual;
 
     //Constructor de la superclase
     public FinanceItem(String nombre, String descripcion, float monto, String tipo,
@@ -38,7 +38,7 @@ public abstract class FinanceItem {
     public float getInteres() {return interes;}
     public LocalDate getFechaInicio() {return fechaInicio;}
     public float getMontoTotal() {return montoTotal;}
-    public float getPromedio() {return promedio;}
+    public float getPromedioMensual() {return promedioMensual;}
 
     public void setNombre(String nombre) {this.nombre = nombre;}
     public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
@@ -50,7 +50,7 @@ public abstract class FinanceItem {
     public void setInteres(float interes) {this.interes = interes;}
     public void setFechaInicio(LocalDate fechaInicio) {this.fechaInicio = fechaInicio;}
     public void setMontoTotal(float montoTotal) {this.montoTotal = montoTotal;}
-    public void setPromedio(float promedio) {this.promedio = promedio;}
+    public void setPromedioMensual(float promedioMensual) {this.promedioMensual = promedioMensual;}
 
     //Metodos propios de la superclase
     protected abstract float calcularValorActual();
@@ -64,12 +64,31 @@ public abstract class FinanceItem {
     }
 
     //Metodo para imprimir los atributos de la clase
-    protected abstract StringBuilder obtenerInformacion();
+    protected final StringBuilder obtenerInformacionGeneral(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Nombre: " + nombre + "\n");
+        sb.append("ID: " + id + "\n");
+        sb.append("Descripcion: " + descripcion + "\n");
+        sb.append("Tipo: " + tipo + "\n");
+        sb.append("Monto: " + monto + "\n");
+        sb.append("Interes: " + interes + "\n");
+        sb.append("Tasa interes: " + tasaInteres + "%\n");
+        sb.append("Monto Total: " + montoTotal + "\n");
+        sb.append("Porcentaje de ganancia: " + porcentajeGanancia + "%\n");
+        sb.append("Valor Mensual Promedio : " + promedioMensual + "\n");
+        sb.append("Fecha inicio: " + fechaInicio + "\n");
+        return sb;
+    }
+
+    //Metodo para obtener toda la informacion
+
 
     //Metodo para obtener el porcentaje que representa este elemento del total
     protected abstract void calcularPorcentajeRepresentacion(FinanceItem[] activosPasivos);
 
-    protected abstract float calcularPromedio();
+    protected abstract float calcularPromedioMensual();
+
+    protected abstract float calcularPromedioAnual();
 
     protected void generarGrafica(){
         return;
