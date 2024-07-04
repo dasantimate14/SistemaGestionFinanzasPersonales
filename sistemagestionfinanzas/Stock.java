@@ -24,6 +24,12 @@ public class Stock extends FinanceItem{
         this.dividendoPorAccion = dividendoPorAccion;
     }
 
+    // Constructor con dividendoPorAccion por defecto
+    public Stock(String nombre, String descripcion, float tasaInteres, LocalDate fechaInicio,
+                 String nombreEmpresa, String simbolo, int cantidad, float precioCompra, String sector) {
+        this(nombre, descripcion, tasaInteres, fechaInicio, nombreEmpresa, simbolo, cantidad, precioCompra, sector, 0.0f);
+    }
+
     @Override
     protected float calcularValorActual() {
         return 0;
