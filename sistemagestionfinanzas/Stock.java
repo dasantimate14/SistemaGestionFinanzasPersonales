@@ -12,8 +12,8 @@ public class Stock extends FinanceItem{
     float precioActual;
     float dividendoPorAccion;
     float dividendoAcumulado;
-    int cantidadInstancias = 0;
-    Stock[] instanciasStocks = new Stock[cantidadInstancias + 1];
+    static int cantidadInstancias = 0;
+    static Stock[] instanciasStocks = new Stock[cantidadInstancias + 1];
 
     public Stock(String nombre, String descripcion, float tasaInteres, LocalDate fechaInicio,
                  String nombreEmpresa, String simbolo, int cantidad, float precioCompra, String sector, float dividendoPorAccion){
@@ -24,6 +24,8 @@ public class Stock extends FinanceItem{
         this.precioCompra = precioCompra;
         this.sector = sector;
         this.dividendoPorAccion = dividendoPorAccion;
+
+        //Se guarda la instancia dentro de un arreglo que pertenece a la clase misma y no a la instancia
         instanciasStocks[cantidadInstancias] = this;
         cantidadInstancias++;
     }
@@ -32,7 +34,12 @@ public class Stock extends FinanceItem{
     public Stock(String nombre, String descripcion, float tasaInteres, LocalDate fechaInicio,
                  String nombreEmpresa, String simbolo, int cantidad, float precioCompra, String sector) {
         this(nombre, descripcion, tasaInteres, fechaInicio, nombreEmpresa, simbolo, cantidad, precioCompra, sector, 0.0f);
+
+        //Se guarda la instancia dentro de un arreglo que pertenece a la clase misma y no a la instancia
+        instanciasStocks[cantidadInstancias] = this;
+        cantidadInstancias++;
     }
+
     //Metodos get y set de la clase
     public String getNombreEmpresa() {return nombreEmpresa;}
     public String getSimbolo() {return simbolo;}
@@ -71,15 +78,18 @@ public class Stock extends FinanceItem{
     @Override
     public void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
         float valorTotalActivos = 0;
+        float valorTotalStocks = 0;
+        float porcentajeRepresentacion = 0;
         for(FinanceItem item : activosPasivos){
             valorTotalActivos = item.getMontoActual() + valorTotalActivos;
             item.getMontoActual();
             if(item instanceof Stock){
                 Stock stock = (Stock)item;
-
+                valorTotalStocks = stock.getMontoActual() + valorTotalStocks;
             }
         }
-
+        porcentajeRepresentacion = (valorTotalStocks/valorTotalActivos)*100;
+        System.out.println("El porcentaje de representación de todos los Stocks es " + porcentajeRepresentacion + "% con un valor de " + valorTotalStocks);
     }
 
     @Override
