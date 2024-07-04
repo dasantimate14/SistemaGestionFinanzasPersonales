@@ -12,6 +12,8 @@ public class Stock extends FinanceItem{
     float precioActual;
     float dividendoPorAccion;
     float dividendoAcumulado;
+    int cantidadInstancias = 0;
+    Stock[] instanciasStocks = new Stock[cantidadInstancias + 1];
 
     public Stock(String nombre, String descripcion, float tasaInteres, LocalDate fechaInicio,
                  String nombreEmpresa, String simbolo, int cantidad, float precioCompra, String sector, float dividendoPorAccion){
@@ -22,6 +24,8 @@ public class Stock extends FinanceItem{
         this.precioCompra = precioCompra;
         this.sector = sector;
         this.dividendoPorAccion = dividendoPorAccion;
+        instanciasStocks[cantidadInstancias] = this;
+        cantidadInstancias++;
     }
 
     // Constructor con dividendoPorAccion por defecto
@@ -65,7 +69,16 @@ public class Stock extends FinanceItem{
 
 
     @Override
-    protected void calcularPorcentajeRepresentacion(FinanceItem[] activosPasivos) {
+    public void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
+        float valorTotalActivos = 0;
+        for(FinanceItem item : activosPasivos){
+            valorTotalActivos = item.getMontoActual() + valorTotalActivos;
+            item.getMontoActual();
+            if(item instanceof Stock){
+                Stock stock = (Stock)item;
+
+            }
+        }
 
     }
 
