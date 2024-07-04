@@ -10,6 +10,7 @@ public abstract class FinanceItem {
     protected float monto;
     protected String tipo;
     protected float porcentajeGanancia;
+    protected float ganaciaPerdida;
     protected String id;
     protected float tasaInteres;
     protected float interes;
@@ -45,6 +46,8 @@ public abstract class FinanceItem {
     public float getMontoTotal() {return montoTotal;}
     public float getPromedioMensual() {return promedioMensual;}
 
+    public float getGanaciaPerdida() {return ganaciaPerdida;}
+
     public void setNombre(String nombre) {this.nombre = nombre;}
     public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
     public void setMonto(float monto) {this.monto = monto;}
@@ -56,6 +59,7 @@ public abstract class FinanceItem {
     public void setFechaInicio(LocalDate fechaInicio) {this.fechaInicio = fechaInicio;}
     public void setMontoTotal(float montoTotal) {this.montoTotal = montoTotal;}
     public void setPromedioMensual(float promedioMensual) {this.promedioMensual = promedioMensual;}
+    public void setGanaciaPerdida(float ganaciaPerdida){this.ganaciaPerdida = ganaciaPerdida;}
 
     //Metodos propios de la superclase
     protected abstract float calcularValorActual();
@@ -78,8 +82,9 @@ public abstract class FinanceItem {
         sb.append("Monto: ").append(monto).append("\n");
         sb.append("Interes: ").append(interes).append("\n");
         sb.append("Tasa interes: ").append(tasaInteres).append("%\n");
-        sb.append("Monto Total: ").append(montoTotal).append("\n");
+        sb.append("Cantidad de Ganancia/Perdida").append(ganaciaPerdida).append("%\n");
         sb.append("Porcentaje de ganancia: ").append(porcentajeGanancia).append("%\n");
+        sb.append("Monto Total: ").append(montoTotal).append("\n");
         sb.append("Valor Mensual Promedio: ").append(promedioMensual).append("\n");
         sb.append("Fecha inicio: ").append(fechaInicio).append("\n");
         return sb;
@@ -92,6 +97,8 @@ public abstract class FinanceItem {
     protected final void obtenerInformacionCompleta(){
         StringBuilder informacionGeneral = obtenerInformacionGeneral();
         StringBuilder informacionSubclase = obtenerInformacionSubclase();
+        System.out.println(informacionGeneral.toString());
+        System.out.println(informacionSubclase.toString());
 
     }
 
@@ -120,7 +127,7 @@ public abstract class FinanceItem {
     }
 
     protected void mostrarInformacion(){
-        return;
+        obtenerInformacionCompleta();
     }
 
     protected abstract void actualizarInformacion();
