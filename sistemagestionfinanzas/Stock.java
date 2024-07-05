@@ -1,7 +1,6 @@
 package sistemagestionfinanzas;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +14,7 @@ public class Stock extends FinanceItem{
     private float precioActual;
     private float dividendoPorAccion;
     private float dividendoAcumulado;
+    private float dividendoEstimado;
     private int frecuenciaDividendos;
     private static int cantidadInstancias = 0;
     private static List<Stock> instanciasStocks = new ArrayList<>();
@@ -49,6 +49,7 @@ public class Stock extends FinanceItem{
     public String getSector() {return sector;}
     public float getDividendoPorAccion() {return dividendoPorAccion;}
     public float getDividendoAcumulado(){return dividendoAcumulado;}
+    public float getDividendoEstimado(){return dividendoEstimado;}
     public static int getCantidadInstancias() {return cantidadInstancias;}
     public float getPrecioActual(){return precioActual;}
     public int getFrecuenciaDividendos(){return frecuenciaDividendos;}
@@ -60,6 +61,7 @@ public class Stock extends FinanceItem{
     public void setSector(String sector){this.sector = sector;}
     public void setDividendoPorAccion(float dividendoPorAccion){this.dividendoPorAccion = dividendoPorAccion;}
     public void setDividendoAcumulado(float dividendoAcumulado){this.dividendoAcumulado = dividendoAcumulado;}
+    public void setDividendoEstimado(float dividendoEstimado){this.dividendoEstimado = dividendoEstimado;}
     public void setPrecioActual(float precioActual){this.precioActual = precioActual;}
 
     @Override
@@ -155,8 +157,25 @@ public class Stock extends FinanceItem{
         return dividendoAcumulado;
     }
 
-    public float calculadDividendoFuturo(int meses){
-        return 0;
+    public float calcularDividendoFuturo(int meses){
+        LocalDate fechaCompra = getFechaInicio();
+        LocalDate fechaFin = LocalDate.now();
+        fechaFin = fechaFin.plusMonths(meses);
+        //Solo se calcula el dividiendo acumulado si es diferente de cero
+        if(getDividendoPorAccion() != 0){
+            while(!fechaCompra.isAfter(fechaFin)){
+                //Se debe acumular el dividendo si es el primero del mes
+                if(fechaCompra.getDayOfMonth() == 1 && fechaCompra.equals(getFechaInicio())){
+                    dividendoAcumulado += (dividendoPorAccion * cantidad);
+                } else if (fechaCompra.isBefore(fechaFin)){
+                    dividendoAcumulado += (dividendoPorAccion * cantidad);
+                }
+                //Avanza al proximo mes
+                fechaCompra = fechaCompra.plusMonths(frecuenciaDividendos);
+            }
+
+        }
+        return dividendoAcumulado;
     }
 
     public float obtenerPrecioActual(){
