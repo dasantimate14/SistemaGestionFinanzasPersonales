@@ -1153,7 +1153,7 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <CollationName>utf8_bin</CollationName>
     </schema>
     <schema id="328" parent="1" name="sistema_gestion_finanzas">
-      <LastIntrospectionLocalTimestamp>2024-07-06.23:59:56</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2024-07-07.14:50:26</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_general_ci</CollationName>
     </schema>
     <schema id="329" parent="1" name="test">
