@@ -108,7 +108,7 @@ public abstract class FinanceItem {
     //Metodo para obtener el porcentaje que representa este elemento del total
     protected abstract void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos);
 
-    protected abstract float calcularPromedioMensual() throws SQLException;
+    protected abstract float calcularPromedioMensual() throws SQLException, IOException;
 
     protected abstract float calcularPromedioAnual();
 

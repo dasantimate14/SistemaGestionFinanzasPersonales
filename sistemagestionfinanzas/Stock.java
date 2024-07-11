@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -115,8 +116,18 @@ public class Stock extends FinanceItem{
     }
 
     @Override
-    protected float calcularPromedioMensual() throws SQLException {
-        return 0;
+    protected float calcularPromedioMensual() throws SQLException, IOException {
+        List<Float> preciosMensuales = obtenerPreciosMensuales();
+        if (preciosMensuales.isEmpty()) {
+            return 0.0f;
+        }
+
+        float sumaPrecios = 0.0f;
+        for (float precio : preciosMensuales) {
+            sumaPrecios += precio;
+        }
+
+        return sumaPrecios / preciosMensuales.size();
     }
 
     @Override
@@ -244,6 +255,71 @@ public class Stock extends FinanceItem{
             return null; // Devuelve null si no se encuentra
         }
     }
+
+    private List<Float> obtenerPreciosMensuales() throws IOException {
+        List<Float> preciosMensuales = new ArrayList<>();
+        String APIKEY = "NAN1GLGHNLYTMDCH";
+        String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + this.simbolo + "&apikey=" + APIKEY;
+        HttpURLConnection con = null;
+        BufferedReader reader = null;
+        StringBuilder response = new StringBuilder();
+
+        try {
+            // Establecer conexión
+            URL obj = new URL(url);
+            con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+
+            // Leer la respuesta
+            reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                response.append(linea);
+            }
+        } finally {
+            // Cerrar conexiones
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (con != null) {
+                con.disconnect();
+            }
+        }
+
+        // Procesar el JSON para extraer los precios de cierre
+        String jsonString = response.toString();
+        preciosMensuales = extraerPreciosMensuales(jsonString);
+
+        return preciosMensuales;
+    }
+
+    private List<Float> extraerPreciosMensuales(String jsonString) {
+        List<Float> preciosMensuales = new ArrayList<>();
+        LocalDate fechaHoy = LocalDate.now();
+        LocalDate fechaInicio = fechaHoy.minusMonths(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        Pattern pattern = Pattern.compile("\"(\\d{4}-\\d{2}-\\d{2})\":\\s*\\{[^}]*\"4. close\":\\s*\"([\\d\\.]+)\"");
+        Matcher matcher = pattern.matcher(jsonString);
+
+        while (matcher.find()) {
+            String fechaStr = matcher.group(1);
+            String precioStr = matcher.group(2);
+
+            LocalDate fecha = LocalDate.parse(fechaStr, formatter);
+            if (!fecha.isBefore(fechaInicio) && !fecha.isAfter(fechaHoy)) {
+                preciosMensuales.add(Float.parseFloat(precioStr));
+            }
+        }
+
+        return preciosMensuales;
+    }
+
+
 
 
 
