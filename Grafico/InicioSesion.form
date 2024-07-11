@@ -26,7 +26,7 @@
             <properties>
               <font name="Segoe UI Black" size="36" style="1"/>
               <foreground color="-394241"/>
-              <text value="Bienvenido a MyFinnacePal"/>
+              <text value="Bienvenido a MyFinacePal"/>
             </properties>
           </component>
           <component id="79a3" class="javax.swing.JLabel" binding="lbIniciarSesion">
