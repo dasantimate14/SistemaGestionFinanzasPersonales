@@ -1,24 +1,27 @@
 package sistemagestionfinanzas;
 
-import import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayList;
 
 public class Cliente {
     private String nombre;
     private String email;
     private String password;
     private String id;
-    private List<FinanceItem> activos;
-    private List<FinanceItem> pasivos;
+    private ArrayList<FinanceItem> activos;
+    private ArrayList<FinanceItem> pasivos;
 
+    // Constructor
     public Cliente(String nombre, String email, String password) {
         this.nombre = nombre;
         this.email = email;
         this.password = password;
         this.activos = new ArrayList<>();
         this.pasivos = new ArrayList<>();
+        // Generar un ID único para el cliente
+        this.id = generarIdUnico();
     }
 
+    // Métodos getter y setter
     public void setNombre(String nuevoNombre) {
         this.nombre = nuevoNombre;
     }
@@ -32,57 +35,73 @@ public class Cliente {
     }
 
     public String getNombre() {
-        return nombre;
+        return this.nombre;
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(String nuevoId) {
         this.id = nuevoId;
     }
 
-    public void iniciarSesion() {
-        System.out.println("Iniciando sesión para " + nombre);
+    // Métodos relacionados con la gestión de activos y pasivos
+    public void obtenerActivos() {
+        // Lógica para obtener y mostrar activos
     }
 
-    public List<FinanceItem> obtenerActivos() {
-        return activos;
-    }
-
-    public List<FinanceItem> obtenerPasivos() {
-        return pasivos;
+    public void obtenerPasivos() {
+        // Lógica para obtener y mostrar pasivos
     }
 
     public void agregarFinanceItem(FinanceItem item, boolean esActivo) {
         if (esActivo) {
-            activos.add(item);
+            this.activos.add(item);
         } else {
-            pasivos.add(item);
+            this.pasivos.add(item);
         }
     }
 
     public void eliminarFinanceItem(FinanceItem item, boolean esActivo) {
         if (esActivo) {
-            activos.remove(item);
+            this.activos.remove(item);
         } else {
-            pasivos.remove(item);
+            this.pasivos.remove(item);
         }
     }
 
+    // Otros métodos
     public void verBalance() {
-        double totalActivos = activos.stream().mapToDouble(FinanceItem::getValor).sum();
-        double totalPasivos = pasivos.stream().mapToDouble(FinanceItem::getValor).sum();
-        double balance = totalActivos - totalPasivos;
-        System.out.println("Balance total: " + balance);
+        // Lógica para calcular y mostrar el balance
+    }
+
+    public void iniciarSesion() {
+        // Lógica para iniciar sesión del cliente
+    }
+
+    // Método privado para generar un ID único (ejemplo sencillo)
+    private String generarIdUnico() {
+        // Lógica para generar un ID único (puedes implementar según tus necesidades)
+        return "ID_" + this.nombre.hashCode();
+    }
+
+    // Método para obtener información general del cliente
+    protected StringBuilder obtenerInformacionGeneral() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Nombre: ").append(nombre).append("\n");
+        sb.append("ID: ").append(id).append("\n");
+        sb.append("Email: ").append(email).append("\n");
+        sb.append("Número de Activos: ").append(activos.size()).append("\n");
+        sb.append("Número de Pasivos: ").append(pasivos.size()).append("\n");
+        return sb;
     }
 }
