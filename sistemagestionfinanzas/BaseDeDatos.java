@@ -31,6 +31,7 @@ public class BaseDeDatos {
             throw e;
         }
     }
+
     // Método para ejecutar consultas SELECT usando una consulta creada por los desarrolladores
     public static ResultSet realizarConsultaSelectInterna(String consulta) throws SQLException {
         Statement st= null;
@@ -41,11 +42,10 @@ public class BaseDeDatos {
 
             //Se ejecuta la consulta y se obtienen los resultados
             rs = st.executeQuery(consulta);
-            return rs;
         } catch (SQLException e) {
-            System.out.println("Error al realizar la consulta SELECT: " + e.getMessage());
-            throw e;
+            e.printStackTrace();
         }
+        return rs;
     }
 
     // Método estático para ejecutar consultas INSERT, UPDATE, DELETE
@@ -94,6 +94,14 @@ public class BaseDeDatos {
         } catch (SQLException e) {
             System.out.println("Error al mostrar los datos de la tabla " + nombreTabla + ": " + e.getMessage());
             throw e;
+        }
+    }
+
+    public void cerrarConexion(Connection con){
+        try {
+            if (con != null) con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
