@@ -4,11 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -116,7 +112,7 @@ public class Stock extends FinanceItem{
     }
 
     @Override
-    protected float calcularPromedioMensual() throws SQLException, IOException {
+    protected float calcularPromedioMensual() throws IOException {
         List<Float> preciosMensuales = obtenerPreciosMensuales();
         if (preciosMensuales.isEmpty()) {
             return 0.0f;
@@ -131,8 +127,16 @@ public class Stock extends FinanceItem{
     }
 
     @Override
-    protected float calcularPromedioAnual() {
-        return 0;
+    protected float calcularPromedioAnual() throws IOException {
+        float sumaPromedio = 0.0f;
+        List<Float> preciosAnuales = obtenerPreciosAnuales();
+        if(preciosAnuales.isEmpty()){
+            return 0.0f;
+        }
+        for (float precio : preciosAnuales) {
+            sumaPromedio += precio;
+        }
+        return sumaPromedio/preciosAnuales.size();
     }
 
     @Override
@@ -297,6 +301,7 @@ public class Stock extends FinanceItem{
         return preciosMensuales;
     }
 
+    //Metodo para encontrar el valor de cierre dentro de la respuesta de la API por día siguiendo un patrón de formato fecha y 4. close.
     private List<Float> extraerPreciosMensuales(String jsonString) {
         List<Float> preciosMensuales = new ArrayList<>();
         LocalDate fechaHoy = LocalDate.now();
@@ -319,8 +324,67 @@ public class Stock extends FinanceItem{
         return preciosMensuales;
     }
 
+    private List<Float> obtenerPreciosAnuales()throws IOException {
+        List<Float> preciosAnuales = new ArrayList<>();
+        String APIKEY = "NAN1GLGHNLYTMDCH";
+        String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + this.simbolo + "&apikey=" + APIKEY;
+        HttpURLConnection con = null;
+        BufferedReader reader = null;
+        StringBuilder response = new StringBuilder();
 
+        try {
+            // Establecer conexión
+            URL obj = new URL(url);
+            con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
 
+            // Leer la respuesta
+            reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                response.append(linea);
+            }
+        } finally {
+            // Cerrar conexiones
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (con != null) {
+                con.disconnect();
+            }
+        }
 
+        // Procesar el JSON para extraer los precios de cierre
+        String jsonString = response.toString();
+        preciosAnuales = extraerPreciosAnuales(jsonString);
+
+        return preciosAnuales;
+    }
+
+    private List<Float> extraerPreciosAnuales(String jsonString) {
+        List<Float> preciosAnuales = new ArrayList<>();
+        LocalDate fechaHoy = LocalDate.now();
+        LocalDate fechaInicio = fechaHoy.minusYears(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        Pattern pattern = Pattern.compile("\"(\\d{4}-\\d{2}-\\d{2})\":\\s*\\{[^}]*\"4. close\":\\s*\"([\\d\\.]+)\"");
+        Matcher matcher = pattern.matcher(jsonString);
+
+        while (matcher.find()) {
+            String fechaStr = matcher.group(1);
+            String precioStr = matcher.group(2);
+
+            LocalDate fecha = LocalDate.parse(fechaStr, formatter);
+            if(!fecha.isBefore(fechaInicio) && !fecha.isAfter(fechaHoy)){
+                preciosAnuales.add(Float.parseFloat(precioStr));
+            }
+        }
+        System.out.println(preciosAnuales);
+        return preciosAnuales;
+    }
 
 }

@@ -110,7 +110,7 @@ public abstract class FinanceItem {
 
     protected abstract float calcularPromedioMensual() throws SQLException, IOException;
 
-    protected abstract float calcularPromedioAnual();
+    protected abstract float calcularPromedioAnual() throws IOException;
 
     protected void generarGrafica(){
         return;
