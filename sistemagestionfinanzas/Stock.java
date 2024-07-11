@@ -143,6 +143,7 @@ public class Stock extends FinanceItem{
     protected void actualizarInformacion() throws IOException {
         setGanaciaPerdida(calcularGanaciaPerdida());
         setMontoActual(calcularValorActual());
+        setDividendoAcumulado(calcularDividendoAcumulado());
     }
 
     //Metodo para obtener el porcentaje de representacion de una instancia de stock
