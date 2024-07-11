@@ -12,7 +12,7 @@ public class BaseDeDatos {
         return con;
     }
 
-    // Método para ejecutar consultas SELECT
+    // Método para ejecutar consultas SELECT con proteccion a SQL Injections, usar cuando se guardan datos ingresados por el usuario
     public static ResultSet realizarConsultaSelect(String consulta, String[] parametros) throws SQLException {
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -25,6 +25,22 @@ public class BaseDeDatos {
             }
 
             rs = pst.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            System.out.println("Error al realizar la consulta SELECT: " + e.getMessage());
+            throw e;
+        }
+    }
+    // Método para ejecutar consultas SELECT usando una consulta creada por los desarrolladores
+    public static ResultSet realizarConsultaSelectInterna(String consulta) throws SQLException {
+        Statement st= null;
+        ResultSet rs = null;
+        try {
+            //Se crea un objeto statement
+            st = con.createStatement();
+
+            //Se ejecuta la consulta y se obtienen los resultados
+            rs = st.executeQuery(consulta);
             return rs;
         } catch (SQLException e) {
             System.out.println("Error al realizar la consulta SELECT: " + e.getMessage());
