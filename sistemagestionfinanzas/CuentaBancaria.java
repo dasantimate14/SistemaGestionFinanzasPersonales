@@ -23,6 +23,12 @@ public class CuentaBancaria extends FinanceItem{
     }
 
     //Metodos get y set
+    public String getBanco() {return this.banco;}
+    public int getNumeroCuenta() {return this.numeroCuenta;}
+    public String getTipoCuenta() {return this.tipoCuenta;}
+    public void setBanco(String banco) {this.banco = banco;}
+    public void setNumeroCuenta(int numeroCuenta) {this.numeroCuenta = numeroCuenta;}
+    public void setTipoCuenta(String tipoCuenta) {this.tipoCuenta = tipoCuenta;}
 
     @Override
     protected float calcularValorActual() throws IOException {
