@@ -25,7 +25,8 @@
             </constraints>
             <properties>
               <font name="Segoe UI Black" size="36" style="1"/>
-              <text value="Bienvenidos a MyFinnacePal"/>
+              <foreground color="-394241"/>
+              <text value="Bienvenido a MyFinnacePal"/>
             </properties>
           </component>
           <component id="79a3" class="javax.swing.JLabel" binding="lbIniciarSesion">
@@ -34,6 +35,7 @@
             </constraints>
             <properties>
               <font size="20"/>
+              <foreground color="-394241"/>
               <text value="Iniciar Sesión"/>
             </properties>
           </component>
@@ -54,7 +56,9 @@
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <foreground color="-394241"/>
+        </properties>
         <border type="none"/>
         <children>
           <hspacer id="1823">
@@ -91,7 +95,9 @@
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <text value=""/>
+            </properties>
           </component>
           <component id="85508" class="javax.swing.JLabel" binding="lbContrasena">
             <constraints>
@@ -130,6 +136,8 @@
               <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <background color="-16734769"/>
+              <foreground color="-394241"/>
               <text value="Iniciar Sesion"/>
             </properties>
           </component>
@@ -138,6 +146,8 @@
               <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <background color="-8723070"/>
+              <foreground color="-394241"/>
               <text value="Registrarse"/>
             </properties>
           </component>

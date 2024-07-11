@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDataSourceStorage">
+    <option name="dataSources">
+      <list>
+        <State>
+          <option name="id" value="15d00b63-a46f-4264-aadd-6f9720d67bf5" />
+          <option name="name" value="SistemaGestionFinanzas (DDL)" />
+          <option name="dbmsName" value="MARIADB" />
+          <option name="urls">
+            <array>
+              <option value="file://$PROJECT_DIR$/.idea/dataSources" />
+            </array>
+          </option>
+          <option name="outLayout" value="File per object by schema.groovy" />
+        </State>
+      </list>
+    </option>
+  </component>
+</project>

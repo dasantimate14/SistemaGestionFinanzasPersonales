@@ -1,10 +1,11 @@
 package Grafico;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class InicioSesion extends JDialog {
+public class InicioSesion extends JFrame {
     private JPanel LoginPanel;
     private JTextField tfCorreo;
     private JPasswordField pfContrasena;
@@ -15,25 +16,24 @@ public class InicioSesion extends JDialog {
     private JLabel lbCorreo;
     private JLabel lbContrasena;
 
-  public InicioSesion() {
+    public InicioSesion() {
             // Configuración de la ventana de inicio de sesión
             setTitle("Inicio de Sesión");
-            setSize(300, 200);
+            setSize(600, 600);
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setLocationRelativeTo(null);
             setContentPane(LoginPanel); // Asignamos el panel principal
+            setVisible(true);
 
             // Acción para el botón "Iniciar Sesión"
             btnIniciarSesion.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // Aquí puedes agregar la lógica para iniciar sesión
-                    // por ejemplo, validación de usuario y contraseña
-                    JOptionPane.showMessageDialog(null, "Iniciar Sesión presionado");
+                    //Aquí se agrega el método para que se entrelace al dashboard (página principal)
                 }
             });
             // Acción para el botón "Registrarse"
-      btnRegistrarse.addActionListener(new ActionListener() {
+        btnRegistrarse.addActionListener(new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent e) {
                       RegistrarUsuario registrarUsuario = new RegistrarUsuario();
@@ -41,7 +41,6 @@ public class InicioSesion extends JDialog {
                   }
       });
   }
-
         public static void main(String[] args) {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override

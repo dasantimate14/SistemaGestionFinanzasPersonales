@@ -3,7 +3,7 @@ package Grafico;
 import javax.swing.*;
 
 public class RegistrarUsuario {
-    private JPanel panel1;
+    private JPanel RegistrarPanel;
 
     public void setVisible(boolean b) {
     }

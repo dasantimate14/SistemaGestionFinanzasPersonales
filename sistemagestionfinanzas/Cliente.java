@@ -1,6 +1,6 @@
 package sistemagestionfinanzas;
 
-import import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Cliente {
@@ -80,8 +80,8 @@ public class Cliente {
     }
 
     public void verBalance() {
-        double totalActivos = activos.stream().mapToDouble(FinanceItem::getValor).sum();
-        double totalPasivos = pasivos.stream().mapToDouble(FinanceItem::getValor).sum();
+        double totalActivos = activos.stream().mapToDouble(item -> item.getMontoActual()).sum();
+        double totalPasivos = pasivos.stream().mapToDouble(item -> item.getMontoActual()).sum();
         double balance = totalActivos - totalPasivos;
         System.out.println("Balance total: " + balance);
     }
