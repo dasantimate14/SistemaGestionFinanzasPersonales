@@ -7,12 +7,13 @@ public class BaseDeDatos {
     //La conexion a la base de datos se maneja con el plugin database de InteliJ
     private static Connection con;
 
-    public static void establecerConexion() throws SQLException {
+    public static Connection establecerConexion() throws SQLException {
         con = DriverManager.getConnection("jdbc:mariadb://localhost:3306", "root", "");
+        return con;
     }
 
     // Método para ejecutar consultas SELECT
-    public static ResultSet realizarConsultaSelect(String consulta, Object[] parametros) throws SQLException {
+    public static ResultSet realizarConsultaSelect(String consulta, String[] parametros) throws SQLException {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {

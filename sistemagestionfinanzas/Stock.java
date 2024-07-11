@@ -1,8 +1,19 @@
 package sistemagestionfinanzas;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Stock extends FinanceItem{
     //Atributos de la clase
@@ -65,7 +76,7 @@ public class Stock extends FinanceItem{
     public void setPrecioActual(float precioActual){this.precioActual = precioActual;}
 
     @Override
-    protected float calcularValorActual() {
+    protected float calcularValorActual() throws IOException {
         setPrecioActual(obtenerPrecioActual() + calcularDividendoAcumulado());
         return getPrecioActual();
     }
@@ -84,7 +95,6 @@ public class Stock extends FinanceItem{
         sb.append("Sector: ").append(sector).append("\n");
         return sb;
     }
-
 
     @Override
     public void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
@@ -105,7 +115,7 @@ public class Stock extends FinanceItem{
     }
 
     @Override
-    protected float calcularPromedioMensual() {
+    protected float calcularPromedioMensual() throws SQLException {
         return 0;
     }
 
@@ -115,7 +125,7 @@ public class Stock extends FinanceItem{
     }
 
     @Override
-    protected void actualizarInformacion() {
+    protected void actualizarInformacion() throws IOException {
         setGanaciaPerdida(calcularGanaciaPerdida());
         setMontoActual(calcularValorActual());
     }
@@ -178,8 +188,61 @@ public class Stock extends FinanceItem{
         return dividendoAcumulado;
     }
 
-    public float obtenerPrecioActual(){
+    public float obtenerPrecioActual() throws IOException {
+       String APIKEY = "NAN1GLGHNLYTMDCH";
+       String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + this.simbolo + "&apikey=" + APIKEY;
+        HttpURLConnection con = null;
+        BufferedReader reader = null;
+        StringBuilder response = new StringBuilder();
+        try {
+            // Establecer conexión
+            URL obj = new URL(url);
+            con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+
+            // Leer la respuesta
+            reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                response.append(linea);
+            }
+        } finally {
+            // Cerrar conexiones
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (con != null) {
+                con.disconnect();
+            }
+        }
+
+        // Extraer el precio actual usando regex
+        String jsonString = response.toString();
+        String priceValue = extraerPrecioActual(jsonString);
+        if (priceValue != null) {
+            precioActual = Float.parseFloat(priceValue);
+        } else {
+            precioActual = 0.0f;
+        }
+
         return precioActual;
+    }
+    private String extraerPrecioActual(String jsonString) {
+        // Define el patrón regex para encontrar "05. price": "valor"
+        String regex = "\"05\\. price\":\\s*\"([\\d\\.]+)\"";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(jsonString);
+
+        // Encuentra el valor de price si hay coincidencia
+        if (matcher.find()) {
+            return matcher.group(1); // Devuelve el valor encontrado
+        } else {
+            return null; // Devuelve null si no se encuentra
+        }
     }
 
 

@@ -1,6 +1,8 @@
 package sistemagestionfinanzas;
 
 import javax.swing.*;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public abstract class FinanceItem {
@@ -62,14 +64,14 @@ public abstract class FinanceItem {
     public void setGanaciaPerdida(float ganaciaPerdida){this.ganaciaPerdida = ganaciaPerdida;}
 
     //Metodos propios de la superclase
-    protected abstract float calcularValorActual();
+    protected abstract float calcularValorActual() throws IOException;
 
-    protected float calcularGanaciaPerdida(){
+    protected float calcularGanaciaPerdida() throws IOException {
         setGanaciaPerdida(calcularValorActual() - montoOriginal);
         return getGanaciaPerdida();
     }
 
-    protected float calcularPorcentajeGananciaPerdida(){
+    protected float calcularPorcentajeGananciaPerdida() throws IOException {
         return (calcularGanaciaPerdida()/ montoOriginal) * 100;
     }
 
@@ -106,7 +108,7 @@ public abstract class FinanceItem {
     //Metodo para obtener el porcentaje que representa este elemento del total
     protected abstract void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos);
 
-    protected abstract float calcularPromedioMensual();
+    protected abstract float calcularPromedioMensual() throws SQLException;
 
     protected abstract float calcularPromedioAnual();
 
@@ -132,7 +134,7 @@ public abstract class FinanceItem {
     }
 
     //Metodo que usa todos los otros metodos que calculan valores que cambian con el tiempo y se actualizen al momento actual
-    protected abstract void actualizarInformacion();
+    protected abstract void actualizarInformacion() throws IOException;
 
 
 
