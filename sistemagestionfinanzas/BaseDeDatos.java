@@ -5,11 +5,10 @@ import java.sql.*;
 //Clase para manejar la base de datos
 public class BaseDeDatos {
     //La conexion a la base de datos se maneja con el plugin database de InteliJ
-    private static Connection con;
+    private static Connection con = null;
 
-    public static Connection establecerConexion() throws SQLException {
+    public static void establecerConexion() throws SQLException {
         con = DriverManager.getConnection("jdbc:mariadb://localhost:3306", "root", "");
-        return con;
     }
 
     // Método para ejecutar consultas SELECT con proteccion a SQL Injections, usar cuando se guardan datos ingresados por el usuario
@@ -97,9 +96,12 @@ public class BaseDeDatos {
         }
     }
 
-    public void cerrarConexion(Connection con){
+    public static void cerrarConexion(){
         try {
-            if (con != null) con.close();
+            if (con != null){
+                con.close();
+                con = null;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
