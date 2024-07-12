@@ -2,7 +2,7 @@ package Grafico;
 
 import javax.swing.*;
 
-public class Gastos {
+public class Proyecciones {
     private JButton menuPrincipalButton;
     private JButton button2;
     private JButton button3;
@@ -12,5 +12,5 @@ public class Gastos {
     private JButton button7;
     private JButton button8;
     private JButton button9;
-    private JPanel GastosPanel;
+    private JPanel ProyeccionesPanel;
 }
