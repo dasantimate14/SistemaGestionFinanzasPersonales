@@ -48,7 +48,7 @@ public class BaseDeDatos {
     }
 
     // Método estático para ejecutar consultas INSERT, UPDATE, DELETE
-    public static boolean ejecutarActualizacion(String consulta, Object[] parametros) throws SQLException {
+    public static boolean ejecutarActualizacion(String consulta, String[] parametros) throws SQLException {
         try {
             PreparedStatement pst = con.prepareStatement(consulta);
             // Establecer los parámetros en el PreparedStatement
