@@ -9,8 +9,8 @@ public class RegistrarUsuario {
     private JTextField textField3;
     private JTextField textField4;
     private JPasswordField passwordField1;
-    private JButton enviarButton;
-    private JButton yaTengoUnaCuentaButton;
+    private JButton BtnEnviar;
+    private JButton BtnLogin;
 
     public void setVisible(boolean b) {
     }

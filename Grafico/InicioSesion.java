@@ -17,37 +17,46 @@ public class InicioSesion extends JFrame {
     private JLabel lbContrasena;
 
     public InicioSesion() {
-            // Configuración de la ventana de inicio de sesión
-            setTitle("Inicio de Sesión");
-            setSize(600, 600);
-            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            setLocationRelativeTo(null);
-            setContentPane(LoginPanel); // Asignamos el panel principal
-            setVisible(true);
+        // Configuración de la ventana de inicio de sesión
+        setSize(980, 920);
+        setLocation(0, 0);
+        setTitle("Inicio de Sesión");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setContentPane(LoginPanel); // Asignamos el panel principal
+        setVisible(true);
 
-            // Acción para el botón "Iniciar Sesión"
-            btnIniciarSesion.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    //Aquí se agrega el método para que se entrelace al dashboard (página principal)
-                }
-            });
-            // Acción para el botón "Registrarse"
+        // Acción para el botón "Iniciar Sesión"
+        btnIniciarSesion.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Aquí se agrega el método para que se entrelace al dashboard (página principal)
+            }
+        });
         btnRegistrarse.addActionListener(new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-                      RegistrarUsuario registrarUsuario = new RegistrarUsuario();
-                      registrarUsuario.setVisible(true);
-                  }
-      });
-  }
-        public static void main(String[] args) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    InicioSesion inicioSesion = new InicioSesion();
-                    inicioSesion.setVisible(true);
-                }
-            });
-        }
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RegistrarUsuario newframe = new RegistrarUsuario();
+                newframe.setVisible(true);
+                
+            }
+        });
+        setContentPane(LoginPanel);
     }
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    InicioSesion frame = new InicioSesion();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+}
+
+
