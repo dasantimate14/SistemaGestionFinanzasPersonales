@@ -218,8 +218,8 @@ public class CuentaBancaria extends FinanceItem{
 
     public float calcularBalanceActual(String idUsuario) throws SQLException {
         float balanceActual;
-        String consultaIngreso = "SELECT SUM(monto) AS ingreso_total FROM ingresos WHERE idUsuario = '" + idUsuario + "' AND idCuentaBancaria = '" + this.id + "'";
-        String consultaRetiros = "SELECT SUM(monto) AS retiro_total FROM gastos WHERE idUsuario = '" + idUsuario + "' AND idCuentaBancaria = '" + this.id + "'";
+        String consultaIngreso = "SELECT SUM(monto) AS ingreso_total FROM ingresos WHERE idUsuario = '" + idUsuario + "' AND idCuentaBancaria = '" + getId() + "'";
+        String consultaRetiros = "SELECT SUM(monto) AS retiro_total FROM gastos WHERE idUsuario = '" + idUsuario + "' AND idCuentaBancaria = '" + getId() + "'";
         float ingrestoTotal = 0;
         float retiroTotal = 0;
 
