@@ -130,6 +130,9 @@ public class CuentaBancaria extends FinanceItem{
             //Se establece el rango inferior de las fechas al ultimo deposito que se hizo
             fechaInicial = ultimaFechaInteres;
 
+            //Se obtiene el balance del mes anterior
+            LocalDate fechaBalanceDelMesAnterior = fechaInicial.minusMonths(1).withDayOfMonth(1);
+
             //Se establece un rango del primero de un mes al otro, representando el deposito de intereses el primero de cada mes
             fechaInicial = fechaInicial.withDayOfMonth(1);
             fechaActual = fechaActual.withDayOfMonth(1);
@@ -194,6 +197,19 @@ public class CuentaBancaria extends FinanceItem{
 
     public void retirarMonto(float monto){
         setMontoActual(getMontoActual() - monto);
+    }
+
+    public float calcularBalanceActual(String idUsuario){
+        float balanceActual = 0;
+
+
+
+        return balanceActual;
+    }
+
+    public float calcularBalanceMesAnterior(String idUsuario, String fechaInicial) throws SQLException {
+        float balanceMesAnterior = 0;
+        return balanceMesAnterior;
     }
 
 
