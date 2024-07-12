@@ -84,7 +84,7 @@ public class CuentaBancaria extends FinanceItem{
     @Override
     protected void actualizarInformacion() throws IOException {
         try {
-            setMontoActual(calcularBalanceActual(idUsuario));
+            setMontoActual(calcularBalanceActual(getIdUsuario()));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -92,13 +92,13 @@ public class CuentaBancaria extends FinanceItem{
     }
 
     //Metodo que registra el interes en la base de datos como un objeto Ingreso
-    public void registrarInteres(String idUsuario){
+    public void registrarInteres(){
         //Calcular el balance hasta el primero del mes anterior
         float balanceMensual = getMontoOriginal();
         float interesMensual = 0;
         LocalDate fechaInicial;
         LocalDate fechaActual = LocalDate.now();
-        String consulta = "SELECT MAX(fecha) AS fecha_mas_reciente FROM ingresos WHERE idUsuario = '" + idUsuario + "' AND idCuentaBancaria = '" + this.id + "' AND nombre = 'Interes'";
+        String consulta = "SELECT MAX(fecha) AS fecha_mas_reciente FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND nombre = 'Interes'";
         ResultSet rs = null;
         LocalDate ultimaFechaInteres = null;
 
@@ -123,7 +123,7 @@ public class CuentaBancaria extends FinanceItem{
             fechaActual = fechaActual.withDayOfMonth(1);
             while (fechaInicial.isBefore(fechaActual)){
                 try {
-                    balanceMensual = calcularBalanceMensual(idUsuario, String.valueOf(fechaInicial), balanceMensual);
+                    balanceMensual = calcularBalanceMensual(String.valueOf(fechaInicial), balanceMensual);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -149,14 +149,14 @@ public class CuentaBancaria extends FinanceItem{
 
             //Se obtiene el balance del mes anterior utilizando la fechaInicial como limite superior de la funcion calcularBalanceMesAnterior
             try {
-                balanceMensual = calcularBalanceMesAnterior(idUsuario, String.valueOf(fechaInicial));
+                balanceMensual = calcularBalanceMesAnterior(String.valueOf(fechaInicial));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
 
             while(fechaInicial.isBefore(fechaActual)){
                 try{
-                    balanceMensual = calcularBalanceMensual(idUsuario, String.valueOf(fechaInicial), balanceMensual);
+                    balanceMensual = calcularBalanceMensual(String.valueOf(fechaInicial), balanceMensual);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -181,9 +181,9 @@ public class CuentaBancaria extends FinanceItem{
     }
 
     //Metodo para obtener el balance para un mes en especifico
-    public float calcularBalanceMensual(String idUsuario, String fechaInicial, float balanceAnterior) throws SQLException {
-        String consultaIngreso = "SELECT SUM(monto) AS ingreso_total FROM ingresos WHERE idUsuario = '" + idUsuario + "' AND idCuentaBancaria = '" + this.id + "' AND fechaInicio BETWEEN '" + fechaInicial + "' AND DATE_ADD('" + fechaInicial + "', INTERVAL 1 MONTH)";
-        String consultaRetiros = "SELECT SUM(monto) AS retiro_total FROM gastos WHERE idUsuario = '" + idUsuario + "' AND idCuentaBancaria = '" + this.id + "' AND fechaInicio BETWEEN '" + fechaInicial + "' AND DATE_ADD('" + fechaInicial + "', INTERVAL 1 MONTH)";
+    public float calcularBalanceMensual(String fechaInicial, float balanceAnterior) throws SQLException {
+        String consultaIngreso = "SELECT SUM(monto) AS ingreso_total FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + fechaInicial + "' AND DATE_ADD('" + fechaInicial + "', INTERVAL 1 MONTH)";
+        String consultaRetiros = "SELECT SUM(monto) AS retiro_total FROM gastos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + fechaInicial + "' AND DATE_ADD('" + fechaInicial + "', INTERVAL 1 MONTH)";
         float ingrestoTotal = 0;
         float retiroTotal = 0;
         float balanceMensual;
@@ -243,10 +243,10 @@ public class CuentaBancaria extends FinanceItem{
         return balanceActual;
     }
 
-    public float calcularBalanceMesAnterior(String idUsuario, String fechaFinal) throws SQLException {
+    public float calcularBalanceMesAnterior(String fechaFinal) throws SQLException {
         float balanceMesAnterior;
-        String consultaIngreso = "SELECT SUM(monto) AS ingreso_total FROM ingresos WHERE idUsuario = '" + idUsuario + "' AND idCuentaBancaria = '" + this.id + "' AND fechaInicio BETWEEN '" + getFechaInicio() + "' AND '" + fechaFinal +"'";
-        String consultaRetiros = "SELECT SUM(monto) AS retiro_total FROM gastos WHERE idUsuario = '" + idUsuario + "' AND idCuentaBancaria = '" + this.id + "' AND fechaInicio BETWEEN '" + getFechaInicio() + "' AND '" + fechaFinal +"'";
+        String consultaIngreso = "SELECT SUM(monto) AS ingreso_total FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + getFechaInicio() + "' AND '" + fechaFinal +"'";
+        String consultaRetiros = "SELECT SUM(monto) AS retiro_total FROM gastos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + getFechaInicio() + "' AND '" + fechaFinal +"'";
         float ingrestoTotal = 0;
         float retiroTotal = 0;
 
