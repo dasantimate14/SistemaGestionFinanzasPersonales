@@ -122,8 +122,9 @@ public class Stock extends FinanceItem{
         for (float precio : preciosMensuales) {
             sumaPrecios += precio;
         }
+        setPromedioMensual(sumaPrecios / preciosMensuales.size());
 
-        return sumaPrecios / preciosMensuales.size();
+        return getPromedioMensual();
     }
 
     @Override
