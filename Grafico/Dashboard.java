@@ -4,8 +4,8 @@ import javax.swing.*;
 
 public class Dashboard {
     private JPanel DashboardPanel;
-    private JButton menuPrincipalButton;
-    private JButton cuentaBancariaButton;
+    private JButton btnMenu1;
+    private JButton btnCuentaBancaria;
     private JButton plazosFijosButton;
     private JButton btnIngresos;
     private JButton btnStocks;

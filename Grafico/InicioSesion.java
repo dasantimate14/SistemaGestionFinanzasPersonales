@@ -18,13 +18,12 @@ public class InicioSesion extends JFrame {
 
     public InicioSesion() {
         // Configuración de la ventana de inicio de sesión
-        setSize(980, 920);
+        setSize(930, 920);
         setLocation(0, 0);
         setTitle("Inicio de Sesión");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setContentPane(LoginPanel); // Asignamos el panel principal
-        setVisible(true);
 
         // Acción para el botón "Iniciar Sesión"
         btnIniciarSesion.addActionListener(new ActionListener() {
@@ -33,15 +32,18 @@ public class InicioSesion extends JFrame {
                 //Aquí se agrega el método para que se entrelace al dashboard (página principal)
             }
         });
+
+        // Acción para el botón "Registrarse"
         btnRegistrarse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 RegistrarUsuario newframe = new RegistrarUsuario();
                 newframe.setVisible(true);
-                
+                dispose(); // Cierra la ventana actual de Inicio de Sesión
             }
         });
-        setContentPane(LoginPanel);
+
+        setVisible(true);
     }
 
     public static void main(String[] args) {
@@ -53,10 +55,8 @@ public class InicioSesion extends JFrame {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         });
     }
 }
-
 
