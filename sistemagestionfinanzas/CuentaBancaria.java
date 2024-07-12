@@ -120,6 +120,9 @@ public class CuentaBancaria extends FinanceItem{
 
                 //Se crea un objeto ingreso para que registre el interes
 
+                //Se actualiza el deposito del monto al valor actual de cuenta
+                depositarMonto(interesMensual);
+
             }
 
         //Si la ultima fecha es diferente de null entonces ya se han registrado depositos de interes antes y se empieza a registrar intereses apartir de este ultimo deposito
@@ -143,6 +146,9 @@ public class CuentaBancaria extends FinanceItem{
                 fechaInicial = fechaInicial.plusMonths(1);
 
                 //Se crea un objeto ingreso para que registre el interes
+
+                //Se actualiza el deposito del monto al valor actual de cuenta
+                depositarMonto(interesMensual);
             }
         }
     }
@@ -180,6 +186,14 @@ public class CuentaBancaria extends FinanceItem{
         //Se calcula el balance mensual tomando el cuenta el balance del mes anterior y los ingresos y retiros de un mes
         balanceMensual = (balanceAnterior + ingrestoTotal) - retiroTotal;
         return balanceMensual;
+    }
+
+    public void depositarMonto(float monto){
+        setMontoActual(getMontoActual() + monto);
+    }
+
+    public void retirarMonto(float monto){
+        setMontoActual(getMontoActual() - monto);
     }
 
 
