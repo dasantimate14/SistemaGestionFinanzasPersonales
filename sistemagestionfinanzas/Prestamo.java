@@ -25,13 +25,11 @@ public class Prestamo extends FinanceItem {
     }
     @Override
     protected float calcularValorActual() throws IOException {
-        // Implementa la lógica para calcular el valor actual
         return saldoPendiente - (cuotaMensual * (LocalDate.now().until(fechaVencimiento, ChronoUnit.MONTHS)));
     }
 
     @Override
     protected StringBuilder obtenerInformacionSubclase() {
-        // Implementa la lógica para obtener la información de la subclase
         StringBuilder info = new StringBuilder();
         info.append("Tipo de Préstamo: ").append(tipoPrestamo).append("\n");
         info.append("Saldo Pendiente: ").append(saldoPendiente).append("\n");
@@ -55,19 +53,16 @@ public class Prestamo extends FinanceItem {
 
     @Override
     protected float calcularPromedioMensual() throws SQLException, IOException {
-        // Implementa la lógica para calcular el promedio mensual
         return calcularPagoMensual();
     }
 
     @Override
     protected float calcularPromedioAnual() throws IOException {
-        // Implementa la lógica para calcular el promedio anual
         return calcularPagoMensual() * 12;
     }
 
     @Override
     protected void actualizarInformacion() throws IOException {
-        // Implementa la lógica para actualizar la información
         this.cuotaMensual = calcularPagoMensual();
     }
 
@@ -117,40 +112,32 @@ public class Prestamo extends FinanceItem {
     }
 
     public int getFrecuenciaPago() {
-        // Suponiendo pagos mensuales
-        return 1;
+        return 0;
     }
 
     public void setFrecuenciaPago(int nuevaFrecuenciaPago) {
-        // Implementa lógica para establecer la nueva frecuencia de pago si es necesario
     }
 
     public float calcularPagoMensual() {
-        // Implementa la lógica para calcular el pago mensual basado en el saldo pendiente, tasa de interés y plazo
         float tasaInteresMensual = super.getTasaInteres() / 12 / 100;
         int numeroPagos = plazo * 12;
         return (saldoPendiente * tasaInteresMensual) / (1 - (float)Math.pow(1 + tasaInteresMensual, -numeroPagos));
     }
 
     public float calcularTipoRestante() {
-        // Implementa la lógica para calcular el tipo restante
         return saldoPendiente * (super.getTasaInteres() / 100);
     }
 
     public float calcularSaldoPendiente() {
-        // Implementa la lógica para calcular el saldo pendiente basado en pagos realizados y plazo
         return saldoPendiente - (cuotaMensual * plazo);
     }
-
     public float calcularInteresAcumulado() {
-        // Implementa la lógica para calcular el interés acumulado
         float interesMensual = super.getTasaInteres() / 12 / 100;
         int numeroPagos = plazo * 12;
         return numeroPagos * cuotaMensual * interesMensual;
     }
 
     public float calcularInteresPendiente() {
-        // Implementa la lógica para calcular el interés pendiente
         float interesMensual = super.getTasaInteres() / 12 / 100;
         return saldoPendiente * interesMensual * (plazo - (LocalDate.now().until(fechaVencimiento, ChronoUnit.MONTHS)));
     }
