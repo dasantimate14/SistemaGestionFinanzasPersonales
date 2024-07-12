@@ -42,7 +42,6 @@ public class Prestamo extends FinanceItem {
 
     @Override
     protected void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) throws IOException {
-        // Implementa la lógica para calcular el porcentaje de representación de la subclase
         float totalActivos = 0;
         for (FinanceItem item : activosPasivos) {
             totalActivos += item.calcularValorActual();
