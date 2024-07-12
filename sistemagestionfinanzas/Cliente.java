@@ -104,4 +104,12 @@ public class Cliente {
         sb.append("Número de Pasivos: ").append(pasivos.size()).append("\n");
         return sb;
     }
+    public void verBalance() {
+        double totalActivos = activos.stream().mapToDouble(FinanceItem::getValor).sum();
+        double totalPasivos = pasivos.stream().mapToDouble(FinanceItem::getValor).sum();
+        double totalActivos = activos.stream().mapToDouble(item -> item.getMontoActual()).sum();
+        double totalPasivos = pasivos.stream().mapToDouble(item -> item.getMontoActual()).sum();
+        double balance = totalActivos - totalPasivos;
+        System.out.println("Balance total: " + balance);
+    }
 }
