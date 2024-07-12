@@ -306,7 +306,7 @@ public class Stock extends FinanceItem{
     private List<Float> extraerPreciosMensuales(String jsonString) {
         List<Float> preciosMensuales = new ArrayList<>();
         LocalDate fechaHoy = LocalDate.now();
-        LocalDate fechaInicio = fechaHoy.minusMonths(1);
+        LocalDate fechaInicio = fechaHoy.minusYears(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         Pattern pattern = Pattern.compile("\"(\\d{4}-\\d{2}-\\d{2})\":\\s*\\{[^}]*\"4. close\":\\s*\"([\\d\\.]+)\"");
@@ -369,7 +369,7 @@ public class Stock extends FinanceItem{
     private List<Float> extraerPreciosAnuales(String jsonString) {
         List<Float> preciosAnuales = new ArrayList<>();
         LocalDate fechaHoy = LocalDate.now();
-        LocalDate fechaInicio = fechaHoy.minusYears(1);
+        LocalDate fechaInicio = fechaHoy.minusYears(5);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         Pattern pattern = Pattern.compile("\"(\\d{4}-\\d{2}-\\d{2})\":\\s*\\{[^}]*\"4. close\":\\s*\"([\\d\\.]+)\"");
