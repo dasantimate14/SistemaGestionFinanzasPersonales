@@ -105,7 +105,7 @@ public abstract class FinanceItem {
 
     }
 
-    //Metodo para obtener el porcentaje que representa este elemento del total
+    //Metodo para obtener el porcentaje que representa este elemento del total - El arreglo activosPasivos representa que se le pasa un arreglo de activos o de pasivos al método dependiendo de la clase
     protected abstract void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos);
 
     protected abstract float calcularPromedioMensual() throws SQLException, IOException;

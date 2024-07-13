@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 public class Prestamo extends FinanceItem {
     private String tipoPrestamo;
@@ -12,6 +13,8 @@ public class Prestamo extends FinanceItem {
     private LocalDate fechaVencimiento;
     private boolean estatus;
     private float cuotaMensual;
+    private static int cantidadInstancias;
+    private static List<Prestamo> instanciasPrestamos;
 
     public Prestamo(String nombre, String descripcion, float montoOriginal, String tipo, float tasaInteres, LocalDate fechaInicio,
                     String tipoPrestamo, float saldoPendiente, int plazo, LocalDate fechaVencimiento, float cuotaMensual) {
@@ -22,7 +25,10 @@ public class Prestamo extends FinanceItem {
         this.fechaVencimiento = fechaVencimiento;
         this.estatus = false;
         this.cuotaMensual = cuotaMensual;
+        instanciasPrestamos.add(this);
+        cantidadInstancias ++;
     }
+
     @Override
     protected float calcularValorActual() throws IOException {
         return saldoPendiente - (cuotaMensual * (LocalDate.now().until(fechaVencimiento, ChronoUnit.MONTHS)));
@@ -41,13 +47,18 @@ public class Prestamo extends FinanceItem {
     }
 
     @Override
-    protected void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) throws IOException {
-        float totalActivos = 0;
+    protected void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
+        float totalPasivos = 0;
+        float totalPrestamos = 0;
         for (FinanceItem item : activosPasivos) {
-            totalActivos += item.calcularValorActual();
+            totalPasivos += item.getMontoActual();
+            if(item instanceof Prestamo) {
+                Prestamo prestamo = (Prestamo) item;
+                totalPrestamos += prestamo.getMontoActual();
+            }
         }
-        float porcentaje = (calcularValorActual() / totalActivos) * 100;
-        System.out.println("Porcentaje de Representación: " + porcentaje + "%");
+        float porcentaje = (totalPrestamos / totalPasivos) * 100;
+        System.out.println("Porcentaje de Representación de los Prestamos: " + porcentaje + "%");
     }
 
     @Override
@@ -130,6 +141,7 @@ public class Prestamo extends FinanceItem {
     public float calcularSaldoPendiente() {
         return saldoPendiente - (cuotaMensual * plazo);
     }
+
     public float calcularInteresAcumulado() {
         float interesMensual = super.getTasaInteres() / 12 / 100;
         int numeroPagos = plazo * 12;
@@ -140,4 +152,14 @@ public class Prestamo extends FinanceItem {
         float interesMensual = super.getTasaInteres() / 12 / 100;
         return saldoPendiente * interesMensual * (plazo - (LocalDate.now().until(fechaVencimiento, ChronoUnit.MONTHS)));
     }
+
+    public void calcularPorcentajeRepresentacionPrestamo() {
+        float totalPrestamos = 0;
+        for (Prestamo prestamo : instanciasPrestamos) {
+            totalPrestamos += prestamo.getMontoActual();
+        }
+        float porcentaje = (getMontoActual() / totalPrestamos) * 100;
+        System.out.println("Porcentaje de Representación: " + porcentaje + "%");
+    }
+
 }
