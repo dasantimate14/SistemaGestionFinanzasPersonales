@@ -5,14 +5,13 @@ import java.sql.*;
 //Clase para manejar la base de datos
 public class BaseDeDatos {
     //La conexion a la base de datos se maneja con el plugin database de InteliJ
-    private static Connection con;
+    private static Connection con = null;
 
-    public static Connection establecerConexion() throws SQLException {
+    public static void establecerConexion() throws SQLException {
         con = DriverManager.getConnection("jdbc:mariadb://localhost:3306", "root", "");
-        return con;
     }
 
-    // Método para ejecutar consultas SELECT
+    // Método para ejecutar consultas SELECT con proteccion a SQL Injections, usar cuando se guardan datos ingresados por el usuario
     public static ResultSet realizarConsultaSelect(String consulta, String[] parametros) throws SQLException {
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -32,8 +31,24 @@ public class BaseDeDatos {
         }
     }
 
+    // Método para ejecutar consultas SELECT usando una consulta creada por los desarrolladores
+    public static ResultSet realizarConsultaSelectInterna(String consulta) throws SQLException {
+        Statement st= null;
+        ResultSet rs = null;
+        try {
+            //Se crea un objeto statement
+            st = con.createStatement();
+
+            //Se ejecuta la consulta y se obtienen los resultados
+            rs = st.executeQuery(consulta);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
     // Método estático para ejecutar consultas INSERT, UPDATE, DELETE
-    public static boolean ejecutarActualizacion(String consulta, Object[] parametros) throws SQLException {
+    public static boolean ejecutarActualizacion(String consulta, String[] parametros) throws SQLException {
         try {
             PreparedStatement pst = con.prepareStatement(consulta);
             // Establecer los parámetros en el PreparedStatement
@@ -78,6 +93,17 @@ public class BaseDeDatos {
         } catch (SQLException e) {
             System.out.println("Error al mostrar los datos de la tabla " + nombreTabla + ": " + e.getMessage());
             throw e;
+        }
+    }
+
+    public static void cerrarConexion(){
+        try {
+            if (con != null){
+                con.close();
+                con = null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
