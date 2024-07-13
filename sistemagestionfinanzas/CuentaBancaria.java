@@ -106,13 +106,9 @@ public class CuentaBancaria extends FinanceItem{
 
     @Override
     protected void actualizarInformacion() throws IOException {
-        calcularGanaciaPerdida();
-        try {
-            setMontoActual(calcularBalanceActual());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        setGanaciaPerdida(calcularGanaciaPerdida());
+        calcularValorActual();
+        calcularInteresAcumulado();
     }
 
     //Metodo que registra el interes en la base de datos como un objeto Ingreso
@@ -266,6 +262,7 @@ public class CuentaBancaria extends FinanceItem{
         return balanceActual;
     }
 
+    //Metodo para calcular el balance previo a la fecha del parametro
     public float calcularBalancePrevio(String fechaFinal) throws SQLException {
         float balanceMesAnterior;
         String consultaIngreso = "SELECT SUM(montoOriginal) AS ingreso_total FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + getFechaInicio() + "' AND '" + fechaFinal +"'";
