@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CuentaBancaria extends FinanceItem{
@@ -39,7 +40,7 @@ public class CuentaBancaria extends FinanceItem{
     @Override
     protected float calcularValorActual() throws IOException {
         try {
-            setMontoActual(calcularBalanceActual(idUsuario));
+            setMontoActual(calcularBalanceActual());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -73,20 +74,40 @@ public class CuentaBancaria extends FinanceItem{
 
     @Override
     protected float calcularPromedioMensual() throws SQLException, IOException {
-        String consulta = "SELECT DATE_FORMAT(fechaInicio, '%Y-%m') AS mes, AVG(montoOriginal)";
-        return 0;
+        //Arreglo para guardar todos los balances mensuales
+        List<Float> balancesMensuales = new ArrayList<>();
+        float sumatoriaBalances = 0;
+        balancesMensuales = calcularBalancesMensualesRecientes();
+
+        //Se suman los balances y se calcula el promedio
+        for(float balance : balancesMensuales){
+            sumatoriaBalances += balance;
+        }
+        setPromedioMensual((sumatoriaBalances)/balancesMensuales.size());
+        return getPromedioMensual();
     }
 
     @Override
     protected float calcularPromedioAnual() throws IOException {
+        float sumatoriaBalances = 0;
+        float promedioAnual;
+        //Arreglo para guardar todos los balances mensuales
+        List<Float> balancesAnuales = new ArrayList<>();
+        balancesAnuales = calcularBalancesAnualesRecientes();
 
-        return 0;
+        //Se hace la sumatoria y se calcula el promedio
+        for(float balance : balancesAnuales){
+            sumatoriaBalances += balance;
+        }
+        promedioAnual = sumatoriaBalances/ balancesAnuales.size();
+        return promedioAnual;
     }
 
     @Override
     protected void actualizarInformacion() throws IOException {
+        calcularGanaciaPerdida();
         try {
-            setMontoActual(calcularBalanceActual(getIdUsuario()));
+            setMontoActual(calcularBalanceActual());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -137,11 +158,10 @@ public class CuentaBancaria extends FinanceItem{
 
                 //Se actualiza el deposito del monto al valor actual de cuenta
                 depositarMonto(interesMensual);
-
             }
 
         //Si la ultima fecha es diferente de null entonces ya se han registrado depositos de interes antes y se empieza a registrar intereses apartir de este ultimo deposito
-        } else if (ultimaFechaInteres != null) {
+        } else {
             //Se establece el rango inferior de las fechas al ultimo deposito que se hizo
             fechaInicial = ultimaFechaInteres;
 
@@ -149,9 +169,9 @@ public class CuentaBancaria extends FinanceItem{
             fechaInicial = fechaInicial.withDayOfMonth(1);
             fechaActual = fechaActual.withDayOfMonth(1);
 
-            //Se obtiene el balance del mes anterior utilizando la fechaInicial como limite superior de la funcion calcularBalanceMesAnterior
+            //Se obtiene el balance del mes anterior utilizando la fechaInicial como limite superior de la funcion calcularBalancePrevio
             try {
-                balanceMensual = calcularBalanceMesAnterior(String.valueOf(fechaInicial));
+                balanceMensual = calcularBalancePrevio(String.valueOf(fechaInicial));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -218,10 +238,10 @@ public class CuentaBancaria extends FinanceItem{
         setMontoActual(getMontoActual() - monto);
     }
 
-    public float calcularBalanceActual(String idUsuario) throws SQLException {
+    public float calcularBalanceActual() throws SQLException {
         float balanceActual;
-        String consultaIngreso = "SELECT SUM(montoOriginal) AS ingreso_total FROM ingresos WHERE idUsuario = '" + idUsuario + "' AND idCuentaBancaria = '" + getId() + "'";
-        String consultaRetiros = "SELECT SUM(montoOriginal) AS retiro_total FROM gastos WHERE idUsuario = '" + idUsuario + "' AND idCuentaBancaria = '" + getId() + "'";
+        String consultaIngreso = "SELECT SUM(montoOriginal) AS ingreso_total FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "'";
+        String consultaRetiros = "SELECT SUM(montoOriginal) AS retiro_total FROM gastos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "'";
         float ingrestoTotal = 0;
         float retiroTotal = 0;
 
@@ -245,7 +265,7 @@ public class CuentaBancaria extends FinanceItem{
         return balanceActual;
     }
 
-    public float calcularBalanceMesAnterior(String fechaFinal) throws SQLException {
+    public float calcularBalancePrevio(String fechaFinal) throws SQLException {
         float balanceMesAnterior;
         String consultaIngreso = "SELECT SUM(montoOriginal) AS ingreso_total FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + getFechaInicio() + "' AND '" + fechaFinal +"'";
         String consultaRetiros = "SELECT SUM(montoOriginal) AS retiro_total FROM gastos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + getFechaInicio() + "' AND '" + fechaFinal +"'";
@@ -280,6 +300,92 @@ public class CuentaBancaria extends FinanceItem{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    //Metodo para calcular el balance de un año específico
+    public float calcularBalanceAnual(String fechaInicial, float balanceAnterior) throws SQLException {
+        String consultaIngreso = "SELECT SUM(montoOriginal) AS ingreso_total FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + fechaInicial + "' AND DATE_ADD('" + fechaInicial + "', INTERVAL 1 YEAR)";
+        String consultaRetiros = "SELECT SUM(montoOriginal) AS retiro_total FROM gastos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + fechaInicial + "' AND DATE_ADD('" + fechaInicial + "', INTERVAL 1 YEAR)";
+        float ingrestoTotal = 0;
+        float retiroTotal = 0;
+        float balanceAnual = 0;
+
+        //Se realizan las consultas a las tablas ingresos y retiros para obtener las respectivas sumatorias y calcular el balance
+        BaseDeDatos.establecerConexion();
+        ResultSet rsIngreso = BaseDeDatos.realizarConsultaSelectInterna(consultaIngreso);
+        if(rsIngreso != null){
+            ingrestoTotal = rsIngreso.getFloat("ingreso_total");
+            rsIngreso.close();
+        }
+
+        ResultSet rsRetiro = BaseDeDatos.realizarConsultaSelectInterna(consultaRetiros);
+        if(rsRetiro != null){
+            retiroTotal = rsRetiro.getFloat("retiro_total");
+            rsRetiro.close();
+        }
+        BaseDeDatos.cerrarConexion();
+
+        //Se calcula el balance anual tomando el cuenta el balance del año anterior y los ingresos y retiros del año
+        balanceAnual = (balanceAnterior + ingrestoTotal) - retiroTotal;
+        return balanceAnual;
+    }
+
+    //Metodo que obtiene los balances por mes del año más reciente
+    public List<Float> calcularBalancesMensualesRecientes(){
+        //La fecha inicial debe ser un año atrás para que se calcule el promedio mensual más reciente
+        List<Float> balancesMensuales = new ArrayList<>();
+        LocalDate fechaActual = LocalDate.now();
+        LocalDate fechaInicial = fechaActual.minusYears(1);
+        float balanceMensual;
+
+        //Se obtiene el balance previo al año de los promedios que se calcularan
+        try {
+            balanceMensual = calcularBalancePrevio(String.valueOf(fechaInicial));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        //Se calculan los balances para cada mes y se guardan en un arrelgo
+        while(fechaInicial.isBefore(fechaActual)){
+            try{
+                balanceMensual = calcularBalanceMensual(String.valueOf(fechaInicial), balanceMensual);
+                balancesMensuales.add(balanceMensual);
+                fechaInicial = fechaInicial.plusMonths(1);
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return balancesMensuales;
+    }
+
+    //Metodo que obtiene todos los balances anuales desde 5 años previos a la fecha actual
+    public List<Float> calcularBalancesAnualesRecientes(){
+        //La fecha inicial debe ser cinco año atrás para que se calcule el promedio de los años más recientes
+        LocalDate fechaActual = LocalDate.now();
+        LocalDate fechaInicial = fechaActual.minusYears(5);
+        float balanceAnual = 0;
+
+        //Arreglo para guardar todos los balances mensuales
+        List<Float> balancesAnuales = new ArrayList<>();
+
+        //Se obtiene el balance previo a los 5 años de los promedios que se calcularan
+        try {
+            balanceAnual = calcularBalancePrevio(String.valueOf(fechaInicial));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //Se calculan los balances para cada año y se guardan en un arrelgo
+        while(fechaInicial.isBefore(fechaActual)){
+            try{
+                balanceAnual = calcularBalanceAnual(String.valueOf(fechaInicial), balanceAnual);
+                balancesAnuales.add(balanceAnual);
+                fechaInicial = fechaInicial.plusYears(1);
+
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return balancesAnuales;
     }
 
 }
