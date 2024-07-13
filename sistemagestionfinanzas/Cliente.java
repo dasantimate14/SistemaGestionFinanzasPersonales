@@ -80,10 +80,6 @@ public class Cliente {
     }
 
     // Otros métodos
-    public void verBalance() {
-        // Lógica para calcular y mostrar el balance
-    }
-
     public void iniciarSesion() {
         // Lógica para iniciar sesión del cliente
     }
@@ -105,8 +101,6 @@ public class Cliente {
         return sb;
     }
     public void verBalance() {
-        double totalActivos = activos.stream().mapToDouble(FinanceItem::getValor).sum();
-        double totalPasivos = pasivos.stream().mapToDouble(FinanceItem::getValor).sum();
         double totalActivos = activos.stream().mapToDouble(item -> item.getMontoActual()).sum();
         double totalPasivos = pasivos.stream().mapToDouble(item -> item.getMontoActual()).sum();
         double balance = totalActivos - totalPasivos;
