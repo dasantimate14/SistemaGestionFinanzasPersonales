@@ -106,9 +106,9 @@ public class CuentaBancaria extends FinanceItem{
 
     @Override
     protected void actualizarInformacion() throws IOException {
-        setGanaciaPerdida(calcularGanaciaPerdida());
         calcularValorActual();
         calcularInteresAcumulado();
+        setGanaciaPerdida(calcularGanaciaPerdida());
     }
 
     //Metodo que registra el interes en la base de datos como un objeto Ingreso
@@ -290,14 +290,24 @@ public class CuentaBancaria extends FinanceItem{
         return balanceMesAnterior;
     }
 
+    //Metodo que calcula la suma total de intereses obtenidos por la cuenta bancaria
     public void calcularInteresAcumulado(){
         float interesAcumulado = 0;
         String consulta = "SELECT SUM(montoOriginal) AS interes_total FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "'" + " AND idCuentaBancaria = '" + getId() + "' AND nombre = 'Interes'";
         try {
             BaseDeDatos.establecerConexion();
+            ResultSet rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
+            if(rs != null){
+                interesAcumulado = rs.getFloat("interes_total");
+            }
+            rs.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            BaseDeDatos.cerrarConexion();
         }
+        setInteres(interesAcumulado);
+
     }
 
     //Metodo para calcular el balance de un año específico
