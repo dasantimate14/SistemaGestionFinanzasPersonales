@@ -24,6 +24,8 @@ public class CuentaBancaria extends FinanceItem{
         this.tipoCuenta = tipoCuenta;
         this.montoActual = montoOriginal;
         this.idUsuario = idUsuario;
+        instanciasCuentasBancarias.add(this);
+        cantidadInstancias++;
     }
 
     //Metodos get y set
@@ -134,7 +136,7 @@ public class CuentaBancaria extends FinanceItem{
             BaseDeDatos.cerrarConexion();
         }
 
-        //Si la ultima fecha es null entonces nunca se le han registrado los intereses a la cuenta. Se crean todos los intereses por mes desde la creacion de la cuenta hasta el dia acutal
+        //Si la ultima fecha es null entonces nunca se le han registrado los intereses a la cuenta. Se crean todos los intereses por mes desde la creacion de la cuenta hasta la fecha acutal
         if (ultimaFechaInteres == null){
             fechaInicial = getFechaInicio();
 
