@@ -17,7 +17,7 @@ public class CuentaBancaria extends FinanceItem{
     private static List<CuentaBancaria> instanciasCuentasBancarias;
 
     //Constructor
-    CuentaBancaria(String nombre, String  descripcion, float montoOriginal, String tipo, float tasaInteres, LocalDate fechaInicio, String banco, int numeroCuenta, String tipoCuenta, String idUsuario) {
+    public CuentaBancaria(String nombre, String  descripcion, float montoOriginal, String tipo, float tasaInteres, LocalDate fechaInicio, String banco, int numeroCuenta, String tipoCuenta, String idUsuario) {
         super(nombre, descripcion, montoOriginal, tipo, tasaInteres, fechaInicio);
         this.banco = banco;
         this.numeroCuenta = numeroCuenta;
