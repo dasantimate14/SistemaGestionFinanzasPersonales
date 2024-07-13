@@ -39,6 +39,7 @@ public class CuentaBancaria extends FinanceItem{
     //Devuelve el valor calculado por calcularBalanceActual
     @Override
     protected float calcularValorActual() throws IOException {
+        registrarInteres();
         try {
             setMontoActual(calcularBalanceActual());
         } catch (SQLException e) {
@@ -357,7 +358,7 @@ public class CuentaBancaria extends FinanceItem{
         return balancesMensuales;
     }
 
-    //Metodo que obtiene todos los balances anuales desde 5 años previos a la fecha actual
+    //Metodo para calcular todos los balances anuales desde 5 años previos a la fecha actual
     public List<Float> calcularBalancesAnualesRecientes(){
         //La fecha inicial debe ser cinco año atrás para que se calcule el promedio de los años más recientes
         LocalDate fechaActual = LocalDate.now();
