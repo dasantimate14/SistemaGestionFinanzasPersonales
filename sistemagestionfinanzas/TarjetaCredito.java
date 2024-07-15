@@ -1,19 +1,22 @@
 package sistemagestionfinanzas;
 
-public class TarjetaCredito {
+import java.io.IOException;
+import java.time.LocalDate;
+
+public class TarjetaCredito extends FinanceItem {
     private String tipoTarjeta;
     private float limiteCredito;
     private float saldoActual;
-    private float tasaInteres;
     private String numero;
     private float creditoUsado;
 
     // Constructor
-    public TarjetaCredito(String tipoTarjeta, float limiteCredito, float saldoActual, float tasaInteres, String numero) {
+    public TarjetaCredito(String nombre, String descripcion, float montoOriginal, String tipo, float tasaInteres, LocalDate fechaInicio,
+                          String tipoTarjeta, float limiteCredito, float saldoActual, String numero) {
+        super(nombre, descripcion, montoOriginal, tipo, tasaInteres, fechaInicio);
         this.tipoTarjeta = tipoTarjeta;
         this.limiteCredito = limiteCredito;
         this.saldoActual = saldoActual;
-        this.tasaInteres = tasaInteres;
         this.numero = numero;
         this.creditoUsado = calcularCreditoUsado();
     }
@@ -69,4 +72,41 @@ public class TarjetaCredito {
     public float getCreditoUsado() {
         return creditoUsado;
     }
+
+    @Override
+    protected float calcularValorActual() throws IOException {
+        return 0;
+    }
+
+    @Override
+    protected StringBuilder obtenerInformacionSubclase() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Tipo de Tarjeta: ").append(tipoTarjeta).append("\n");
+        sb.append("Límite de Crédito: ").append(limiteCredito).append("\n");
+        sb.append("Saldo Actual: ").append(saldoActual).append("\n");
+        sb.append("Número: ").append(numero).append("\n");
+        sb.append("Crédito Usado: ").append(creditoUsado).append("\n");
+        return sb;
+    }
+
+    @Override
+    protected void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
+        // Implementación específica no necesaria para esta prueba
+    }
+
+    @Override
+    protected float calcularPromedioMensual() throws IOException {
+        return 0;
+    }
+
+    @Override
+    protected float calcularPromedioAnual() throws IOException {
+        return 0;
+    }
+
+    @Override
+    protected void actualizarInformacion() throws IOException {
+        // Implementación específica no necesaria para esta prueba
+    }
 }
+
