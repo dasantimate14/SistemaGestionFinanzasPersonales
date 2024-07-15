@@ -85,7 +85,7 @@ public class TarjetaCredito extends FinanceItem {
         sb.append("Límite de Crédito: ").append(limiteCredito).append("\n");
         sb.append("Saldo Actual: ").append(saldoActual).append("\n");
         sb.append("Número: ").append(numero).append("\n");
-        sb.append("Crédito Usado: ").append(creditoUsado).append("\n");
+        sb.append("Crédito Usado: " ).append(creditoUsado).append("\n");
         return sb;
     }
 
