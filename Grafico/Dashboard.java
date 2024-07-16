@@ -1,6 +1,8 @@
 package Grafico;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Dashboard extends JFrame {
     private JPanel DashboardPanel;
@@ -17,10 +19,19 @@ public class Dashboard extends JFrame {
     public Dashboard() {
         // Configuración de la ventana de inicio de sesión
         setSize(930, 920);
-        setTitle("Inicio de Sesión");
+        setTitle("Menu Principal");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setContentPane(DashboardPanel); // Asignamos el panel principal
+        setContentPane(DashboardPanel);
+
+        btnCuentaBancaria.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CuentaBancaria newframe = new CuentaBancaria();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
     }
 
     public void setVisible(boolean b) {
