@@ -64,7 +64,7 @@
               <text value="Nombre"/>
             </properties>
           </component>
-          <component id="bb3f0" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+          <component id="bb3f0" class="javax.swing.JTextField" binding="tfNombre">
             <constraints>
               <grid row="6" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -72,7 +72,7 @@
             </constraints>
             <properties/>
           </component>
-          <component id="9596" class="javax.swing.JPasswordField" binding="passwordField1" default-binding="true">
+          <component id="9596" class="javax.swing.JPasswordField" binding="tfContrasena">
             <constraints>
               <grid row="18" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -88,7 +88,7 @@
               <text value="Contraseña"/>
             </properties>
           </component>
-          <component id="8e5b6" class="javax.swing.JTextField" binding="textField4" default-binding="true">
+          <component id="8e5b6" class="javax.swing.JTextField" binding="tfCedula">
             <constraints>
               <grid row="15" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -106,7 +106,7 @@
               <text value="Cedula"/>
             </properties>
           </component>
-          <component id="2a991" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+          <component id="2a991" class="javax.swing.JTextField" binding="tfCorreo">
             <constraints>
               <grid row="12" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -122,7 +122,7 @@
               <text value="Correo"/>
             </properties>
           </component>
-          <component id="e7751" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+          <component id="e7751" class="javax.swing.JTextField" binding="tfApellido">
             <constraints>
               <grid row="9" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>

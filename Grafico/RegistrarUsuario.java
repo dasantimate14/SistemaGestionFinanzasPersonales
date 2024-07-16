@@ -6,11 +6,11 @@ import java.awt.event.ActionListener;
 
 public class RegistrarUsuario extends JFrame {
     private JPanel RegistrarPanel;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JTextField textField3;
-    private JTextField textField4;
-    private JPasswordField passwordField1;
+    private JTextField tfNombre;
+    private JTextField tfApellido;
+    private JTextField tfCorreo;
+    private JTextField tfCedula;
+    private JPasswordField tfContrasena;
     private JButton BtnEnviar;
     private JButton BtnLogin;
 
@@ -21,7 +21,7 @@ public class RegistrarUsuario extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        //Acción para que se abra "iniciar sesión" al presionar
+        // Acción para que se abra "iniciar sesión" al presionar si ya se tiene una cuenta
         BtnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -30,10 +30,18 @@ public class RegistrarUsuario extends JFrame {
                 dispose();
             }
         });
-    }
 
-    public void setVisible(boolean b) {
-        super.setVisible(b);
+        // Acción para que se redirija a la interfaz de inicio de sesión
+        // Se debe almacenar los datos ingresados en la base de datos aquí
+        BtnEnviar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                guardarUsuario();
+                InicioSesion newframe = new InicioSesion();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -44,6 +52,25 @@ public class RegistrarUsuario extends JFrame {
                 frame.setVisible(true);
             }
         });
+    }
 
+    private void guardarUsuario() {
+        String nombre = this.tfNombre.getText();
+        String apellido = this.tfApellido.getText();
+        String correo = this.tfCorreo.getText();
+        String cedula = this.tfCedula.getText();
+        String contrasena = new String(this.tfContrasena.getPassword());
+
+        // Aquí deberías agregar la lógica para guardar los datos en la base de datos.
+
+
+        JOptionPane.showMessageDialog(this, "Información guardada correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+        // Limpiar los campos
+        this.tfNombre.setText("");
+        this.tfApellido.setText("");
+        this.tfCedula.setText("");
+        this.tfContrasena.setText("");
+        this.tfCorreo.setText("");
     }
 }
