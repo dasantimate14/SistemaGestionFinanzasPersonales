@@ -1,6 +1,8 @@
 package Grafico;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class RegistrarUsuario extends JFrame {
     private JPanel RegistrarPanel;
@@ -18,6 +20,16 @@ public class RegistrarUsuario extends JFrame {
         setSize(930, 920);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        //Acción para que se abra "iniciar sesión" al presionar
+        BtnLogin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                InicioSesion newframe = new InicioSesion();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
     }
 
     public void setVisible(boolean b) {
@@ -32,5 +44,6 @@ public class RegistrarUsuario extends JFrame {
                 frame.setVisible(true);
             }
         });
+
     }
 }

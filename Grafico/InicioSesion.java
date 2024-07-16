@@ -29,17 +29,19 @@ public class InicioSesion extends JFrame {
         btnIniciarSesion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //Aquí se agrega el método para que se entrelace al dashboard (página principal)
+                Dashboard newframe = new Dashboard();
+                newframe.setVisible(true);
+                dispose();
             }
         });
 
-        // Acción para el botón "Registrarse"
+        // Acción para que se abra "Registrar Usuarios" al tocar el botón registrarse
         btnRegistrarse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 RegistrarUsuario newframe = new RegistrarUsuario();
                 newframe.setVisible(true);
-                dispose(); // Cierra la ventana actual de Inicio de Sesión
+                dispose();
             }
         });
 
