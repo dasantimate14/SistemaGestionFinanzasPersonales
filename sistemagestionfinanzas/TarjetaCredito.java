@@ -2,6 +2,8 @@ package sistemagestionfinanzas;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TarjetaCredito extends FinanceItem {
     private String tipoTarjeta;
@@ -9,6 +11,9 @@ public class TarjetaCredito extends FinanceItem {
     private float saldoActual;
     private String numero;
     private float creditoUsado;
+    private CuentaBancaria cuentaBancaria;
+
+    private static List<TarjetaCredito> instanciasTarjetas = new ArrayList<>();
 
     // Constructor
     public TarjetaCredito(String nombre, String descripcion, float montoOriginal, String tipo, float tasaInteres, LocalDate fechaInicio,
@@ -19,6 +24,7 @@ public class TarjetaCredito extends FinanceItem {
         this.saldoActual = saldoActual;
         this.numero = numero;
         this.creditoUsado = calcularCreditoUsado();
+        instanciasTarjetas.add(this);
     }
 
     // Métodos para calcular el crédito usado
@@ -73,6 +79,26 @@ public class TarjetaCredito extends FinanceItem {
         return creditoUsado;
     }
 
+    // Método para calcular el porcentaje de representación
+    public void calcularPorcentajeRepresentacionTarjeta() {
+        float totalTarjetas = 0;
+        for (TarjetaCredito tarjeta : instanciasTarjetas) {
+            totalTarjetas += tarjeta.getSaldoActual();
+        }
+        float porcentaje = (getSaldoActual() / totalTarjetas) * 100;
+        System.out.println("Porcentaje de Representación: " + porcentaje + "%");
+    }
+
+    // Método para obtener la cantidad de instancias
+    public static int obtenerCantidadInstancias() {
+        return instanciasTarjetas.size();
+    }
+
+    // Método para obtener las instancias de la clase
+    public static List<TarjetaCredito> obtenerInstancias() {
+        return new ArrayList<>(instanciasTarjetas);
+    }
+
     @Override
     protected float calcularValorActual() throws IOException {
         return 0;
@@ -85,7 +111,7 @@ public class TarjetaCredito extends FinanceItem {
         sb.append("Límite de Crédito: ").append(limiteCredito).append("\n");
         sb.append("Saldo Actual: ").append(saldoActual).append("\n");
         sb.append("Número: ").append(numero).append("\n");
-        sb.append("Crédito Usado: " ).append(creditoUsado).append("\n");
+        sb.append("Crédito Usado: ").append(creditoUsado).append("\n");
         return sb;
     }
 
