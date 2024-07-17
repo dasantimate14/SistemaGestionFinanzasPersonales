@@ -15,13 +15,18 @@ public class Ingreso extends FinanceItem{
     private static List<Ingreso> instanciasIngresos;
 
     //Constructor
-    public Ingreso(String nombre, String  descripcion, float montoOriginal, String tipo, float tasaInteres, LocalDate fechaInicio, String fuente, CuentaBancaria cuentaBancaria, int frencuencia) {
-        super(nombre, descripcion, montoOriginal, tipo, tasaInteres, fechaInicio);
+    public Ingreso(String nombre, String  descripcion, float montoOriginal, LocalDate fechaInicio, String fuente, CuentaBancaria cuentaBancaria, int frencuencia) {
+        super(nombre, descripcion, montoOriginal, "Activo", fechaInicio);
         this.fuente = fuente;
         this.cuentaBancaria = cuentaBancaria;
         this.frencuencia = frencuencia;
         instanciasIngresos.add(this);
         cantidadInstancias ++;
+    }
+    //Método Constructor para objetos sin frecuencia recurrente de deposito
+    public Ingreso(String nombre, String  descripcion, float montoOriginal,
+                   LocalDate fechaInicio, String fuente, CuentaBancaria cuentaBancaria){
+        this(nombre, descripcion, montoOriginal, fechaInicio, fuente, cuentaBancaria, 0);
     }
 
     //Metodos get y set
@@ -65,6 +70,13 @@ public class Ingreso extends FinanceItem{
 
     @Override
     protected void actualizarInformacion() throws IOException {
+        if(getFrencuencia() != 0){
+
+        }
+
+
 
     }
+
+
 }
