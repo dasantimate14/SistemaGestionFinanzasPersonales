@@ -26,7 +26,7 @@ public class Ingreso extends FinanceItem{
 
     //Metodos get y set
     public String getFuente(){ return fuente;}
-    public CuentaBancaria getCuenta(){return cuentaBancaria;}
+    public CuentaBancaria getCuentaBancaria(){return cuentaBancaria;}
     public int getFrencuencia(){return frencuencia;}
 
     public void setFuente(String fuente){this.fuente = fuente;}
