@@ -22,16 +22,16 @@ public class Cliente {
     }
 
     // Métodos getter y setter
-    public void setNombre(String nuevoNombre) {
-        this.nombre = nuevoNombre;
+    public void setNombre(String nuevo_nombre) {
+        this.nombre = nuevo_nombre;
     }
 
-    public void setEmail(String nuevoEmail) {
-        this.email = nuevoEmail;
+    public void setEmail(String nuevo_email) {
+        this.email = nuevo_email;
     }
 
-    public void setPassword(String nuevaPassword) {
-        this.password = nuevaPassword;
+    public void setPassword(String nueva_password) {
+        this.password = nueva_password;
     }
 
     public String getNombre() {
@@ -50,8 +50,8 @@ public class Cliente {
         return this.id;
     }
 
-    public void setId(String nuevoId) {
-        this.id = nuevoId;
+    public void setId(String nuevo_id) {
+        this.id = nuevo_id;
     }
 
     // Métodos relacionados con la gestión de activos y pasivos
@@ -63,16 +63,16 @@ public class Cliente {
         // Lógica para obtener y mostrar pasivos
     }
 
-    public void agregarFinanceItem(FinanceItem item, boolean esActivo) {
-        if (esActivo) {
+    public void agregarFinanceItem(FinanceItem item, boolean es_activo) {
+        if (es_activo) {
             this.activos.add(item);
         } else {
             this.pasivos.add(item);
         }
     }
 
-    public void eliminarFinanceItem(FinanceItem item, boolean esActivo) {
-        if (esActivo) {
+    public void eliminarFinanceItem(FinanceItem item, boolean es_activo) {
+        if (es_activo) {
             this.activos.remove(item);
         } else {
             this.pasivos.remove(item);
@@ -100,10 +100,11 @@ public class Cliente {
         sb.append("Número de Pasivos: ").append(pasivos.size()).append("\n");
         return sb;
     }
+
     public void verBalance() {
-        double totalActivos = activos.stream().mapToDouble(item -> item.getMontoActual()).sum();
-        double totalPasivos = pasivos.stream().mapToDouble(item -> item.getMontoActual()).sum();
-        double balance = totalActivos - totalPasivos;
+        double total_activos = activos.stream().mapToDouble(item -> item.getMontoActual()).sum();
+        double total_pasivos = pasivos.stream().mapToDouble(item -> item.getMontoActual()).sum();
+        double balance = total_activos - total_pasivos;
         System.out.println("Balance total: " + balance);
     }
 }
