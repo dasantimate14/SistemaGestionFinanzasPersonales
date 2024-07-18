@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class Gastos {
     private JButton menuPrincipalButton;
-    private JButton button2;
+    private JButton cuentasBancariasButton;
     private JButton button3;
     private JButton button4;
     private JButton button5;
