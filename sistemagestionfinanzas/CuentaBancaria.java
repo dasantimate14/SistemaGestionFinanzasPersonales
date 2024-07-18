@@ -97,7 +97,7 @@ public class CuentaBancaria extends FinanceItem{
         float sumatoria_balances = 0;
         float promedio_anual;
         //Arreglo para guardar todos los balances mensuales
-        List<Float> balances_anuales = new ArrayList<>();
+        List<Float> balances_anuales;
         balances_anuales = calcularBalancesAnualesRecientes();
 
         //Se hace la sumatoria y se calcula el promedio
@@ -119,11 +119,11 @@ public class CuentaBancaria extends FinanceItem{
     public void registrarInteres(){
         //Calcular el balance hasta el primero del mes anterior
         float balance_mensual = getMontoOriginal();
-        float interes_mensual = 0;
+        float interes_mensual;
         LocalDate fecha_inicial;
         LocalDate fecha_actual = LocalDate.now();
         String consulta = "SELECT MAX(fechaInicio) AS fecha_mas_reciente FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND nombre = 'Interes'";
-        ResultSet rs = null;
+        ResultSet rs;
         LocalDate ultima_fecha_interes = null;
 
         //Se realiza la consulta a la base de datos
@@ -208,7 +208,7 @@ public class CuentaBancaria extends FinanceItem{
         Ingreso ingreso = new Ingreso("Interes", "Interes mensual generado por esta cuenta", interes_mensual, fecha_deposito, getBanco(), this);
 
         //Arreglo con los parametros de la consulta
-        String[] parametros = new String[]{ingreso.getNombre(), ingreso.getDescripcion(), String.valueOf(ingreso.getMontoOriginal()), String.valueOf(getFechaInicio()), ingreso.getFuente(), getIdUsuario(), getId()};;
+        String[] parametros = new String[]{ingreso.getNombre(), ingreso.getDescripcion(), String.valueOf(ingreso.getMontoOriginal()), String.valueOf(getFechaInicio()), ingreso.getFuente(), getIdUsuario(), getId()};
 
         //Registro en la base de datos
         try{
@@ -347,7 +347,7 @@ public class CuentaBancaria extends FinanceItem{
         String consulta_retiros = "SELECT SUM(montoOriginal) AS retiro_total FROM gastos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + java.sql.Date.valueOf(fecha_inicial) + "' AND DATE_ADD('" + java.sql.Date.valueOf(fecha_inicial) + "', INTERVAL 1 YEAR)";
         float ingreso_total = 0;
         float retiro_total = 0;
-        float balance_anual = 0;
+        float balance_anual;
 
         //Se realizan las consultas a las tablas ingresos y retiros para obtener las respectivas sumatorias y calcular el balance
         BaseDeDatos.establecerConexion();
@@ -426,5 +426,17 @@ public class CuentaBancaria extends FinanceItem{
         }
         return balances_anuales;
     }
+
+    //Metodo para encontrar el valor de esta cuenta bancaria dentro de todas las cuentas bancarias
+    public void calcularPorcentajeRepresentacionCuenta(){
+        float total_cuentas = 0;
+        float porcentaje_representacion = 0;
+        for(CuentaBancaria cuenta : intsancias_cuentas_bancarias){
+            total_cuentas += cuenta.getMontoActual();
+        }
+        porcentaje_representacion = (getMontoActual() / total_cuentas) * 100;
+        System.out.println("El porcentaje representacion es " + porcentaje_representacion + "% con un valor de " + getMontoActual());
+    }
+
 
 }
