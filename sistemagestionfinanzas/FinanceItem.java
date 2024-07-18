@@ -67,12 +67,12 @@ public abstract class FinanceItem {
     protected abstract float calcularValorActual() throws IOException;
 
     protected float calcularGanaciaPerdida() throws IOException {
-        setGanaciaPerdida(calcularValorActual() - montoOriginal);
+        setGanaciaPerdida(redonderCantidad(calcularValorActual() - montoOriginal));
         return getGanaciaPerdida();
     }
 
     protected float calcularPorcentajeGananciaPerdida() throws IOException {
-        return (calcularGanaciaPerdida()/ montoOriginal) * 100;
+        return redonderCantidad((calcularGanaciaPerdida()/ montoOriginal) * 100);
     }
 
     //Metodo para imprimir los atributos de la clase
