@@ -328,7 +328,7 @@ public class CuentaBancaria extends FinanceItem{
         try {
             BaseDeDatos.establecerConexion();
             ResultSet rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
-            if(rs != null){
+            if(rs.next()){
                 interes_acumulado = rs.getFloat("interes_total");
                 rs.close();
             }

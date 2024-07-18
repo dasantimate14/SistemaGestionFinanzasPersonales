@@ -85,7 +85,7 @@ public class Ingreso extends FinanceItem{
             try{
                 BaseDeDatos.establecerConexion();
                 rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
-                if(rs != null){
+                if(rs.next()){
                     fecha_inicio = LocalDate.parse(rs.getString("fecha_mas_reciente"));
                 }
                 rs.close();
@@ -209,7 +209,7 @@ public class Ingreso extends FinanceItem{
                 ResultSet rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
 
                 //Analisis del resultset y guardado del resultado en el array list
-                if(rs != null){
+                if(rs.next()){
                     ingreso_mensual = rs.getFloat("ingreso_mensual");
                     ingresos_mensuales.add(ingreso_mensual);
                     fecha_inicial = fecha_inicial.plusMonths(1);
@@ -238,7 +238,7 @@ public class Ingreso extends FinanceItem{
                 ResultSet rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
 
                 //Analisis del resultset y guardado del resultado en el array list
-                if(rs != null){
+                if(rs.next()){
                     ingreso_anual = rs.getFloat("ingreso_anual");
                     ingresos_anuales.add(ingreso_anual);
                     fecha_inicial = fecha_inicial.plusYears(1);
