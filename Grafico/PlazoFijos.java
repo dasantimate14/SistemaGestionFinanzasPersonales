@@ -7,10 +7,11 @@ public class PlazoFijos {
     private JButton menuPrincipalButton;
     private JButton cuentasBancariasButton;
     private JButton plazoFijosButton;
-    private JButton ingresosButton;
+    private JButton ingresosYGastosButton;
     private JButton stocksButton;
     private JButton tarjetasDeCreditosButton;
     private JButton prestamosButton;
     private JButton gastosButton;
     private JButton proyeccionesButton;
+    private JButton agregarPlazoFijoButton;
 }

@@ -87,7 +87,9 @@
             <preferred-size width="83" height="34"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <model/>
+        </properties>
       </component>
       <component id="bc7f4" class="javax.swing.JList" binding="list1" default-binding="true">
         <constraints>

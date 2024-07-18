@@ -2,7 +2,7 @@ package Grafico;
 
 import javax.swing.*;
 
-public class Ingreso {
+public class IngresoYGastos {
     private JButton menuPrincipalButton;
     private JButton button2;
     private JButton button3;

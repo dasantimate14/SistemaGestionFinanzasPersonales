@@ -13,7 +13,6 @@ public class Dashboard extends JFrame {
     private JButton btnStocks;
     private JButton btnTarjetas;
     private JButton prestamosButton;
-    private JButton btnGastos;
     private JButton btnProyecciones;
 
     public Dashboard() {
