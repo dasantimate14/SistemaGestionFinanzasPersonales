@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
+
 public class Ingreso extends FinanceItem{
     //Declaracion de atributos
     private String fuente;
@@ -133,6 +134,33 @@ public class Ingreso extends FinanceItem{
         //Calcular porcentaje representación
         porcentaje_representacion = (float) (sumatoria_ingreso/ingresos_totales)*100;
         System.out.println("El porcentaje de representacion de "+ nombre + " es " + porcentaje_representacion +" con un total de " + sumatoria_ingreso);
+    }
+
+    //Método para calcular el promedio mensual de todos los ingresos
+    public static float calcularPromedioMensualIngresos(String idUsuario){
+        String consulta = "SELECT AVG(promedio_mensual) AS promedio_mensual_total " +
+                "FROM (SELECT YEAR(fechaInicio) AS año, MONTH(fechaInicio) AS mes, AVG(montoOriginal) AS promedio_mensual " +
+                "FROM ingresos WHERE idUsuario = ? " +
+                "GROUP BY YEAR(fechaInicio), MONTH(fechaInicio)) AS promedios_mensuales";
+
+        float promedio_mensual_total = 0;
+        try{
+            BaseDeDatos.establecerConexion();
+            //Parametro de la consulta
+            String[] parametros = {idUsuario};
+            ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
+
+            //Procesar el resultado de la consulta
+            if(rs.next()){
+                promedio_mensual_total = rs.getFloat("promedio_mensual_total");
+            }
+        }catch (SQLException e) {
+            System.out.println("Error al calcular el promedio mensual de los ingresos: " + e.getMessage());
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+        return promedio_mensual_total;
+
     }
 
 
