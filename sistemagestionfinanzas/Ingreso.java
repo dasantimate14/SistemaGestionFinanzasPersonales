@@ -156,6 +156,7 @@ public class Ingreso extends FinanceItem{
             if(rs.next()){
                 promedio_mensual_total = rs.getFloat("promedio_mensual_total");
             }
+            rs.close();
         }catch (SQLException e) {
             System.out.println("Error al calcular el promedio mensual de los ingresos: " + e.getMessage());
         } finally {
@@ -183,6 +184,7 @@ public class Ingreso extends FinanceItem{
             if (rs.next()) {
                 promedio_anual_total = rs.getFloat("promedio_anual_total");
             }
+            rs.close();
         } catch (SQLException e) {
             System.out.println("Error al calcular el promedio anual de los ingresos: " + e.getMessage());
         } finally {
@@ -210,6 +212,7 @@ public class Ingreso extends FinanceItem{
                     ingreso_mensual = rs.getFloat("ingreso_mensual");
                     ingresos_mensuales.add(ingreso_mensual);
                     fechaInicial = fechaInicial.plusMonths(1);
+                    rs.close();
                 }
             } catch (SQLException e){
                 e.printStackTrace();
@@ -238,6 +241,7 @@ public class Ingreso extends FinanceItem{
                     ingreso_anual = rs.getFloat("ingreso_anual");
                     ingresos_anuales.add(ingreso_anual);
                     fechaInicial = fechaInicial.plusYears(1);
+                    rs.close();
                 }
             } catch (SQLException e){
                 e.printStackTrace();
