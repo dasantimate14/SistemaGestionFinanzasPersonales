@@ -1,5 +1,6 @@
 package sistemagestionfinanzas;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class PlazoFijo {
@@ -56,5 +57,28 @@ public class PlazoFijo {
         float monto_original = cuenta.getMontoOriginal();
         float interes_acumulado = calcularInteresAcumulado();
         return monto_original + interes_acumulado;
+    }
+
+    // Método para guardar el plazo fijo en la base de datos
+    public void guardarPlazoFijoEnBaseDatos() {
+        String consultaRegistro = "INSERT INTO plazos_fijos (plazo, fecha_final, id_cuenta) VALUES (?, ?, ?)";
+
+        String[] parametros = new String[]{
+                String.valueOf(getPlazo()),
+                String.valueOf(getFechaFinal()),
+                cuenta.getId()
+        };
+
+        try {
+            BaseDeDatos.establecerConexion();
+            boolean registroExitoso = BaseDeDatos.ejecutarActualizacion(consultaRegistro, parametros);
+            if (registroExitoso) {
+                System.out.println("Registro exitoso del plazo fijo.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
     }
 }
