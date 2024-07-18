@@ -13,12 +13,20 @@ public class PlazoFijo {
     private String id;
 
     private static List<PlazoFijo> instanciasPlazosFijos = new ArrayList<>();
+    private static List<CuentaBancaria> instanciasCuentasBancarias = new ArrayList<>(); // Lista de cuentas bancarias
 
     public PlazoFijo(int plazo, CuentaBancaria cuenta) {
         this.plazo = plazo;
         this.cuenta = cuenta;
         this.fecha_final = LocalDate.now().plusMonths(plazo);
         instanciasPlazosFijos.add(this);
+        agregarCuentaBancaria(cuenta); // Agregamos la cuenta a la lista de instancias
+    }
+
+    private void agregarCuentaBancaria(CuentaBancaria cuenta) {
+        if (!instanciasCuentasBancarias.contains(cuenta)) {
+            instanciasCuentasBancarias.add(cuenta);
+        }
     }
 
     public int getPlazo() {
@@ -99,10 +107,7 @@ public class PlazoFijo {
                 LocalDate fecha_final = rs.getDate("fecha_final").toLocalDate();
                 String id_cuenta = rs.getString("id_cuenta");
 
-                // Aquí deberías tener una forma de obtener la instancia de CuentaBancaria
-                // que corresponde a id_cuenta. Si no puedes hacerlo directamente,
-                // necesitarás proporcionar la instancia de alguna otra forma.
-
+                // Obtener la instancia de CuentaBancaria correspondiente a id_cuenta
                 CuentaBancaria cuenta_asociada = obtenerCuentaPorId(id_cuenta);
 
                 if (cuenta_asociada != null) {
@@ -121,10 +126,12 @@ public class PlazoFijo {
     }
 
     private static CuentaBancaria obtenerCuentaPorId(String id) {
-        // Implementa aquí la lógica para obtener la cuenta bancaria por ID.
-        // Dependiendo de tu contexto, esto puede implicar una consulta a la base de datos,
-        // o tener una forma de mapear IDs a instancias de CuentaBancaria.
-        return null; // Cambia esto por la implementación real
+        for (CuentaBancaria cuenta : instanciasCuentasBancarias) {
+            if (cuenta.getId().equals(id)) {
+                return cuenta;
+            }
+        }
+        return null;
     }
 
     // Métodos para obtener y establecer el ID
@@ -146,3 +153,4 @@ public class PlazoFijo {
         return null;
     }
 }
+
