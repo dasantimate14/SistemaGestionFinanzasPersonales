@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -188,6 +189,34 @@ public class Ingreso extends FinanceItem{
             BaseDeDatos.cerrarConexion();
         }
         return promedio_anual_total;
+    }
+
+    //Metodo para obtner los ingresos totales por mes de los ultimos doce meses
+    public List<Float> obtenerIngresosUltimosMeses(){
+        List<Float> ingresos_mensuales = new ArrayList<>();
+        LocalDate fechaActual = LocalDate.now().withDayOfMonth(1);
+        LocalDate fechaInicial = fechaActual.minusYears(1);
+        float ingreso_mensual = 0;
+
+        //Consulta que seleciona todos los datos entre un rango de fecha que en este caso va de un mes a otro
+        String consulta = "SELECT SUM(montoOriginal) AS ingreso_mensual FROM ingresos WHERE idUsuario = '" + cuenta_bancaria.getIdUsuario() + "' AND idCuentaBancaria = '" + cuenta_bancaria.getId() + "' AND fechaInicio BETWEEN '" + java.sql.Date.valueOf(fechaInicial)  + "' AND DATE_ADD('" + java.sql.Date.valueOf(fechaInicial) + "', INTERVAL 1 MONTH)";
+        while(fechaInicial.isBefore(fechaActual)){
+            try{
+                BaseDeDatos.establecerConexion();
+                ResultSet rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
+
+                //Analisis del resultset y guardado del resultado en el array list
+                if(rs != null){
+                    ingreso_mensual = rs.getFloat("ingreso_mensual");
+                    ingresos_mensuales.add(ingreso_mensual);
+                    fechaInicial = fechaInicial.plusMonths(1);
+                }
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+        BaseDeDatos.cerrarConexion();
+        return ingresos_mensuales;
     }
 
 
