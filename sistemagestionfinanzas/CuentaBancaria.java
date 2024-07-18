@@ -10,15 +10,15 @@ import java.util.List;
 public class CuentaBancaria extends FinanceItem{
     //Declaración de atributos
     private String banco;
-    private int numero_cuenta;
+    private String numero_cuenta;
     private String tipo_cuenta;
     private String id_usuario;
-    private static int cantidad_instancias = 0;
-    private static List<CuentaBancaria> intsancias_cuentas_bancarias = new ArrayList<>();
+    static int cantidad_instancias = 0;
+    static List<CuentaBancaria> intsancias_cuentas_bancarias = new ArrayList<>();
 
     //Constructor
-    public CuentaBancaria(String nombre, String  descripcion, float montoOriginal, String tipo, float tasaInteres, LocalDate fechaInicio, String banco, int numero_cuenta, String tipo_cuenta, String id_usuario) {
-        super(nombre, descripcion, montoOriginal, tipo, tasaInteres, fechaInicio);
+    public CuentaBancaria(String nombre, String  descripcion, float montoOriginal, float tasaInteres, LocalDate fechaInicio, String banco, String numero_cuenta, String tipo_cuenta, String id_usuario) {
+        super(nombre, descripcion, montoOriginal, "Activo", tasaInteres, fechaInicio);
         this.banco = banco;
         this.numero_cuenta = numero_cuenta;
         this.tipo_cuenta = tipo_cuenta;
@@ -30,11 +30,11 @@ public class CuentaBancaria extends FinanceItem{
 
     //Metodos get y set
     public String getBanco() {return this.banco;}
-    public int getNumeroCuenta() {return this.numero_cuenta;}
+    public String getNumeroCuenta() {return this.numero_cuenta;}
     public String getTipoCuenta() {return this.tipo_cuenta;}
     public String getIdUsuario() {return this.id_usuario;}
     public void setBanco(String banco) {this.banco = banco;}
-    public void setNumeroCuenta(int numero_cuenta) {this.numero_cuenta = numero_cuenta;}
+    public void setNumeroCuenta(String numero_cuenta) {this.numero_cuenta = numero_cuenta;}
     public void setTipoCuenta(String tipo_cuenta) {this.tipo_cuenta = tipo_cuenta;}
     public void setIdUsuario(String id_usuario) {this.id_usuario = id_usuario;}
 
@@ -215,7 +215,7 @@ public class CuentaBancaria extends FinanceItem{
             BaseDeDatos.establecerConexion();
             boolean registro_exitoso = BaseDeDatos.ejecutarActualizacion(consulta_registro, parametros);
             if (registro_exitoso){
-                System.out.println("Registro exitoso de ingreso." );
+                System.out.println("Registro exitoso de Interes." );
             }
         } catch (SQLException e){
             e.printStackTrace();
@@ -241,13 +241,13 @@ public class CuentaBancaria extends FinanceItem{
         //Se realizan las consultas a las tablas ingresos y retiros para obtener las respectivas sumatorias y calcular el balance
         BaseDeDatos.establecerConexion();
         ResultSet rs_ingreso = BaseDeDatos.realizarConsultaSelectInterna(consulta_ingreso);
-        if(rs_ingreso != null){
+        if(rs_ingreso.next()){
             ingreso_total = rs_ingreso.getFloat("ingreso_total");
             rs_ingreso.close();
         }
 
         ResultSet rs_retiro = BaseDeDatos.realizarConsultaSelectInterna(consulta_retiros);
-        if(rs_retiro != null){
+        if(rs_retiro.next()){
             retiro_total = rs_retiro.getFloat("retiro_total");
             rs_retiro.close();
         }
@@ -276,13 +276,13 @@ public class CuentaBancaria extends FinanceItem{
         //Se realizan las consultas a las tablas ingresos y retiros para obtener las respectivas sumatorias y calcular el balance
         BaseDeDatos.establecerConexion();
         ResultSet rs_ingreso = BaseDeDatos.realizarConsultaSelectInterna(consulta_ingreso);
-        if(rs_ingreso != null){
+        if(rs_ingreso.next()){
             ingreso_total = rs_ingreso.getFloat("ingreso_total");
             rs_ingreso.close();
         }
 
         ResultSet rs_retiro = BaseDeDatos.realizarConsultaSelectInterna(consulta_retiros);
-        if(rs_retiro != null){
+        if(rs_retiro.next()){
             retiro_total = rs_retiro.getFloat("retiro_total");
             rs_retiro.close();
         }
@@ -304,13 +304,13 @@ public class CuentaBancaria extends FinanceItem{
         //Se realizan las consultas a las tablas ingresos y retiros para obtener las respectivas sumatorias y calcular el balance
         BaseDeDatos.establecerConexion();
         ResultSet rs_ingreso = BaseDeDatos.realizarConsultaSelectInterna(consulta_ingreso);
-        if(rs_ingreso != null){
+        if(rs_ingreso.next()){
             ingreso_total = rs_ingreso.getFloat("ingreso_total");
             rs_ingreso.close();
         }
 
         ResultSet rs_retiro = BaseDeDatos.realizarConsultaSelectInterna(consutla_retiros);
-        if(rs_retiro != null){
+        if(rs_retiro.next()){
             retiro_total = rs_retiro.getFloat("retiro_total");
             rs_retiro.close();
         }
@@ -352,13 +352,13 @@ public class CuentaBancaria extends FinanceItem{
         //Se realizan las consultas a las tablas ingresos y retiros para obtener las respectivas sumatorias y calcular el balance
         BaseDeDatos.establecerConexion();
         ResultSet rs_ingreso = BaseDeDatos.realizarConsultaSelectInterna(consulta_ingreso);
-        if(rs_ingreso != null){
+        if(rs_ingreso.next()){
             ingreso_total = rs_ingreso.getFloat("ingreso_total");
             rs_ingreso.close();
         }
 
         ResultSet rs_retiro = BaseDeDatos.realizarConsultaSelectInterna(consulta_retiros);
-        if(rs_retiro != null){
+        if(rs_retiro.next()){
             retiro_total = rs_retiro.getFloat("retiro_total");
             rs_retiro.close();
         }
@@ -441,17 +441,17 @@ public class CuentaBancaria extends FinanceItem{
     //Metodo para guardar interes en la base de datos
     public void guardarCuentaBancariaBaseDatos(){
         //Consulta para guardar el objeto interes en la base de datos
-        String consulta_registro = "INSERT INTO cuentas_bancarias (id, nombre, descripcion, montoOriginal,  fechaInicio, tasaInteres, banco, numeroCuenta, tipoCuenta, idUsuario) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String consulta_registro = "INSERT INTO cuentas_bancarias (id, nombre, descripcion, montoOriginal, fechaInicio, tasaInteres, banco, numeroCuenta, tipoCuenta, idUsuario) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         //Arreglo con los parametros de la consulta
-        String[] parametros = new String[]{getNombre(), getDescripcion(), String.valueOf(getMontoOriginal()), String.valueOf(getFechaInicio()), String.valueOf(getTasaInteres()), getBanco(), String.valueOf(getNumeroCuenta()), getTipoCuenta(), getIdUsuario()};
+        String[] parametros = {getNombre(), getDescripcion(), String.valueOf(getMontoOriginal()), String.valueOf(getFechaInicio()), String.valueOf(getTasaInteres()), getBanco(), String.valueOf(getNumeroCuenta()), getTipoCuenta(), getIdUsuario()};
 
         //Registro en la base de datos
         try{
             BaseDeDatos.establecerConexion();
             boolean registro_exitoso = BaseDeDatos.ejecutarActualizacion(consulta_registro, parametros);
             if (registro_exitoso){
-                System.out.println("Registro exitoso de ingreso." );
+                System.out.println("Registro exitoso de Cuenta Bancaria." );
             }
         } catch (SQLException e){
             e.printStackTrace();
