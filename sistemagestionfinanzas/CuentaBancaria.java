@@ -203,8 +203,8 @@ public class CuentaBancaria extends FinanceItem{
 
     //Metodo para obtener el balance para un mes en especifico
     public float calcularBalanceMensual(String fechaInicial, float balanceAnterior) throws SQLException {
-        String consultaIngreso = "SELECT SUM(montoOriginal) AS ingreso_total FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + fechaInicial + "' AND DATE_ADD('" + fechaInicial + "', INTERVAL 1 MONTH)";
-        String consultaRetiros = "SELECT SUM(montoOriginal) AS retiro_total FROM gastos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + fechaInicial + "' AND DATE_ADD('" + fechaInicial + "', INTERVAL 1 MONTH)";
+        String consultaIngreso = "SELECT SUM(montoOriginal) AS ingreso_total FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + java.sql.Date.valueOf(fechaInicial) + "' AND DATE_ADD('" + java.sql.Date.valueOf(fechaInicial) + "', INTERVAL 1 MONTH)";
+        String consultaRetiros = "SELECT SUM(montoOriginal) AS retiro_total FROM gastos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + java.sql.Date.valueOf(fechaInicial) + "' AND DATE_ADD('" + java.sql.Date.valueOf(fechaInicial) + "', INTERVAL 1 MONTH)";
         float ingrestoTotal = 0;
         float retiroTotal = 0;
         float balanceMensual;
@@ -267,8 +267,8 @@ public class CuentaBancaria extends FinanceItem{
     //Metodo para calcular el balance previo a la fecha del parametro
     public float calcularBalancePrevio(String fechaFinal) throws SQLException {
         float balanceMesAnterior;
-        String consultaIngreso = "SELECT SUM(montoOriginal) AS ingreso_total FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + getFechaInicio() + "' AND '" + fechaFinal +"'";
-        String consultaRetiros = "SELECT SUM(montoOriginal) AS retiro_total FROM gastos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + getFechaInicio() + "' AND '" + fechaFinal +"'";
+        String consultaIngreso = "SELECT SUM(montoOriginal) AS ingreso_total FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + java.sql.Date.valueOf(getFechaInicio()) + "' AND '" + java.sql.Date.valueOf(fechaFinal) +"'";
+        String consultaRetiros = "SELECT SUM(montoOriginal) AS retiro_total FROM gastos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + java.sql.Date.valueOf(getFechaInicio()) + "' AND '" + java.sql.Date.valueOf(fechaFinal) +"'";
         float ingrestoTotal = 0;
         float retiroTotal = 0;
 
@@ -314,8 +314,8 @@ public class CuentaBancaria extends FinanceItem{
 
     //Metodo para calcular el balance de un año específico
     public float calcularBalanceAnual(String fechaInicial, float balanceAnterior) throws SQLException {
-        String consultaIngreso = "SELECT SUM(montoOriginal) AS ingreso_total FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + fechaInicial + "' AND DATE_ADD('" + fechaInicial + "', INTERVAL 1 YEAR)";
-        String consultaRetiros = "SELECT SUM(montoOriginal) AS retiro_total FROM gastos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + fechaInicial + "' AND DATE_ADD('" + fechaInicial + "', INTERVAL 1 YEAR)";
+        String consultaIngreso = "SELECT SUM(montoOriginal) AS ingreso_total FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + java.sql.Date.valueOf(fechaInicial) + "' AND DATE_ADD('" + java.sql.Date.valueOf(fechaInicial) + "', INTERVAL 1 YEAR)";
+        String consultaRetiros = "SELECT SUM(montoOriginal) AS retiro_total FROM gastos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND fechaInicio BETWEEN '" + java.sql.Date.valueOf(fechaInicial) + "' AND DATE_ADD('" + java.sql.Date.valueOf(fechaInicial) + "', INTERVAL 1 YEAR)";
         float ingrestoTotal = 0;
         float retiroTotal = 0;
         float balanceAnual = 0;
