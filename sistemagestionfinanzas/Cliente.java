@@ -1,6 +1,8 @@
 package sistemagestionfinanzas;
 
 import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class Cliente {
@@ -10,6 +12,9 @@ public class Cliente {
     private String id;
     private ArrayList<FinanceItem> activos;
     private ArrayList<FinanceItem> pasivos;
+
+    // Lista estática para almacenar todos los clientes
+    public static ArrayList<Cliente> instancias_clientes = new ArrayList<>();
 
     // Constructor
     public Cliente(String nombre, String email, String password) {
@@ -126,5 +131,42 @@ public class Cliente {
         } finally {
             BaseDeDatos.cerrarConexion();
         }
+    }
+
+    // Método estático para cargar todos los clientes desde la base de datos
+    public static void cargarClientesDesdeBaseDeDatos() {
+        String consulta = "SELECT * FROM clientes";
+        try {
+            BaseDeDatos.establecerConexion();
+            ResultSet rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
+            while (rs.next()) {
+                // Leer cada uno de los campos del ResultSet
+                String id = rs.getString("id");
+                String nombre = rs.getString("nombre");
+                String email = rs.getString("email");
+                String password = rs.getString("password");
+
+                // Crear el objeto Cliente con los datos capturados
+                Cliente cliente = new Cliente(nombre, email, password);
+                cliente.setId(id);
+
+                // Agregar el cliente a la lista estática
+                instancias_clientes.add(cliente);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+    }
+
+    // Método para buscar un cliente por ID
+    public static Cliente buscarClientePorId(String idBuscado) {
+        for (Cliente cliente : instancias_clientes) {
+            if (cliente.getId().equals(idBuscado)) {
+                return cliente;
+            }
+        }
+        return null; // Si no se encuentra el cliente
     }
 }
