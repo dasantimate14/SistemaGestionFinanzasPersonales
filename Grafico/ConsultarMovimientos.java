@@ -5,6 +5,9 @@ import javax.swing.*;
 public class ConsultarMovimientos extends JFrame {
 
     private JPanel ConsultaMovPanel;
+    private JComboBox comboBox1;
+    private JComboBox comboBox2;
+    private JList list1;
 
     public ConsultarMovimientos(){
         // Configuración de la ventana
