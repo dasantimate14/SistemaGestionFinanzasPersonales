@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Grafico.IngresoYGastos">
-  <grid id="27dc6" binding="IngresoPanel" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="IngresoPanel" layout-manager="GridLayoutManager" row-count="36" column-count="23" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="758" height="633"/>
+      <xy x="20" y="20" width="1432" height="1010"/>
     </constraints>
     <properties>
       <preferredSize width="960" height="920"/>
     </properties>
     <border type="none"/>
     <children>
-      <grid id="458b6" layout-manager="GridLayoutManager" row-count="13" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="458b6" layout-manager="GridLayoutManager" row-count="12" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="1" column="0" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="35" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <background color="-16757148"/>
@@ -28,78 +28,70 @@
               <text value="Menu Principal"/>
             </properties>
           </component>
-          <component id="5a9c4" class="javax.swing.JButton" binding="button2" default-binding="true">
+          <component id="5a9c4" class="javax.swing.JButton" binding="cuentaBancariaButton" default-binding="true">
             <constraints>
               <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Button"/>
+              <text value="Cuenta Bancaria"/>
             </properties>
           </component>
-          <component id="7cd3f" class="javax.swing.JButton" binding="button3" default-binding="true">
+          <component id="7cd3f" class="javax.swing.JButton" binding="plazoFijosButton" default-binding="true">
             <constraints>
               <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Button"/>
+              <text value="Plazo Fijos"/>
             </properties>
           </component>
-          <component id="112f6" class="javax.swing.JButton" binding="button4" default-binding="true">
+          <component id="112f6" class="javax.swing.JButton" binding="ingresosYGastosButton" default-binding="true">
             <constraints>
               <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Button"/>
+              <text value="Ingresos y Gastos"/>
             </properties>
           </component>
-          <component id="e025f" class="javax.swing.JButton" binding="button5" default-binding="true">
+          <component id="e025f" class="javax.swing.JButton" binding="stocksButton" default-binding="true">
             <constraints>
               <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Button"/>
+              <text value="Stocks"/>
             </properties>
           </component>
-          <component id="56f0c" class="javax.swing.JButton" binding="button6" default-binding="true">
+          <component id="56f0c" class="javax.swing.JButton" binding="tarjetasDeCreditoButton" default-binding="true">
             <constraints>
               <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Button"/>
+              <text value="Tarjetas de Credito"/>
             </properties>
           </component>
-          <component id="3be6a" class="javax.swing.JButton" binding="button7" default-binding="true">
+          <component id="3be6a" class="javax.swing.JButton" binding="prestamosButton" default-binding="true">
             <constraints>
               <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Button"/>
+              <text value="Prestamos"/>
             </properties>
           </component>
-          <component id="9eb45" class="javax.swing.JButton" binding="button8" default-binding="true">
+          <component id="9eb45" class="javax.swing.JButton" binding="proyeccionesButton" default-binding="true">
             <constraints>
               <grid row="9" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Button"/>
-            </properties>
-          </component>
-          <component id="51874" class="javax.swing.JButton" binding="button9" default-binding="true">
-            <constraints>
-              <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Button"/>
+              <text value="Proyecciones"/>
             </properties>
           </component>
           <vspacer id="f4e9d">
             <constraints>
-              <grid row="12" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <grid row="11" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
           <vspacer id="2562f">
             <constraints>
-              <grid row="11" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
           <component id="7bbb7" class="javax.swing.JSeparator">
@@ -142,22 +134,320 @@
       </grid>
       <hspacer id="2518">
         <constraints>
-          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="35" column="20" row-span="1" col-span="3" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
       </hspacer>
+      <vspacer id="3a9bd">
+        <constraints>
+          <grid row="2" column="20" row-span="33" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
       <component id="17306" class="javax.swing.JLabel">
         <constraints>
-          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="1" row-span="1" col-span="20" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="Segoe UI Black" size="26"/>
+          <text value="Visualiza tus ingresos y gastos"/>
+        </properties>
+      </component>
+      <component id="9572d" class="javax.swing.JButton" binding="promedioMensualDeGastosButton" default-binding="true">
+        <constraints>
+          <grid row="2" column="21" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Promedio mensual de gastos"/>
+        </properties>
+      </component>
+      <component id="15ca3" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+        <constraints>
+          <grid row="3" column="21" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <vspacer id="ae66d">
+        <constraints>
+          <grid row="31" column="1" row-span="1" col-span="19" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
+      <component id="4addb" class="javax.swing.JComboBox" binding="cbtipoIngreso">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="19" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <model>
+            <item value="Selecciona una opción"/>
+            <item value="Ingreso"/>
+            <item value="Gastos"/>
+          </model>
+        </properties>
+      </component>
+      <component id="ddff8" class="javax.swing.JComboBox" binding="comboBox3" default-binding="true">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="19" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <model>
+            <item value="Escoge una fuente"/>
+          </model>
+        </properties>
+      </component>
+      <component id="16984" class="javax.swing.JButton" binding="btnBuscar">
+        <constraints>
+          <grid row="6" column="1" row-span="1" col-span="19" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Buscar"/>
+        </properties>
+      </component>
+      <component id="72ef6" class="javax.swing.JButton" binding="promedioMensualDeIngresosButton" default-binding="true">
+        <constraints>
+          <grid row="4" column="21" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="promedio mensual de Ingresos"/>
+        </properties>
+      </component>
+      <component id="aebdb" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+        <constraints>
+          <grid row="5" column="21" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="c1dd" class="javax.swing.JButton" default-binding="true">
+        <constraints>
+          <grid row="6" column="21" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Promedio anual de gastos"/>
+        </properties>
+      </component>
+      <component id="bb527" class="javax.swing.JButton" binding="agregarGastosButton" default-binding="true">
+        <constraints>
+          <grid row="19" column="9" row-span="1" col-span="11" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Agregar Gastos"/>
+        </properties>
+      </component>
+      <component id="d5a4b" class="javax.swing.JButton" binding="agregarIngresoButton" default-binding="true">
+        <constraints>
+          <grid row="19" column="1" row-span="1" col-span="7" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Agregar Ingreso"/>
+        </properties>
+      </component>
+      <vspacer id="3acf4">
+        <constraints>
+          <grid row="26" column="8" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
+      <component id="f9a79" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="20" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Fuente"/>
+        </properties>
+      </component>
+      <component id="d009b" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="20" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Fuente"/>
+        </properties>
+      </component>
+      <component id="88259" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+        <constraints>
+          <grid row="20" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="558e9" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="21" column="9" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Cuenta de Banco"/>
+        </properties>
+      </component>
+      <component id="d6617" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="21" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Cuenta de Banco"/>
+        </properties>
+      </component>
+      <component id="6fd" class="javax.swing.JComboBox" default-binding="true">
+        <constraints>
+          <grid row="21" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="85325" class="javax.swing.JComboBox" default-binding="true">
+        <constraints>
+          <grid row="20" column="11" row-span="1" col-span="8" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="25aa9" class="javax.swing.JComboBox" default-binding="true">
+        <constraints>
+          <grid row="21" column="11" row-span="1" col-span="8" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="700bd" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="22" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Frcuencia"/>
+        </properties>
+      </component>
+      <component id="6a007" class="javax.swing.JComboBox" default-binding="true">
+        <constraints>
+          <grid row="22" column="11" row-span="1" col-span="7" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="da7c8" class="javax.swing.JComboBox" binding="comboBox2" default-binding="true">
+        <constraints>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <model>
+            <item value="Mes"/>
+            <item value="Enero"/>
+            <item value="Febrero"/>
+            <item value="Marzo"/>
+            <item value="Abril"/>
+            <item value="Mayo"/>
+            <item value="Junio"/>
+            <item value="Julio"/>
+            <item value="Agosto"/>
+            <item value="Septiembre"/>
+            <item value="OCtubre"/>
+            <item value="Noviembre"/>
+            <item value="Diciembre"/>
+          </model>
+        </properties>
+      </component>
+      <component id="4eb94" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+        <constraints>
+          <grid row="7" column="21" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="32249" class="javax.swing.JTextField" default-binding="true">
+        <constraints>
+          <grid row="9" column="21" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="7d380" class="javax.swing.JButton" default-binding="true">
+        <constraints>
+          <grid row="8" column="21" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Promedio anual de Ingresos "/>
+        </properties>
+      </component>
+      <scrollpane id="82fe2">
+        <constraints>
+          <grid row="8" column="1" row-span="8" col-span="19" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="383f6" class="javax.swing.JList" binding="list1" default-binding="true">
+            <constraints/>
+            <properties/>
+          </component>
+        </children>
+      </scrollpane>
+      <component id="afc10" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="25" column="9" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Fecha"/>
+        </properties>
+      </component>
+      <grid id="35e33" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="25" column="12" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children/>
+      </grid>
+      <component id="d9322" class="javax.swing.JTextField" binding="textField4" default-binding="true">
+        <constraints>
+          <grid row="26" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="690a5" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="26" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Label"/>
         </properties>
       </component>
-      <vspacer id="3a9bd">
+      <component id="f2bdb" class="javax.swing.JButton" default-binding="true">
         <constraints>
-          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="26" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
-      </vspacer>
+        <properties>
+          <text value="Eliminar Ingreso"/>
+        </properties>
+      </component>
+      <component id="ef19d" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="22" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Frecuencia"/>
+        </properties>
+      </component>
+      <component id="7885f" class="javax.swing.JComboBox" default-binding="true">
+        <constraints>
+          <grid row="22" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="e67cb" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="23" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Fecha"/>
+        </properties>
+      </component>
+      <grid id="684b4" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="23" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children/>
+      </grid>
     </children>
   </grid>
 </form>

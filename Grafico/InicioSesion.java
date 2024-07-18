@@ -21,7 +21,7 @@ public class InicioSesion extends JFrame {
     private JLabel lbContrasena;
 
     public InicioSesion() {
-        // Configuración de la ventana de inicio de sesión
+        // Configuración de la ventana
         setSize(930, 920);
         setLocation(0, 0);
         setTitle("Inicio de Sesión");
