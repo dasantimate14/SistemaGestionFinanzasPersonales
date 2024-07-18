@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PlazoFijo {
     private int plazo;
@@ -17,7 +18,7 @@ public class PlazoFijo {
 
     public PlazoFijo(int plazo, CuentaBancaria cuenta) {
         this.plazo = plazo;
-        this.cuenta = cuenta;
+        this.cuenta = Objects.requireNonNull(cuenta, "La cuenta bancaria no puede ser nula");
         this.fecha_final = LocalDate.now().plusMonths(plazo);
         instanciasPlazosFijos.add(this);
         agregarCuentaBancaria(cuenta); // Agregamos la cuenta a la lista de instancias
@@ -51,7 +52,7 @@ public class PlazoFijo {
     }
 
     public void setCuenta(CuentaBancaria cuenta) {
-        this.cuenta = cuenta;
+        this.cuenta = Objects.requireNonNull(cuenta, "La cuenta bancaria no puede ser nula");
     }
 
     public void depositarInteres() {
@@ -152,5 +153,52 @@ public class PlazoFijo {
         }
         return null;
     }
+
+    // Método para cargar ingresos desde la base de datos
+    public static void cargarDatosDesdeBaseDatos(String idUsuario) {
+        cargarPlazosFijosDesdeBaseDatos(idUsuario);
+        cargarIngresosDesdeBaseDatos(idUsuario);
+    }
+
+    private static void cargarIngresosDesdeBaseDatos(String idUsuario) {
+        String consulta = "SELECT * FROM ingresos WHERE idUsuario = '" + idUsuario + "'";
+        try {
+            BaseDeDatos.establecerConexion();
+            ResultSet rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
+            while (rs.next()) {
+                // Leer cada uno de los campos en el ResultSet para manejar la información
+                String id = rs.getString("id");
+                String nombre = rs.getString("nombre");
+                String descripcion = rs.getString("descripcion");
+                float monto_original = rs.getFloat("montoOriginal");
+                LocalDate fecha_inicio = rs.getDate("fechaInicio").toLocalDate();
+                String fuente = rs.getString("fuente");
+                int frecuencia = rs.getInt("frecuencia");
+                String id_cuenta_bancaria = rs.getString("idCuentaBancaria");
+
+                CuentaBancaria cuenta_viculada = null;
+                for (CuentaBancaria cuenta : instanciasCuentasBancarias) {
+                    cuenta.obtenerInformacionCompleta();
+                    if (cuenta.getId().equals(id_cuenta_bancaria)) {
+                        cuenta_viculada = cuenta;
+                        break;
+                    }
+                }
+
+                if (cuenta_viculada == null) {
+                    System.out.println("No existe la cuenta con el ID: " + id_cuenta_bancaria);
+                } else {
+                    // Aquí podrías hacer algo con la información de ingreso, como agregarlo a una lista
+                    // Por ejemplo, podrías almacenar los ingresos en una lista o en otro tipo de estructura
+                    System.out.println("Ingreso cargado: " + nombre);
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+    }
 }
+
 
