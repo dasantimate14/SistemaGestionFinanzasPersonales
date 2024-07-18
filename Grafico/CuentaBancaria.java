@@ -15,6 +15,7 @@ public class CuentaBancaria extends JFrame {
     private JButton plazosFijosButton;
     private JButton cuentasBancariasButton;
     private JButton btnAgregarCuenta;
+    private JButton consultarMovimientosButton;
 
     public CuentaBancaria() {
         // Configuración de la ventana

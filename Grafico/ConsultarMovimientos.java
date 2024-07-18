@@ -8,6 +8,8 @@ public class ConsultarMovimientos extends JFrame {
     private JComboBox comboBox1;
     private JComboBox comboBox2;
     private JList list1;
+    private JTextField textField1;
+    private JButton buscarButton;
 
     public ConsultarMovimientos(){
         // Configuración de la ventana
