@@ -1,5 +1,6 @@
 package sistemagestionfinanzas;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Cliente {
@@ -100,10 +101,30 @@ public class Cliente {
         sb.append("Número de Pasivos: ").append(pasivos.size()).append("\n");
         return sb;
     }
+
     public void verBalance() {
         double totalActivos = activos.stream().mapToDouble(item -> item.getMontoActual()).sum();
         double totalPasivos = pasivos.stream().mapToDouble(item -> item.getMontoActual()).sum();
         double balance = totalActivos - totalPasivos;
         System.out.println("Balance total: " + balance);
+    }
+
+    // Método para guardar el cliente en la base de datos
+    public void guardarClienteEnBaseDatos() {
+        String consultaRegistro = "INSERT INTO clientes (id, nombre, email, password) VALUES (?, ?, ?, ?)";
+
+        String[] parametros = new String[]{getId(), getNombre(), getEmail(), getPassword()};
+
+        try {
+            BaseDeDatos.establecerConexion();
+            boolean registroExitoso = BaseDeDatos.ejecutarActualizacion(consultaRegistro, parametros);
+            if (registroExitoso) {
+                System.out.println("Registro exitoso del cliente.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
     }
 }
