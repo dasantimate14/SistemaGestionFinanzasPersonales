@@ -137,7 +137,8 @@ public class Ingreso extends FinanceItem{
     }
 
     //Método para calcular el promedio mensual de todos los ingresos
-    public static float calcularPromedioMensualIngresos(String idUsuario){
+    public static float calcularPromedioMensualIngresos(String id_usuario){
+        // Consulta SQL para calcular el promedio de los promedios mensuales de los ingresos
         String consulta = "SELECT AVG(promedio_mensual) AS promedio_mensual_total " +
                 "FROM (SELECT YEAR(fechaInicio) AS año, MONTH(fechaInicio) AS mes, AVG(montoOriginal) AS promedio_mensual " +
                 "FROM ingresos WHERE idUsuario = ? " +
@@ -147,7 +148,7 @@ public class Ingreso extends FinanceItem{
         try{
             BaseDeDatos.establecerConexion();
             //Parametro de la consulta
-            String[] parametros = {idUsuario};
+            String[] parametros = {id_usuario};
             ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
 
             //Procesar el resultado de la consulta
@@ -160,8 +161,35 @@ public class Ingreso extends FinanceItem{
             BaseDeDatos.cerrarConexion();
         }
         return promedio_mensual_total;
-
     }
+
+    // Método para calcular el promedio anual de todos los ingresos
+    public static float calcularPromedioAnualIngresos(String id_usuario) {
+        // Consulta SQL para calcular el promedio de los promedios anuales de los ingresos
+        String consulta = "SELECT AVG(promedio_anual) AS promedio_anual_total " +
+                "FROM (SELECT YEAR(fechaInicio) AS año, AVG(montoOriginal) AS promedio_anual " +
+                "FROM ingresos WHERE idUsuario = ? " +
+                "GROUP BY YEAR(fechaInicio)) AS promedios_anuales";
+
+        float promedio_anual_total = 0;
+        try {
+            BaseDeDatos.establecerConexion();
+            // Parámetros para la consulta
+            String[] parametros = {id_usuario};
+            ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
+
+            // Procesar el resultado de la consulta
+            if (rs.next()) {
+                promedio_anual_total = rs.getFloat("promedio_anual_total");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al calcular el promedio anual de los ingresos: " + e.getMessage());
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+        return promedio_anual_total;
+    }
+
 
 
 }
