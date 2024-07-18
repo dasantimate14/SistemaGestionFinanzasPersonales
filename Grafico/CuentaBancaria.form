@@ -11,7 +11,7 @@
     </properties>
     <border type="none"/>
     <children>
-      <grid id="9f9d4" layout-manager="GridLayoutManager" row-count="13" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="9f9d4" layout-manager="GridLayoutManager" row-count="12" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="0" row-span="5" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -33,18 +33,10 @@
           </component>
           <component id="a69e0" class="javax.swing.JButton" binding="proyeccionesButton" default-binding="true">
             <constraints>
-              <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Proyecciones"/>
-            </properties>
-          </component>
-          <component id="be187" class="javax.swing.JButton" binding="gastosButton" default-binding="true">
-            <constraints>
               <grid row="9" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Gastos"/>
+              <text value="Proyecciones"/>
             </properties>
           </component>
           <component id="4c0ea" class="javax.swing.JButton" binding="prestamosButton" default-binding="true">
@@ -71,12 +63,12 @@
               <text value="Stocks"/>
             </properties>
           </component>
-          <component id="cd3a9" class="javax.swing.JButton" binding="ingresosButton" default-binding="true">
+          <component id="cd3a9" class="javax.swing.JButton" binding="ingresosYGastosButton" default-binding="true">
             <constraints>
               <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Ingresos"/>
+              <text value="Ingresos y Gastos"/>
             </properties>
           </component>
           <component id="b7fdc" class="javax.swing.JButton" binding="plazosFijosButton" default-binding="true">
@@ -133,12 +125,12 @@
           </vspacer>
           <vspacer id="ddceb">
             <constraints>
-              <grid row="12" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <grid row="11" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
           <vspacer id="cd27a">
             <constraints>
-              <grid row="11" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
         </children>

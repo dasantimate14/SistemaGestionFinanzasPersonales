@@ -8,11 +8,10 @@ public class CuentaBancaria extends JFrame {
     private JPanel CuentaBancoPanel;
     private JButton btnMenu2;
     private JButton proyeccionesButton;
-    private JButton gastosButton;
     private JButton prestamosButton;
     private JButton tarjetasDeCreditoButton;
     private JButton stocksButton;
-    private JButton ingresosButton;
+    private JButton ingresosYGastosButton;
     private JButton plazosFijosButton;
     private JButton cuentasBancariasButton;
     private JButton btnAgregarCuenta;
