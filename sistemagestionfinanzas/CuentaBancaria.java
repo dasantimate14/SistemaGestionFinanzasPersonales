@@ -88,7 +88,8 @@ public class CuentaBancaria extends FinanceItem{
         for(float balance : balances_mensuales){
             sumatoria_balances += balance;
         }
-        setPromedioMensual((sumatoria_balances)/ balances_mensuales.size());
+
+        setPromedioMensual(redonderCantidad((sumatoria_balances)/ balances_mensuales.size()));
         return getPromedioMensual();
     }
 
@@ -105,7 +106,7 @@ public class CuentaBancaria extends FinanceItem{
         for(float balance : balances_anuales){
             sumatoria_balances += balance;
         }
-        promedio_anual = sumatoria_balances/ balances_anuales.size();
+        promedio_anual = redonderCantidad(sumatoria_balances/ balances_anuales.size()) ;
         return promedio_anual;
     }
 
@@ -133,10 +134,9 @@ public class CuentaBancaria extends FinanceItem{
             rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
             if(rs.next()){
                 String fecha_mas_reciente = rs.getString("fecha_mas_reciente");
-                if (fecha_mas_reciente != null) {
-                    ultima_fecha_interes = LocalDate.parse(fecha_mas_reciente);
-                }
+                ultima_fecha_interes =  fecha_mas_reciente != null ? LocalDate.parse(fecha_mas_reciente) : null;
             }
+
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -146,27 +146,27 @@ public class CuentaBancaria extends FinanceItem{
 
         //Si la ultima fecha es null entonces nunca se le han registrado los intereses a la cuenta. Se crean todos los intereses por mes desde la creacion de la cuenta hasta la fecha acutal
         if (ultima_fecha_interes == null){
-            fecha_inicial = getFechaInicio();
 
             //Se establece un rango del primero de un mes al otro, representando el deposito de intereses el primero de cada mes
-            fecha_inicial = fecha_inicial.withDayOfMonth(1);
+            fecha_inicial = getFechaInicio().withDayOfMonth(1);
             fecha_actual = fecha_actual.withDayOfMonth(1);
             while (fecha_inicial.isBefore(fecha_actual)){
                 try {
                     balance_mensual = calcularBalanceMensual(String.valueOf(fecha_inicial), balance_mensual);
+                    interes_mensual = calcularInteresSobreBalance(balance_mensual);
+                    //Se mueve la fechaInicial al siguiente mes
+                    fecha_inicial = fecha_inicial.plusMonths(1);
+
+
+                    //Se crea un objeto ingreso para que registre el interes
+                    guardarInteres(interes_mensual, fecha_inicial);
+
+                    //Se actualiza el deposito del monto al valor actual de cuenta
+                    depositarMonto(interes_mensual);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
 
-                interes_mensual = calcularInteresSobreBalance(balance_mensual);
-                //Se mueve la fechaInicial al siguiente mes
-                fecha_inicial = fecha_inicial.plusMonths(1);
-
-                //Se crea un objeto ingreso para que registre el interes
-                guardarInteres(interes_mensual, fecha_inicial);
-
-                //Se actualiza el deposito del monto al valor actual de cuenta
-                depositarMonto(interes_mensual);
             }
 
         //Si la ultima fecha es diferente de null entonces ya se han registrado depositos de interes antes y se empieza a registrar intereses apartir de este ultimo deposito
@@ -188,19 +188,19 @@ public class CuentaBancaria extends FinanceItem{
             while(fecha_inicial.isBefore(fecha_actual)){
                 try{
                     balance_mensual = calcularBalanceMensual(String.valueOf(fecha_inicial), balance_mensual);
+                    interes_mensual = calcularInteresSobreBalance(balance_mensual);
+
+                    //Se mueve la fechaInicial al siguiente mes
+                    fecha_inicial = fecha_inicial.plusMonths(1);
+
+                    //Se crea un objeto ingreso y se registra en la base de datos
+                    guardarInteres(interes_mensual, fecha_inicial);
+
+                    //Se actualiza el deposito del monto al valor actual de cuenta
+                    depositarMonto(interes_mensual);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                interes_mensual = calcularInteresSobreBalance(balance_mensual);
-
-                //Se mueve la fechaInicial al siguiente mes
-                fecha_inicial = fecha_inicial.plusMonths(1);
-
-                //Se crea un objeto ingreso y se registra en la base de datos
-                guardarInteres(interes_mensual, fecha_inicial);
-
-                //Se actualiza el deposito del monto al valor actual de cuenta
-                depositarMonto(interes_mensual);
             }
         }
     }
@@ -211,10 +211,10 @@ public class CuentaBancaria extends FinanceItem{
         String consulta_registro = "INSERT INTO ingresos (id, nombre, descripcion, montoOriginal, fechaInicio, fuente, idUsuario, idCuentaBancaria) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?)";
 
         //Objeto ingreso que se guardará en la base de datos
-        Ingreso ingreso = new Ingreso("Interes", "Interes mensual generado por esta cuenta", interes_mensual, fecha_deposito, getBanco(), this);
+        Ingreso ingreso = new Ingreso("Interes", "Interes mensual generado por el " + getBanco(), interes_mensual, fecha_deposito, getBanco(), this);
 
         //Arreglo con los parametros de la consulta
-        String[] parametros = new String[]{ingreso.getNombre(), ingreso.getDescripcion(), String.valueOf(ingreso.getMontoOriginal()), String.valueOf(getFechaInicio()), ingreso.getFuente(), getIdUsuario(), getId()};
+        String[] parametros = new String[]{ingreso.getNombre(), ingreso.getDescripcion(), String.valueOf(ingreso.getMontoOriginal()), String.valueOf(ingreso.getFechaInicio()), ingreso.getFuente(), getIdUsuario(), getId()};
 
         //Registro en la base de datos
         try{
@@ -234,13 +234,7 @@ public class CuentaBancaria extends FinanceItem{
     //Metodo que aplica la ecuacion del interes
     public float calcularInteresSobreBalance(float balance_mensual){
         float interes = (balance_mensual *((getTasaInteres()/100)/12));
-
-        // Formateamos el resultado a dos decimales
-        DecimalFormat formato = new DecimalFormat("#.##");
-        String interes_formateado = formato.format(interes);
-
-        //Convierte el resultado a flotante y lo devuelve
-        return Float.parseFloat(interes_formateado);
+        return redonderCantidad(interes);
     }
 
     //Metodo para obtener el balance para un mes en especifico
@@ -448,7 +442,7 @@ public class CuentaBancaria extends FinanceItem{
             total_cuentas += cuenta.getMontoActual();
         }
         porcentaje_representacion = (getMontoActual() / total_cuentas) * 100;
-        System.out.println("El porcentaje representacion es " + porcentaje_representacion + "% con un valor de " + getMontoActual());
+        System.out.println("El porcentaje representacion es " + redonderCantidad(porcentaje_representacion) + "% con un valor de " + getMontoActual());
     }
 
     //Metodo para guardar interes en la base de datos
