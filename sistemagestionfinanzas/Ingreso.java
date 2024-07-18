@@ -185,15 +185,20 @@ public class Ingreso extends FinanceItem{
     }
 
     //Metodo para obtner los ingresos totales por mes de los ultimos doce meses
-    public List<Float> obtenerIngresosUltimosMeses(){
+    public static List<Float> obtenerIngresosUltimosMeses(String id_usuario){
         List<Float> ingresos_mensuales = new ArrayList<>();
         LocalDate fecha_actual = LocalDate.now().withDayOfMonth(1);
         LocalDate fecha_inicial = fecha_actual.minusYears(1);
+        LocalDate siguiente_mes = fecha_inicial.plusMonths(1);
         float ingreso_mensual = 0;
 
         //Consulta que seleciona todos los datos entre un rango de fecha que en este caso va de un mes a otro
-        String consulta = "SELECT SUM(montoOriginal) AS ingreso_mensual FROM ingresos WHERE idUsuario = '" + cuenta_bancaria.getIdUsuario() + "' AND idCuentaBancaria = '" + cuenta_bancaria.getId() + "' AND fechaInicio BETWEEN '" + java.sql.Date.valueOf(fecha_inicial)  + "' AND DATE_ADD('" + java.sql.Date.valueOf(fecha_inicial) + "', INTERVAL 1 MONTH)";
+        String consulta = "SELECT SUM(montoOriginal) AS ingreso_mensual FROM ingresos WHERE idUsuario = '" + id_usuario + "' AND fechaInicio BETWEEN '" + java.sql.Date.valueOf(fecha_inicial)  + "' AND '" + java.sql.Date.valueOf(siguiente_mes) + "'";
+
         while(fecha_inicial.isBefore(fecha_actual)){
+            System.out.println("Fecha inicial: " + fecha_inicial);
+            System.out.println("Siguiente mes: " + siguiente_mes);
+            System.out.println("Fecha actual: " + fecha_actual+"\n");
             try{
                 BaseDeDatos.establecerConexion();
                 ResultSet rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
@@ -201,10 +206,14 @@ public class Ingreso extends FinanceItem{
                 //Analisis del resultset y guardado del resultado en el array list
                 if(rs.next()){
                     ingreso_mensual = rs.getFloat("ingreso_mensual");
-                    ingresos_mensuales.add(ingreso_mensual);
-                    fecha_inicial = fecha_inicial.plusMonths(1);
+                    rs.close();
+                } else {
+                    ingreso_mensual = 0;
                     rs.close();
                 }
+                ingresos_mensuales.add(ingreso_mensual);
+                fecha_inicial = fecha_inicial.plusMonths(1);
+                siguiente_mes = fecha_inicial.plusMonths(1);
             } catch (SQLException e){
                 e.printStackTrace();
             }
@@ -214,14 +223,14 @@ public class Ingreso extends FinanceItem{
     }
 
     //Metodo para obtner los ingresos totales por año de los ultimos doce meses
-    public List<Float> obtenerIngresosAnualesRecientes(){
+    public static List<Float> obtenerIngresosAnualesRecientes(String id_usuario){
         List<Float> ingresos_anuales = new ArrayList<>();
         LocalDate fecha_actual = LocalDate.now().withDayOfMonth(1);
-        LocalDate fecha_inicial = fecha_actual.minusYears(5).withDayOfYear(1);
+        LocalDate fecha_inicial = fecha_actual.minusYears(4).withDayOfYear(1);
         float ingreso_anual = 0;
 
         //Consulta que seleciona todos los datos entre un rango de fecha que en este caso va de un mes a otro
-        String consulta = "SELECT SUM(montoOriginal) AS ingreso_anual FROM ingresos WHERE idUsuario = '" + cuenta_bancaria.getIdUsuario()+ "' AND idCuentaBancaria = '" + cuenta_bancaria.getId() + "' AND fechaInicio BETWEEN '" + java.sql.Date.valueOf(fecha_inicial)  + "' AND DATE_ADD('" + java.sql.Date.valueOf(fecha_inicial) + "', INTERVAL 1 YEAR)";
+        String consulta = "SELECT SUM(montoOriginal) AS ingreso_anual FROM ingresos WHERE idUsuario = '" + id_usuario + "' AND fechaInicio BETWEEN '" + java.sql.Date.valueOf(fecha_inicial)  + "' AND DATE_ADD('" + java.sql.Date.valueOf(fecha_inicial) + "', INTERVAL 1 YEAR)";
         while(fecha_inicial.isBefore(fecha_actual)){
             try{
                 BaseDeDatos.establecerConexion();
@@ -230,7 +239,7 @@ public class Ingreso extends FinanceItem{
                 //Analisis del resultset y guardado del resultado en el array list
                 if(rs.next()){
                     ingreso_anual = rs.getFloat("ingreso_anual");
-                    ingresos_anuales.add(redonderCantidad(ingreso_anual));
+                    ingresos_anuales.add(ingreso_anual);
                     fecha_inicial = fecha_inicial.plusYears(1);
                     rs.close();
                 }
