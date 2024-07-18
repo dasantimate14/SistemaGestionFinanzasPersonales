@@ -219,6 +219,33 @@ public class Ingreso extends FinanceItem{
         return ingresos_mensuales;
     }
 
+    //Metodo para obtner los ingresos totales por año de los ultimos doce meses
+    public List<Float> obtenerIngresosAnualesRecientes(){
+        List<Float> ingresos_anuales = new ArrayList<>();
+        LocalDate fechaActual = LocalDate.now().withDayOfMonth(1);
+        LocalDate fechaInicial = fechaActual.minusYears(5).withDayOfYear(1);
+        float ingreso_anual = 0;
+
+        //Consulta que seleciona todos los datos entre un rango de fecha que en este caso va de un mes a otro
+        String consulta = "SELECT SUM(montoOriginal) AS ingreso_anual FROM ingresos WHERE idUsuario = '" + cuenta_bancaria.getIdUsuario() + "' AND idCuentaBancaria = '" + cuenta_bancaria.getId() + "' AND fechaInicio BETWEEN '" + java.sql.Date.valueOf(fechaInicial)  + "' AND DATE_ADD('" + java.sql.Date.valueOf(fechaInicial) + "', INTERVAL 1 YEAR)";
+        while(fechaInicial.isBefore(fechaActual)){
+            try{
+                BaseDeDatos.establecerConexion();
+                ResultSet rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
+
+                //Analisis del resultset y guardado del resultado en el array list
+                if(rs != null){
+                    ingreso_anual = rs.getFloat("ingreso_anual");
+                    ingresos_anuales.add(ingreso_anual);
+                    fechaInicial = fechaInicial.plusYears(1);
+                }
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+        BaseDeDatos.cerrarConexion();
+        return ingresos_anuales;
+    }
 
 
 }
