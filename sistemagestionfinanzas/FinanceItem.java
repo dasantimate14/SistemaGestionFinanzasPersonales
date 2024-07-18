@@ -85,7 +85,7 @@ public abstract class FinanceItem {
         sb.append("Monto Original: ").append(montoOriginal).append("\n");
         sb.append("Interes: ").append(interes).append("\n");
         sb.append("Tasa interes: ").append(tasaInteres).append("%\n");
-        sb.append("Cantidad de Ganancia/Perdida: ").append(ganaciaPerdida).append("%\n");
+        sb.append("Cantidad de Ganancia/Perdida: ").append(ganaciaPerdida).append("\n");
         sb.append("Porcentaje de ganancia: ").append(porcentajeGanancia).append("%\n");
         sb.append("Monto Actual: ").append(montoActual).append("\n");
         sb.append("Valor Mensual Promedio: ").append(promedioMensual).append("\n");
