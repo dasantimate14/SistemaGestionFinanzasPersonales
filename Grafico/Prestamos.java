@@ -10,8 +10,6 @@ public class Prestamos {
     private JButton stocksButton;
     private JButton tarjetasDeCréditoButton;
     private JButton préstamosButton;
-    private JButton proyeccionesButton;
-    private JButton button9;
     private JButton agregarPréstamoButton;
     private JButton mostrarInterésPendienteButton;
     private JButton mostrarInterésAcumuladoButton;
