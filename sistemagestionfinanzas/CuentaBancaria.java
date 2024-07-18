@@ -445,7 +445,7 @@ public class CuentaBancaria extends FinanceItem{
         System.out.println("El porcentaje representacion es " + redonderCantidad(porcentaje_representacion) + "% con un valor de " + getMontoActual());
     }
 
-    //Metodo para guardar interes en la base de datos
+    //Metodo para guardar una cuenta bancaria en la base de datos
     public void guardarCuentaBancariaBaseDatos(){
         //Consulta para guardar el objeto interes en la base de datos
         String consulta_registro = "INSERT INTO cuentas_bancarias (id, nombre, descripcion, montoOriginal, fechaInicio, tasaInteres, banco, numeroCuenta, tipoCuenta, idUsuario) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
