@@ -154,6 +154,7 @@ public class CuentaBancaria extends FinanceItem{
                 fecha_inicial = fecha_inicial.plusMonths(1);
 
                 //Se crea un objeto ingreso para que registre el interes
+                guardarInteres(interes_mensual, fecha_inicial);
 
                 //Se actualiza el deposito del monto al valor actual de cuenta
                 depositarMonto(interes_mensual);
@@ -197,8 +198,27 @@ public class CuentaBancaria extends FinanceItem{
 
     //Metodo para guardar interes en la base de datos
     public void guardarInteres(float interes_mensual, LocalDate fecha_deposito){
+        //Consulta para guardar el objeto interes en la base de datos
+        String consulta_registro = "INSERT INTO ingresos (id, nombre, descripcion, montoOriginal, fechaInicio, fuente, idUsuario, idCuentaBancaria) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?)";
+
+        //Objeto ingreso que se guardará en la base de datos
         Ingreso ingreso = new Ingreso("Interes", "Interes mensual generado por esta cuenta", interes_mensual, fecha_deposito, getBanco(), this);
 
+        //Arreglo con los parametros de la consulta
+        String[] parametros = new String[]{ingreso.getNombre(), ingreso.getDescripcion(), String.valueOf(ingreso.getMontoOriginal()), String.valueOf(getFechaInicio()), ingreso.getFuente(), getIdUsuario(), getId()};;
+
+        //Registro en la base de datos
+        try{
+            BaseDeDatos.establecerConexion();
+            boolean registro_exitoso = BaseDeDatos.ejecutarActualizacion(consulta_registro, parametros);
+            if (registro_exitoso){
+                System.out.println("Registro exitoso de ingreso." );
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
 
     }
 
