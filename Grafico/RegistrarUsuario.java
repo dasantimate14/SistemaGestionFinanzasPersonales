@@ -22,24 +22,23 @@ public class RegistrarUsuario extends JFrame {
         setLocationRelativeTo(null);
 
         // Acción para que se abra "iniciar sesión" al presionar si ya se tiene una cuenta
-        BtnLogin.addActionListener(new ActionListener() {
-            @Override
+        this.BtnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 InicioSesion newframe = new InicioSesion();
                 newframe.setVisible(true);
-                dispose();
+                RegistrarUsuario.this.dispose();
             }
         });
 
         // Acción para que se redirija a la interfaz de inicio de sesión
         // Se debe almacenar los datos ingresados en la base de datos aquí
-        BtnEnviar.addActionListener(new ActionListener() {
-            @Override
+        this.BtnEnviar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                guardarUsuario();
-                InicioSesion newframe = new InicioSesion();
-                newframe.setVisible(true);
-                dispose();
+                if (RegistrarUsuario.this.guardarUsuario()) {
+                    InicioSesion newframe = new InicioSesion();
+                    newframe.setVisible(true);
+                    RegistrarUsuario.this.dispose();
+                }
             }
         });
     }
@@ -54,23 +53,63 @@ public class RegistrarUsuario extends JFrame {
         });
     }
 
-    private void guardarUsuario() {
-        String nombre = this.tfNombre.getText();
-        String apellido = this.tfApellido.getText();
-        String correo = this.tfCorreo.getText();
-        String cedula = this.tfCedula.getText();
-        String contrasena = new String(this.tfContrasena.getPassword());
+    private boolean guardarUsuario() {
+        try {
+            String nombre = this.tfNombre.getText();
+            String apellido = this.tfApellido.getText();
+            String correo = this.tfCorreo.getText();
+            String cedula = this.tfCedula.getText();
+            String contrasena = new String(this.tfContrasena.getPassword());
 
-        // Aquí deberías agregar la lógica para guardar los datos en la base de datos.
+            if (nombre.isEmpty() || nombre == null) {
+                throw new Exception("Debe ingresar el nombre.");
+            }
+            if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ]+")) {
+                throw new Exception("El nombre solo puede contener letras.");
+            }
 
 
-        JOptionPane.showMessageDialog(this, "Información guardada correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            if (apellido.isEmpty() || apellido == null) {
+                throw new Exception("Debe ingresar el apellido.");
+            }
+            if (!apellido.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ]+")) {
+                throw new Exception("El apellido solo puede contener letras.");
+            }
 
-        // Limpiar los campos
-        this.tfNombre.setText("");
-        this.tfApellido.setText("");
-        this.tfCedula.setText("");
-        this.tfContrasena.setText("");
-        this.tfCorreo.setText("");
+
+            if (correo.isEmpty() || correo == null) {
+                throw new Exception("Debe ingresar el correo.");
+            }
+
+            if (!correo.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
+                throw new Exception("El correo solo puede contener puntos, arrobas, letras y números.");
+            }
+
+            if (cedula.isEmpty() || cedula == null) {
+                throw new Exception("Debe ingresar la cédula.");
+            }
+            if (!cedula.matches("[0-9-]+")) {
+                throw new Exception("La cédula solo puede contener números y guiones.");
+            }
+
+
+            if (contrasena.isEmpty() || contrasena == null) {
+                throw new Exception("Debe ingresar la contraseña.");
+            }
+
+            JOptionPane.showMessageDialog(this, "Información guardada correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            this.tfNombre.setText("");
+            this.tfApellido.setText("");
+            this.tfCedula.setText("");
+            this.tfContrasena.setText("");
+            this.tfCorreo.setText("");
+            return true;
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese datos válidos. " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese datos válidos. " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
     }
 }

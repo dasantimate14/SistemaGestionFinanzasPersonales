@@ -4,8 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 
 public class InicioSesion extends JFrame {
+    BufferedReader entrada = new BufferedReader(new InputStreamReader(System.in));
     private JPanel LoginPanel;
     private JTextField tfCorreo;
     private JPasswordField pfContrasena;
@@ -29,9 +33,11 @@ public class InicioSesion extends JFrame {
         btnIniciarSesion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Dashboard newframe = new Dashboard();
-                newframe.setVisible(true);
-                dispose();
+                if (guardarDatos()) {
+                    Dashboard newframe = new Dashboard();
+                    newframe.setVisible(true);
+                    dispose();
+                }
             }
         });
 
@@ -48,6 +54,40 @@ public class InicioSesion extends JFrame {
         setVisible(true);
     }
 
+    private boolean guardarDatos() {
+        try {
+            String correo = this.tfCorreo.getText();
+            String password = new String(this.pfContrasena.getPassword());
+
+            if (correo.isEmpty() || correo == null) {
+                throw new Exception("Debe ingresar el correo.");
+            }
+
+            // Validación del formato del correo
+            if (!correo.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
+                throw new Exception("El correo solo puede contener puntos, arrobas, letras y números.");
+            }
+
+            if (password.isEmpty() || password == null) {
+                throw new Exception("Debe ingresar la contraseña.");
+            }
+
+            System.out.println("Correo: " + correo);
+            System.out.println("Contraseña: " + password);
+
+            JOptionPane.showMessageDialog(this, "Información guardada correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            this.tfCorreo.setText("");
+            this.pfContrasena.setText("");
+            return true;
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese datos válidos. " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese datos válidos. " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -61,4 +101,3 @@ public class InicioSesion extends JFrame {
         });
     }
 }
-
