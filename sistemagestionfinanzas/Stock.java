@@ -14,28 +14,28 @@ import java.util.regex.Pattern;
 
 public class Stock extends FinanceItem{
     //Atributos de la clase
-    private String nombreEmpresa;
+    private String nombre_empresa;
     private String simbolo;
     private int cantidad;
-    private float precioCompra;
+    private float precio_compra;
     private String sector;
-    private float precioActual;
-    private float dividendoPorAccion;
-    private float dividendoAcumulado;
+    private float precio_actual;
+    private float dividendo_por_accion;
+    private float dividendo_acumulado;
     private float dividendoEstimado;
     private int frecuenciaDividendos;
     private static int cantidadInstancias = 0;
     private static List<Stock> instanciasStocks = new ArrayList<>();
 
     public Stock(String nombre, String descripcion, float tasaInteres, LocalDate fechaInicio,
-                 String nombreEmpresa, String simbolo, int cantidad, float precioCompra, String sector, float dividendoPorAccion, int frecuenciaDividendos){
-        super(nombre, descripcion, (cantidad*precioCompra), "Activo", tasaInteres, fechaInicio);
-        this.nombreEmpresa = nombreEmpresa;
+                 String nombreEmpresa, String simbolo, int cantidad, float precio_compra, String sector, float dividendo_por_accion, int frecuenciaDividendos){
+        super(nombre, descripcion, (cantidad* precio_compra), "Activo", tasaInteres, fechaInicio);
+        this.nombre_empresa = nombreEmpresa;
         this.simbolo = simbolo;
         this.cantidad = cantidad;
-        this.precioCompra = precioCompra;
+        this.precio_compra = precio_compra;
         this.sector = sector;
-        this.dividendoPorAccion = dividendoPorAccion;
+        this.dividendo_por_accion = dividendo_por_accion;
         this.frecuenciaDividendos = frecuenciaDividendos;
 
         //Se guarda la instancia dentro de un arreglo que pertenece a la clase misma y no a la instancia
@@ -45,32 +45,32 @@ public class Stock extends FinanceItem{
 
     // Constructor con dividendoPorAccion por defecto
     public Stock(String nombre, String descripcion, float tasaInteres, LocalDate fechaInicio,
-                 String nombreEmpresa, String simbolo, int cantidad, float precioCompra, String sector) {
-        this(nombre, descripcion, tasaInteres, fechaInicio, nombreEmpresa, simbolo, cantidad, precioCompra, sector, 0.0f, 0);
+                 String nombreEmpresa, String simbolo, int cantidad, float precio_compra, String sector) {
+        this(nombre, descripcion, tasaInteres, fechaInicio, nombreEmpresa, simbolo, cantidad, precio_compra, sector, 0.0f, 0);
     }
 
     //Metodos get y set de la clase
-    public String getNombreEmpresa() {return nombreEmpresa;}
+    public String getNombreEmpresa() {return nombre_empresa;}
     public String getSimbolo() {return simbolo;}
     public int getCantidad() {return cantidad;}
-    public float getPrecioCompra() {return precioCompra;}
+    public float getPrecioCompra() {return precio_compra;}
     public String getSector() {return sector;}
-    public float getDividendoPorAccion() {return dividendoPorAccion;}
-    public float getDividendoAcumulado(){return dividendoAcumulado;}
+    public float getDividendoPorAccion() {return dividendo_por_accion;}
+    public float getDividendoAcumulado(){return dividendo_acumulado;}
     public float getDividendoEstimado(){return dividendoEstimado;}
     public static int getCantidadInstancias() {return cantidadInstancias;}
-    public float getPrecioActual(){return precioActual;}
+    public float getPrecioActual(){return precio_actual;}
     public int getFrecuenciaDividendos(){return frecuenciaDividendos;}
 
-    public void setNombreEmpresa(String nombreEmpresa){this.nombreEmpresa = nombreEmpresa;}
+    public void setNombreEmpresa(String nombre_empresa){this.nombre_empresa = nombre_empresa;}
     public void setSimbolo(String simbolo){this.simbolo = simbolo;}
     public void setCantidad(int cantidad){this.cantidad = cantidad;}
-    public void setPrecioCompra(float precioCompra){this.precioCompra = precioCompra;}
+    public void setPrecioCompra(float precio_compra){this.precio_compra = precio_compra;}
     public void setSector(String sector){this.sector = sector;}
-    public void setDividendoPorAccion(float dividendoPorAccion){this.dividendoPorAccion = dividendoPorAccion;}
-    public void setDividendoAcumulado(float dividendoAcumulado){this.dividendoAcumulado = dividendoAcumulado;}
+    public void setDividendoPorAccion(float dividendo_por_accion){this.dividendo_por_accion = dividendo_por_accion;}
+    public void setDividendoAcumulado(float dividendo_acumulado){this.dividendo_acumulado = dividendo_acumulado;}
     public void setDividendoEstimado(float dividendoEstimado){this.dividendoEstimado = dividendoEstimado;}
-    public void setPrecioActual(float precioActual){this.precioActual = precioActual;}
+    public void setPrecioActual(float precio_actual){this.precio_actual = precio_actual;}
 
     @Override
     protected float calcularValorActual() throws IOException {
@@ -81,14 +81,14 @@ public class Stock extends FinanceItem{
     @Override
     protected StringBuilder obtenerInformacionSubclase() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Nombre Empresa: ").append(nombreEmpresa).append("\n");
+        sb.append("Nombre Empresa: ").append(nombre_empresa).append("\n");
         sb.append("Símbolo: ").append(simbolo).append("\n");
         sb.append("Cantidad: ").append(cantidad).append("\n");
-        sb.append("Precio de Compra: ").append(precioCompra).append("\n");
-        sb.append("Dividendo por Acción: ").append(dividendoPorAccion).append("\n");
+        sb.append("Precio de Compra: ").append(precio_compra).append("\n");
+        sb.append("Dividendo por Acción: ").append(dividendo_por_accion).append("\n");
         sb.append("Frecuencia de Pago de Dividendos: ").append(frecuenciaDividendos).append("\n");
-        sb.append("Precio Actual: ").append(precioActual).append("\n");
-        sb.append("Dividendo Acumulado: ").append(dividendoAcumulado).append("\n");
+        sb.append("Precio Actual: ").append(precio_actual).append("\n");
+        sb.append("Dividendo Acumulado: ").append(dividendo_acumulado).append("\n");
         sb.append("Sector: ").append(sector).append("\n");
         return sb;
     }
@@ -171,17 +171,15 @@ public class Stock extends FinanceItem{
         if(getDividendoPorAccion() != 0){
             while(!fechaCompra.isAfter(fechaHoy)){
                 //Se debe acumular el dividendo si es el primero del mes
-                if(fechaCompra.getDayOfMonth() == 1 && fechaCompra.equals(getFechaInicio())){
-                    dividendoAcumulado += (dividendoPorAccion * cantidad);
-                } else if (fechaCompra.isBefore(fechaHoy)){
-                    dividendoAcumulado += (dividendoPorAccion * cantidad);
+                if(fechaCompra.getDayOfMonth() == 1 || fechaCompra.isBefore(fechaHoy)){
+                    dividendo_acumulado += (dividendo_por_accion * cantidad);
                 }
                 //Avanza al proximo mes
                 fechaCompra = fechaCompra.plusMonths(frecuenciaDividendos);
             }
 
         }
-        return dividendoAcumulado;
+        return dividendo_acumulado;
     }
 
     public float calcularDividendoFuturo(int meses){
@@ -192,17 +190,15 @@ public class Stock extends FinanceItem{
         if(getDividendoPorAccion() != 0){
             while(!fechaCompra.isAfter(fechaFin)){
                 //Se debe acumular el dividendo si es el primero del mes
-                if(fechaCompra.getDayOfMonth() == 1 && fechaCompra.equals(getFechaInicio())){
-                    dividendoAcumulado += (dividendoPorAccion * cantidad);
-                } else if (fechaCompra.isBefore(fechaFin)){
-                    dividendoAcumulado += (dividendoPorAccion * cantidad);
+                if(fechaCompra.getDayOfMonth() == 1 || fechaCompra.isBefore(fechaFin)){
+                    dividendo_acumulado += (dividendo_por_accion * cantidad);
                 }
                 //Avanza al proximo mes
                 fechaCompra = fechaCompra.plusMonths(frecuenciaDividendos);
             }
 
         }
-        return dividendoAcumulado;
+        return dividendo_acumulado;
     }
 
     public float obtenerPrecioActual() throws IOException {
@@ -241,12 +237,12 @@ public class Stock extends FinanceItem{
         String jsonString = response.toString();
         String priceValue = extraerPrecioActual(jsonString);
         if (priceValue != null) {
-            precioActual = Float.parseFloat(priceValue);
+            precio_actual = Float.parseFloat(priceValue);
         } else {
-            precioActual = 0.0f;
+            precio_actual = 0.0f;
         }
 
-        return precioActual;
+        return precio_actual;
     }
     private String extraerPrecioActual(String jsonString) {
         // Define el patrón regex para encontrar "05. price": "valor"
