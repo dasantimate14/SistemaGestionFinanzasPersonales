@@ -41,14 +41,9 @@ public class CuentaBancaria extends JFrame {
         consultarMovimientosButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    validarDatosConsultarMovimientos();
                     ConsultarMovimientos newframe = new ConsultarMovimientos();
                     newframe.setVisible(true);
                     dispose();
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(CuentaBancaria.this, "Por favor, ingrese datos válidos. " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
             }
         });
     }

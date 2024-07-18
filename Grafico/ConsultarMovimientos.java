@@ -14,8 +14,9 @@ import java.util.Properties;
 public class ConsultarMovimientos extends JFrame {
     private JPanel datePanelContainer;
     private JPanel MovPanel;
-    private JComboBox cbID;
-    private JComboBox cbNombreCuenta;
+    private JComboBox cbNumeroCuenta;
+    private JComboBox<String> cbNombreCuenta;
+    private JTextField tfNumeroCuenta;
     private JList<String> list1;
     private JButton btnBuscar;
     private JButton Volverbtn;
@@ -40,6 +41,9 @@ public class ConsultarMovimientos extends JFrame {
 
         datePanelContainer.setLayout(new BorderLayout());
         datePanelContainer.add(datePicker, BorderLayout.CENTER);
+
+        actualizarComboBoxes();
+
         Volverbtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -59,8 +63,39 @@ public class ConsultarMovimientos extends JFrame {
             }
         });
     }
+    private void actualizarComboBoxes() {
+        cbNumeroCuenta.removeAllItems();
+        cbNombreCuenta.removeAllItems();
+        for (AgregarCuentaBanco.Cuenta cuenta : AgregarCuentaBanco.getCuentas()) {
+            cbNumeroCuenta.addItem(cuenta.getNumero());
+            cbNombreCuenta.addItem(cuenta.getNombre());
+        }
+    }
 
-    // Clase interna utilizada para formatear las fechas
+    private void validarDatos() throws Exception {
+        // Validar número de cuenta
+        String numeroCuenta = tfNumeroCuenta.getText();
+        if (numeroCuenta == null || numeroCuenta.isEmpty()) {
+            throw new Exception("Debe introducir un número de cuenta.");
+        }
+        if (!numeroCuenta.matches("[0-9-]+")) {
+            throw new Exception("El número de cuenta solo puede contener números y guiones.");
+        }
+
+        // Validar nombre de cuenta
+        String nombreCuenta = (String) cbNombreCuenta.getSelectedItem();
+        if (nombreCuenta == null || nombreCuenta.isEmpty()) {
+            throw new Exception("Debe seleccionar un nombre de cuenta.");
+        }
+
+        // Validar fecha
+        Calendar selectedDate = (Calendar) datePicker.getModel().getValue();
+        if (selectedDate == null) {
+            throw new Exception("Debe seleccionar una fecha.");
+        }
+    }
+
+
     public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
         private String datePattern = "dd/MM/yyyy";
         private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
