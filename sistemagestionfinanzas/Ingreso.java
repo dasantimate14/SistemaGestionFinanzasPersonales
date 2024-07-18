@@ -252,7 +252,28 @@ public class Ingreso extends FinanceItem{
         return ingresos_anuales;
     }
 
-    //Metodo para guardar el ingreso en la base de datos
+    //Metodo para guardar un ingreso en la base de datos
+    public void guardarCuentaBancariaBaseDatos(){
+        //Consulta para guardar el objeto interes en la base de datos
+        String consulta_registro = "INSERT INTO ingresos (id, nombre, descripcion, montoOriginal, fechaInicio, fuente, frecuencia,  idUsuario, idCuentaBancaria) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        //Arreglo con los parametros de la consulta
+        String[] parametros = {getNombre(), getDescripcion(), String.valueOf(getMontoOriginal()), String.valueOf(getFechaInicio()), getFuente(), String.valueOf(getFrencuencia()), cuenta_bancaria.getIdUsuario(), cuenta_bancaria.getId()};
+
+        //Registro en la base de datos
+        try{
+            BaseDeDatos.establecerConexion();
+            boolean registro_exitoso = BaseDeDatos.ejecutarActualizacion(consulta_registro, parametros);
+            if (registro_exitoso){
+                System.out.println("Registro exitoso de Cuenta Bancaria." );
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+
+    }
 
 
 }
