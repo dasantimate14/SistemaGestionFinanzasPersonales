@@ -149,33 +149,33 @@ public class Stock extends FinanceItem{
 
     //Metodo para obtener el porcentaje de representacion de una instancia de stock
     public void calcularPorcentajeRepresentacionPorSimbolo(String simbolo){
-        float valorTotalStocks = 0;
-        float valorStockSimbolo = 0;
-        float porcentajeRepresentacion = 0;
+        float valor_total_stocks = 0;
+        float valor_stock_simbolo = 0;
+        float porcentaje_representacion = 0;
         //Por cada stock que coincida con el simbolo se suma su monto del simbolo y por cada stock se suma a una variable de todos los stocks
         for(Stock instanciaStock : instanciasStocks){
-            valorTotalStocks = instanciaStock.getMontoActual() + valorTotalStocks;
+            valor_total_stocks = instanciaStock.getMontoActual() + valor_total_stocks;
             if(instanciaStock.getSimbolo().equals(simbolo)){
-                valorStockSimbolo = instanciaStock.getMontoActual() + valorStockSimbolo;
+                valor_stock_simbolo = instanciaStock.getMontoActual() + valor_stock_simbolo;
             }
         }
         //Calcular Porcentaje
-        porcentajeRepresentacion = (valorStockSimbolo/valorTotalStocks)*100;
-        System.out.println("El porcentaje de representación de todos los Stocks con símbolo " + simbolo +  " es " + porcentajeRepresentacion + "% con un valor de " + valorStockSimbolo);
+        porcentaje_representacion = (valor_stock_simbolo / valor_total_stocks)*100;
+        System.out.println("El porcentaje de representación de todos los Stocks con símbolo " + simbolo +  " es " + porcentaje_representacion + "% con un valor de " + valor_stock_simbolo);
     }
 
     public float calcularDividendoAcumulado(){
-        LocalDate fechaHoy = LocalDate.now();
-        LocalDate fechaCompra = getFechaInicio();
+        LocalDate fecha_hoy = LocalDate.now();
+        LocalDate fecha_compra = getFechaInicio();
         //Solo se calcula el dividiendo acumulado si es diferente de cero
         if(getDividendoPorAccion() != 0){
-            while(!fechaCompra.isAfter(fechaHoy)){
+            while(!fecha_compra.isAfter(fecha_hoy)){
                 //Se debe acumular el dividendo si es el primero del mes
-                if(fechaCompra.getDayOfMonth() == 1 || fechaCompra.isBefore(fechaHoy)){
+                if(fecha_compra.getDayOfMonth() == 1 || fecha_compra.isBefore(fecha_hoy)){
                     dividendo_acumulado += (dividendo_por_accion * cantidad);
                 }
                 //Avanza al proximo mes
-                fechaCompra = fechaCompra.plusMonths(frecuenciaDividendos);
+                fecha_compra = fecha_compra.plusMonths(frecuenciaDividendos);
             }
 
         }
@@ -183,18 +183,18 @@ public class Stock extends FinanceItem{
     }
 
     public float calcularDividendoFuturo(int meses){
-        LocalDate fechaCompra = getFechaInicio();
-        LocalDate fechaFin = LocalDate.now();
-        fechaFin = fechaFin.plusMonths(meses);
+        LocalDate fecha_compra = getFechaInicio();
+        LocalDate fecha_fin = LocalDate.now();
+        fecha_fin = fecha_fin.plusMonths(meses);
         //Solo se calcula el dividiendo acumulado si es diferente de cero
         if(getDividendoPorAccion() != 0){
-            while(!fechaCompra.isAfter(fechaFin)){
+            while(!fecha_compra.isAfter(fecha_fin)){
                 //Se debe acumular el dividendo si es el primero del mes
-                if(fechaCompra.getDayOfMonth() == 1 || fechaCompra.isBefore(fechaFin)){
+                if(fecha_compra.getDayOfMonth() == 1 || fecha_compra.isBefore(fecha_fin)){
                     dividendo_acumulado += (dividendo_por_accion * cantidad);
                 }
                 //Avanza al proximo mes
-                fechaCompra = fechaCompra.plusMonths(frecuenciaDividendos);
+                fecha_compra = fecha_compra.plusMonths(frecuenciaDividendos);
             }
 
         }
@@ -202,8 +202,8 @@ public class Stock extends FinanceItem{
     }
 
     public float obtenerPrecioActual() throws IOException {
-       String APIKEY = "NAN1GLGHNLYTMDCH";
-       String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + this.simbolo + "&apikey=" + APIKEY;
+       String API_KEY = "NAN1GLGHNLYTMDCH";
+       String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + this.simbolo + "&apikey=" + API_KEY;
         HttpURLConnection con = null;
         BufferedReader reader = null;
         StringBuilder response = new StringBuilder();
@@ -234,10 +234,10 @@ public class Stock extends FinanceItem{
         }
 
         // Extraer el precio actual usando regex
-        String jsonString = response.toString();
-        String priceValue = extraerPrecioActual(jsonString);
-        if (priceValue != null) {
-            precio_actual = Float.parseFloat(priceValue);
+        String json_string = response.toString();
+        String valor_precio = extraerPrecioActual(json_string);
+        if (valor_precio != null) {
+            precio_actual = Float.parseFloat(valor_precio);
         } else {
             precio_actual = 0.0f;
         }
@@ -259,9 +259,9 @@ public class Stock extends FinanceItem{
     }
 
     private List<Float> obtenerPreciosMensuales() throws IOException {
-        List<Float> preciosMensuales = new ArrayList<>();
-        String APIKEY = "NAN1GLGHNLYTMDCH";
-        String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + this.simbolo + "&apikey=" + APIKEY;
+        List<Float> precios_mensuales = new ArrayList<>();
+        String API_KEY = "NAN1GLGHNLYTMDCH";
+        String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + this.simbolo + "&apikey=" + API_KEY;
         HttpURLConnection con = null;
         BufferedReader reader = null;
         StringBuilder response = new StringBuilder();
@@ -293,17 +293,17 @@ public class Stock extends FinanceItem{
         }
 
         // Procesar el JSON para extraer los precios de cierre
-        String jsonString = response.toString();
-        preciosMensuales = extraerPreciosMensuales(jsonString);
+        String json_string = response.toString();
+        precios_mensuales = extraerPreciosMensuales(json_string);
 
-        return preciosMensuales;
+        return precios_mensuales;
     }
 
     //Metodo para encontrar el valor de cierre dentro de la respuesta de la API por día siguiendo un patrón de formato fecha y 4. close.
     private List<Float> extraerPreciosMensuales(String jsonString) {
-        List<Float> preciosMensuales = new ArrayList<>();
-        LocalDate fechaHoy = LocalDate.now();
-        LocalDate fechaInicio = fechaHoy.minusYears(1);
+        List<Float> precios_mensuales = new ArrayList<>();
+        LocalDate fecha_hoy = LocalDate.now();
+        LocalDate fecha_inicio = fecha_hoy.minusYears(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         Pattern pattern = Pattern.compile("\"(\\d{4}-\\d{2}-\\d{2})\":\\s*\\{[^}]*\"4. close\":\\s*\"([\\d\\.]+)\"");
@@ -314,18 +314,18 @@ public class Stock extends FinanceItem{
             String precioStr = matcher.group(2);
 
             LocalDate fecha = LocalDate.parse(fechaStr, formatter);
-            if (!fecha.isBefore(fechaInicio) && !fecha.isAfter(fechaHoy)) {
-                preciosMensuales.add(Float.parseFloat(precioStr));
+            if (!fecha.isBefore(fecha_inicio) && !fecha.isAfter(fecha_hoy)) {
+                precios_mensuales.add(Float.parseFloat(precioStr));
             }
         }
 
-        return preciosMensuales;
+        return precios_mensuales;
     }
 
     private List<Float> obtenerPreciosAnuales()throws IOException {
-        List<Float> preciosAnuales = new ArrayList<>();
-        String APIKEY = "NAN1GLGHNLYTMDCH";
-        String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + this.simbolo + "&apikey=" + APIKEY;
+        List<Float> precios_anuales = new ArrayList<>();
+        String API_KEY = "NAN1GLGHNLYTMDCH";
+        String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + this.simbolo + "&apikey=" + API_KEY;
         HttpURLConnection con = null;
         BufferedReader reader = null;
         StringBuilder response = new StringBuilder();
@@ -357,16 +357,16 @@ public class Stock extends FinanceItem{
         }
 
         // Procesar el JSON para extraer los precios de cierre
-        String jsonString = response.toString();
-        preciosAnuales = extraerPreciosAnuales(jsonString);
+        String json_string = response.toString();
+        precios_anuales = extraerPreciosAnuales(json_string);
 
-        return preciosAnuales;
+        return precios_anuales;
     }
 
     private List<Float> extraerPreciosAnuales(String jsonString) {
-        List<Float> preciosAnuales = new ArrayList<>();
-        LocalDate fechaHoy = LocalDate.now();
-        LocalDate fechaInicio = fechaHoy.minusYears(5);
+        List<Float> precios_anuales = new ArrayList<>();
+        LocalDate fecha_hoy = LocalDate.now();
+        LocalDate fecha_inicio = fecha_hoy.minusYears(5);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         Pattern pattern = Pattern.compile("\"(\\d{4}-\\d{2}-\\d{2})\":\\s*\\{[^}]*\"4. close\":\\s*\"([\\d\\.]+)\"");
@@ -377,12 +377,12 @@ public class Stock extends FinanceItem{
             String precioStr = matcher.group(2);
 
             LocalDate fecha = LocalDate.parse(fechaStr, formatter);
-            if(!fecha.isBefore(fechaInicio) && !fecha.isAfter(fechaHoy)){
-                preciosAnuales.add(Float.parseFloat(precioStr));
+            if(!fecha.isBefore(fecha_inicio) && !fecha.isAfter(fecha_hoy)){
+                precios_anuales.add(Float.parseFloat(precioStr));
             }
         }
-        System.out.println(preciosAnuales);
-        return preciosAnuales;
+        System.out.println(precios_anuales);
+        return precios_anuales;
     }
 
 }
