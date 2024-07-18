@@ -79,7 +79,7 @@
             <properties>
               <background color="-16757148"/>
               <foreground color="-394241"/>
-              <text value="Menu Principal"/>
+              <text value="Página Principal"/>
             </properties>
           </component>
           <component id="d1081" class="javax.swing.JButton" binding="btnCuentaBancaria">
@@ -122,14 +122,14 @@
               <text value="Tarjetas de Credito"/>
             </properties>
           </component>
-          <component id="8a84f" class="javax.swing.JButton" binding="prestamosButton" default-binding="true">
+          <component id="8a84f" class="javax.swing.JButton" binding="préstamosButton" default-binding="true">
             <constraints>
               <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <background color="-16757148"/>
               <foreground color="-394241"/>
-              <text value="Prestamos"/>
+              <text value="Préstamos"/>
             </properties>
           </component>
           <component id="26c01" class="javax.swing.JButton" binding="btnProyecciones">
