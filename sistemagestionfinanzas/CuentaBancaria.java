@@ -13,8 +13,8 @@ public class CuentaBancaria extends FinanceItem{
     private int numero_cuenta;
     private String tipo_cuenta;
     private String id_usuario;
-    private static int cantidad_instancias;
-    private static List<CuentaBancaria> intsancias_cuentas_bancarias;
+    private static int cantidad_instancias = 0;
+    private static List<CuentaBancaria> intsancias_cuentas_bancarias = new ArrayList<>();
 
     //Constructor
     public CuentaBancaria(String nombre, String  descripcion, float montoOriginal, String tipo, float tasaInteres, LocalDate fechaInicio, String banco, int numero_cuenta, String tipo_cuenta, String id_usuario) {
@@ -436,6 +436,29 @@ public class CuentaBancaria extends FinanceItem{
         }
         porcentaje_representacion = (getMontoActual() / total_cuentas) * 100;
         System.out.println("El porcentaje representacion es " + porcentaje_representacion + "% con un valor de " + getMontoActual());
+    }
+
+    //Metodo para guardar interes en la base de datos
+    public void guardarCuentaBancariaBaseDatos(){
+        //Consulta para guardar el objeto interes en la base de datos
+        String consulta_registro = "INSERT INTO cuentas_bancarias (id, nombre, descripcion, montoOriginal,  fechaInicio, tasaInteres, banco, numeroCuenta, tipoCuenta, idUsuario) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        //Arreglo con los parametros de la consulta
+        String[] parametros = new String[]{getNombre(), getDescripcion(), String.valueOf(getMontoOriginal()), String.valueOf(getFechaInicio()), String.valueOf(getTasaInteres()), getBanco(), String.valueOf(getNumeroCuenta()), getTipoCuenta(), getIdUsuario()};
+
+        //Registro en la base de datos
+        try{
+            BaseDeDatos.establecerConexion();
+            boolean registro_exitoso = BaseDeDatos.ejecutarActualizacion(consulta_registro, parametros);
+            if (registro_exitoso){
+                System.out.println("Registro exitoso de ingreso." );
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+
     }
 
 

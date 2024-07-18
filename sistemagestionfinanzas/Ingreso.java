@@ -13,8 +13,8 @@ public class Ingreso extends FinanceItem{
     private String fuente;
     private CuentaBancaria cuenta_bancaria;
     private int frencuencia;
-    private static int cantidad_instancias;
-    private static List<Ingreso> instancias_ingresos;
+    private static int cantidad_instancias = 0;
+    private static List<Ingreso> instancias_ingresos = new ArrayList<>();
 
     //Constructor
     public Ingreso(String nombre, String  descripcion, float montoOriginal, LocalDate fechaInicio, String fuente, CuentaBancaria cuenta_bancaria, int frencuencia) {
