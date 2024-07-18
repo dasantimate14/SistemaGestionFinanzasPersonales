@@ -22,13 +22,13 @@ public class Stock extends FinanceItem{
     private float precio_actual;
     private float dividendo_por_accion;
     private float dividendo_acumulado;
-    private float dividendoEstimado;
-    private int frecuenciaDividendos;
+    private float dividendo_estimado;
+    private int frecuencia_dividendos;
     private static int cantidadInstancias = 0;
     private static List<Stock> instanciasStocks = new ArrayList<>();
 
     public Stock(String nombre, String descripcion, float tasaInteres, LocalDate fechaInicio,
-                 String nombreEmpresa, String simbolo, int cantidad, float precio_compra, String sector, float dividendo_por_accion, int frecuenciaDividendos){
+                 String nombreEmpresa, String simbolo, int cantidad, float precio_compra, String sector, float dividendo_por_accion, int frecuencia_dividendos){
         super(nombre, descripcion, (cantidad* precio_compra), "Activo", tasaInteres, fechaInicio);
         this.nombre_empresa = nombreEmpresa;
         this.simbolo = simbolo;
@@ -36,7 +36,7 @@ public class Stock extends FinanceItem{
         this.precio_compra = precio_compra;
         this.sector = sector;
         this.dividendo_por_accion = dividendo_por_accion;
-        this.frecuenciaDividendos = frecuenciaDividendos;
+        this.frecuencia_dividendos = frecuencia_dividendos;
 
         //Se guarda la instancia dentro de un arreglo que pertenece a la clase misma y no a la instancia
         instanciasStocks.add(this);
@@ -57,10 +57,10 @@ public class Stock extends FinanceItem{
     public String getSector() {return sector;}
     public float getDividendoPorAccion() {return dividendo_por_accion;}
     public float getDividendoAcumulado(){return dividendo_acumulado;}
-    public float getDividendoEstimado(){return dividendoEstimado;}
+    public float getDividendoEstimado(){return dividendo_estimado;}
     public static int getCantidadInstancias() {return cantidadInstancias;}
     public float getPrecioActual(){return precio_actual;}
-    public int getFrecuenciaDividendos(){return frecuenciaDividendos;}
+    public int getFrecuenciaDividendos(){return frecuencia_dividendos;}
 
     public void setNombreEmpresa(String nombre_empresa){this.nombre_empresa = nombre_empresa;}
     public void setSimbolo(String simbolo){this.simbolo = simbolo;}
@@ -69,7 +69,7 @@ public class Stock extends FinanceItem{
     public void setSector(String sector){this.sector = sector;}
     public void setDividendoPorAccion(float dividendo_por_accion){this.dividendo_por_accion = dividendo_por_accion;}
     public void setDividendoAcumulado(float dividendo_acumulado){this.dividendo_acumulado = dividendo_acumulado;}
-    public void setDividendoEstimado(float dividendoEstimado){this.dividendoEstimado = dividendoEstimado;}
+    public void setDividendoEstimado(float dividendo_estimado){this.dividendo_estimado = dividendo_estimado;}
     public void setPrecioActual(float precio_actual){this.precio_actual = precio_actual;}
 
     @Override
@@ -86,7 +86,7 @@ public class Stock extends FinanceItem{
         sb.append("Cantidad: ").append(cantidad).append("\n");
         sb.append("Precio de Compra: ").append(precio_compra).append("\n");
         sb.append("Dividendo por Acción: ").append(dividendo_por_accion).append("\n");
-        sb.append("Frecuencia de Pago de Dividendos: ").append(frecuenciaDividendos).append("\n");
+        sb.append("Frecuencia de Pago de Dividendos: ").append(frecuencia_dividendos).append("\n");
         sb.append("Precio Actual: ").append(precio_actual).append("\n");
         sb.append("Dividendo Acumulado: ").append(dividendo_acumulado).append("\n");
         sb.append("Sector: ").append(sector).append("\n");
@@ -113,31 +113,31 @@ public class Stock extends FinanceItem{
 
     @Override
     protected float calcularPromedioMensual() throws IOException {
-        List<Float> preciosMensuales = obtenerPreciosMensuales();
-        if (preciosMensuales.isEmpty()) {
+        List<Float> precios_mensuales = obtenerPreciosMensuales();
+        if (precios_mensuales.isEmpty()) {
             return 0.0f;
         }
 
-        float sumaPrecios = 0.0f;
-        for (float precio : preciosMensuales) {
-            sumaPrecios += precio;
+        float suma_precios = 0.0f;
+        for (float precio : precios_mensuales) {
+            suma_precios += precio;
         }
-        setPromedioMensual(sumaPrecios / preciosMensuales.size());
+        setPromedioMensual(suma_precios / precios_mensuales.size());
 
         return getPromedioMensual();
     }
 
     @Override
     protected float calcularPromedioAnual() throws IOException {
-        float sumaPromedio = 0.0f;
-        List<Float> preciosAnuales = obtenerPreciosAnuales();
-        if(preciosAnuales.isEmpty()){
+        float suma_promedio = 0.0f;
+        List<Float> precios_anuales = obtenerPreciosAnuales();
+        if(precios_anuales.isEmpty()){
             return 0.0f;
         }
-        for (float precio : preciosAnuales) {
-            sumaPromedio += precio;
+        for (float precio : precios_anuales) {
+            suma_promedio += precio;
         }
-        return sumaPromedio/preciosAnuales.size();
+        return suma_promedio / precios_anuales.size();
     }
 
     @Override
@@ -175,13 +175,14 @@ public class Stock extends FinanceItem{
                     dividendo_acumulado += (dividendo_por_accion * cantidad);
                 }
                 //Avanza al proximo mes
-                fecha_compra = fecha_compra.plusMonths(frecuenciaDividendos);
+                fecha_compra = fecha_compra.plusMonths(frecuencia_dividendos);
             }
 
         }
         return dividendo_acumulado;
     }
 
+    //Metodo para calcular una cantidad total de dividendo acumulado que puede tener una accion en cierta cantidad de meses
     public float calcularDividendoFuturo(int meses){
         LocalDate fecha_compra = getFechaInicio();
         LocalDate fecha_fin = LocalDate.now();
@@ -191,14 +192,14 @@ public class Stock extends FinanceItem{
             while(!fecha_compra.isAfter(fecha_fin)){
                 //Se debe acumular el dividendo si es el primero del mes
                 if(fecha_compra.getDayOfMonth() == 1 || fecha_compra.isBefore(fecha_fin)){
-                    dividendo_acumulado += (dividendo_por_accion * cantidad);
+                    dividendo_estimado += (dividendo_por_accion * cantidad);
                 }
                 //Avanza al proximo mes
-                fecha_compra = fecha_compra.plusMonths(frecuenciaDividendos);
+                fecha_compra = fecha_compra.plusMonths(frecuencia_dividendos);
             }
 
         }
-        return dividendo_acumulado;
+        return getDividendoEstimado();
     }
 
     public float obtenerPrecioActual() throws IOException {
