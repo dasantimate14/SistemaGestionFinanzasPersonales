@@ -13,8 +13,8 @@ public class Ingreso extends FinanceItem{
     private String fuente;
     private CuentaBancaria cuenta_bancaria;
     private int frencuencia;
-    private static int cantidad_instancias = 0;
-    private static List<Ingreso> instancias_ingresos = new ArrayList<>();
+    public static int cantidad_instancias = 0;
+    public static List<Ingreso> instancias_ingresos = new ArrayList<>();
 
     //Constructor
     public Ingreso(String nombre, String  descripcion, float montoOriginal, LocalDate fechaInicio, String fuente, CuentaBancaria cuenta_bancaria, int frencuencia) {
@@ -50,7 +50,7 @@ public class Ingreso extends FinanceItem{
     protected StringBuilder obtenerInformacionSubclase() {
         StringBuilder sb = new StringBuilder();
         sb.append("Fuente del Ingreso: ").append(fuente).append("\n");
-        sb.append("Cuenta Bancaria Asociada: ").append(cuenta_bancaria).append("\n");
+        sb.append("Cuenta Bancaria Asociada: ").append(cuenta_bancaria.getId()).append("\n");
         sb.append("Frecuencia de deposito: ").append(frencuencia).append("\n");
         return sb;
     }
@@ -79,7 +79,6 @@ public class Ingreso extends FinanceItem{
             ResultSet rs = null;
             String[] parametros = new String[8];
             String consulta = "SELECT MAX(fechaInicio) AS fecha_mas_reciente FROM ingresos WHERE idUsuario = '" + cuenta_bancaria.getIdUsuario() + "' AND idCuentaBancaria = '" + cuenta_bancaria.getId() + "' AND nombre = '" + getNombre() + "'";
-            String consulta_registro = "INSERT INTO ingresos (id, nombre, descripcion, montoOriginal, fechaInicio, fuente, idUsuario, idCuentaBancaria) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?)";
 
             //Se hace la consulta para obtener la fecha más reciente de registro de un ingreso que se repite por meses según la frecuencia
             try{
@@ -97,27 +96,18 @@ public class Ingreso extends FinanceItem{
 
             //Si la fecha inicio es igual al getFechaInicio quiere decir que la consulta no encontró una fecha más reciente de deposito y empezará a hacer depositos desde el primer registro del ingreso hasta la fecha actual según la frecuecia.
             while(fecha_inicio.isBefore(fecha_final)){
-                //Se vacía el arreglo de parametros
-                for (int i = 0; i < parametros.length; i++) {
-                    parametros[i] = "";
-                }
+
                 //Se crea el objeto que registra el ingreso automaticamente por el programa
                 fecha_inicio = fecha_inicio.plusMonths(getFrencuencia());
+                //Si despues de sumarle un mes la fecha se pasa de la fecha actual entonces sale del ciclo
+                if(fecha_inicio.isAfter(fecha_final)){
+                    break;
+                }
                 Ingreso ingreso = new Ingreso(getNombre(), getDescripcion(), getMontoOriginal(), fecha_inicio, getFuente(), getCuentaBancaria());
                 cuenta_bancaria.depositarMonto(ingreso.montoOriginal);
-                parametros = new String[]{ingreso.getNombre(), ingreso.getDescripcion(), String.valueOf(ingreso.getMontoOriginal()), String.valueOf(getFechaInicio()), ingreso.getFuente(), ingreso.cuenta_bancaria.getIdUsuario(), ingreso.cuenta_bancaria.getId()};
-            }
-            //Registro del ingreso por frecuencia en la base de datos
-            try {
-                BaseDeDatos.establecerConexion();
-                boolean registro_exitoso = BaseDeDatos.ejecutarActualizacion(consulta_registro, parametros);
-                if (registro_exitoso){
-                    System.out.println("Registro exitoso de ingreso." );
-                }
-            } catch (SQLException e){
-                e.printStackTrace();
-            } finally {
-                BaseDeDatos.cerrarConexion();
+
+                //Se guarda el ingreso repetido en la base de datos
+                ingreso.guardarIngresoBaseDatos();
             }
         }
     }
@@ -134,8 +124,8 @@ public class Ingreso extends FinanceItem{
             }
         }
         //Calcular porcentaje representación
-        porcentaje_representacion = (float) (sumatoria_ingreso/ingresos_totales)*100;
-        System.out.println("El porcentaje de representacion de "+ nombre + " es " + porcentaje_representacion +" con un total de " + sumatoria_ingreso);
+        porcentaje_representacion = redonderCantidad((float) (sumatoria_ingreso/ingresos_totales)*100);
+        System.out.println("El porcentaje de representacion de "+ nombre + " es " + porcentaje_representacion +" con un total de " + redonderCantidad(sumatoria_ingreso));
     }
 
     //Método para calcular el promedio mensual de todos los ingresos
@@ -163,7 +153,7 @@ public class Ingreso extends FinanceItem{
         } finally {
             BaseDeDatos.cerrarConexion();
         }
-        return promedio_mensual_total;
+        return Math.round(promedio_mensual_total * 100.0f) / 100.0f;
     }
 
     // Método para calcular el promedio anual de todos los ingresos
@@ -191,7 +181,7 @@ public class Ingreso extends FinanceItem{
         } finally {
             BaseDeDatos.cerrarConexion();
         }
-        return promedio_anual_total;
+        return Math.round(promedio_anual_total * 100.0f) / 100.0f;
     }
 
     //Metodo para obtner los ingresos totales por mes de los ultimos doce meses
@@ -240,7 +230,7 @@ public class Ingreso extends FinanceItem{
                 //Analisis del resultset y guardado del resultado en el array list
                 if(rs.next()){
                     ingreso_anual = rs.getFloat("ingreso_anual");
-                    ingresos_anuales.add(ingreso_anual);
+                    ingresos_anuales.add(redonderCantidad(ingreso_anual));
                     fecha_inicial = fecha_inicial.plusYears(1);
                     rs.close();
                 }
@@ -253,7 +243,7 @@ public class Ingreso extends FinanceItem{
     }
 
     //Metodo para guardar un ingreso en la base de datos
-    public void guardarCuentaBancariaBaseDatos(){
+    public void guardarIngresoBaseDatos(){
         //Consulta para guardar el objeto interes en la base de datos
         String consulta_registro = "INSERT INTO ingresos (id, nombre, descripcion, montoOriginal, fechaInicio, fuente, frecuencia,  idUsuario, idCuentaBancaria) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -265,7 +255,7 @@ public class Ingreso extends FinanceItem{
             BaseDeDatos.establecerConexion();
             boolean registro_exitoso = BaseDeDatos.ejecutarActualizacion(consulta_registro, parametros);
             if (registro_exitoso){
-                System.out.println("Registro exitoso de Cuenta Bancaria." );
+                System.out.println("Registro exitoso de Ingreso." );
             }
         } catch (SQLException e){
             e.printStackTrace();
