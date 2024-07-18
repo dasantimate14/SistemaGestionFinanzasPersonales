@@ -122,6 +122,7 @@ public class Ingreso extends FinanceItem{
         }
     }
 
+    //Metodo que calcula el porcentaje de representacion de un ingreso bajo el mismo nombre (como salario) frente a los demás
     public void calcularPorcentajeRepresentacionIngreso(String nombre){
         float sumatoria_ingreso = 0;
         float ingresos_totales = 0;
