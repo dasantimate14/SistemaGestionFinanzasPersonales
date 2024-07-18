@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Cliente {
     private String nombre;
@@ -18,9 +19,9 @@ public class Cliente {
 
     // Constructor
     public Cliente(String nombre, String email, String password) {
-        this.nombre = nombre;
-        this.email = email;
-        this.password = password;
+        this.nombre = Objects.requireNonNull(nombre, "Nombre no puede ser nulo");
+        this.email = Objects.requireNonNull(email, "Email no puede ser nulo");
+        this.password = Objects.requireNonNull(password, "Password no puede ser nulo");
         this.activos = new ArrayList<>();
         this.pasivos = new ArrayList<>();
         // Generar un ID único para el cliente
@@ -29,15 +30,15 @@ public class Cliente {
 
     // Métodos getter y setter
     public void setNombre(String nuevoNombre) {
-        this.nombre = nuevoNombre;
+        this.nombre = Objects.requireNonNull(nuevoNombre, "Nombre no puede ser nulo");
     }
 
     public void setEmail(String nuevoEmail) {
-        this.email = nuevoEmail;
+        this.email = Objects.requireNonNull(nuevoEmail, "Email no puede ser nulo");
     }
 
     public void setPassword(String nuevaPassword) {
-        this.password = nuevaPassword;
+        this.password = Objects.requireNonNull(nuevaPassword, "Password no puede ser nulo");
     }
 
     public String getNombre() {
@@ -57,19 +58,12 @@ public class Cliente {
     }
 
     public void setId(String nuevoId) {
-        this.id = nuevoId;
+        this.id = Objects.requireNonNull(nuevoId, "ID no puede ser nulo");
     }
 
     // Métodos relacionados con la gestión de activos y pasivos
-    public void obtenerActivos() {
-        // Lógica para obtener y mostrar activos
-    }
-
-    public void obtenerPasivos() {
-        // Lógica para obtener y mostrar pasivos
-    }
-
     public void agregarFinanceItem(FinanceItem item, boolean esActivo) {
+        Objects.requireNonNull(item, "FinanceItem no puede ser nulo");
         if (esActivo) {
             this.activos.add(item);
         } else {
@@ -78,6 +72,7 @@ public class Cliente {
     }
 
     public void eliminarFinanceItem(FinanceItem item, boolean esActivo) {
+        Objects.requireNonNull(item, "FinanceItem no puede ser nulo");
         if (esActivo) {
             this.activos.remove(item);
         } else {
@@ -162,6 +157,7 @@ public class Cliente {
 
     // Método para buscar un cliente por ID
     public static Cliente buscarClientePorId(String idBuscado) {
+        Objects.requireNonNull(idBuscado, "ID buscado no puede ser nulo");
         for (Cliente cliente : instancias_clientes) {
             if (cliente.getId().equals(idBuscado)) {
                 return cliente;
