@@ -95,19 +95,19 @@ public class Stock extends FinanceItem{
 
     @Override
     public void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
-        float valorTotalActivos = 0;
+        float valor_total_activos = 0;
         float valorTotalStocks = 0;
         float porcentajeRepresentacion = 0;
         //Por cada activo en el arreglo acumular su valor y si es de la instancia de stock se acumula en su respectiva variable
         for(FinanceItem item : activosPasivos){
-            valorTotalActivos = item.getMontoActual() + valorTotalActivos;
+            valor_total_activos = item.getMontoActual() + valor_total_activos;
             if(item instanceof Stock){
                 Stock stock = (Stock)item;
                 valorTotalStocks = stock.getMontoActual() + valorTotalStocks;
             }
         }
         //Calculo de porcentaje
-        porcentajeRepresentacion = (valorTotalStocks/valorTotalActivos)*100;
+        porcentajeRepresentacion = (valorTotalStocks/valor_total_activos)*100;
         System.out.println("El porcentaje de representación de todos los Stocks es " + porcentajeRepresentacion + "% con un valor de " + valorTotalStocks);
     }
 

@@ -41,7 +41,7 @@ public class Ingreso extends FinanceItem{
 
     @Override
     protected float calcularValorActual() throws IOException {
-        return 0;
+        return getMontoOriginal();
     }
 
     @Override
@@ -53,9 +53,9 @@ public class Ingreso extends FinanceItem{
         return sb;
     }
 
+    //No se calcula el porcentaje de representación de los ingresos porque se reflejan en la cuenta bancaria
     @Override
     protected void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
-
     }
 
     @Override
@@ -118,6 +118,21 @@ public class Ingreso extends FinanceItem{
                 BaseDeDatos.cerrarConexion();
             }
         }
+    }
+
+    public void calcularPorcentajeRepresentacionIngreso(String nombre){
+        float sumatoria_ingreso = 0;
+        float ingresos_totales = 0;
+        float porcentaje_representacion = 0;
+        for(Ingreso ingreso : instancias_ingresos){
+            ingresos_totales += ingreso.montoOriginal;
+            if(ingreso.getNombre().equals(nombre)){
+                sumatoria_ingreso += ingreso.montoOriginal;
+            }
+        }
+        //Calcular porcentaje representación
+        porcentaje_representacion = (float) (sumatoria_ingreso/ingresos_totales)*100;
+        System.out.println("El porcentaje de representacion de "+ nombre + " es " + porcentaje_representacion +" con un total de " + sumatoria_ingreso);
     }
 
 
