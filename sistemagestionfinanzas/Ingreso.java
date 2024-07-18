@@ -252,5 +252,7 @@ public class Ingreso extends FinanceItem{
         return ingresos_anuales;
     }
 
+    //Metodo para guardar el ingreso en la base de datos
+
 
 }
