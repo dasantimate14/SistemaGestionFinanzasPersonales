@@ -46,7 +46,17 @@ public class CuentaBancaria extends JFrame {
                     dispose();
             }
         });
+        //Action Listeners para los botones del dashboard
+        btnMenu2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Dashboard newframe = new Dashboard();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
     }
+
 
     @Override
     public void setVisible(boolean b) {

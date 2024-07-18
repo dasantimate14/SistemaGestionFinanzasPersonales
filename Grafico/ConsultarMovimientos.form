@@ -38,7 +38,11 @@
         <constraints>
           <grid row="4" column="7" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <model>
+            <item value="Escoger una opción"/>
+          </model>
+        </properties>
       </component>
       <grid id="8198d" binding="datePanelContainer" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
@@ -78,17 +82,19 @@
         <properties>
           <font name="Segoe UI Black" size="18"/>
           <foreground color="-394241"/>
-          <text value="ID:"/>
+          <text value="Número de Cuenta:"/>
         </properties>
       </component>
-      <component id="b3663" class="javax.swing.JComboBox" binding="cbID">
+      <component id="b3663" class="javax.swing.JComboBox" binding="cbNumeroCuenta">
         <constraints>
           <grid row="2" column="7" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="83" height="34"/>
           </grid>
         </constraints>
         <properties>
-          <model/>
+          <model>
+            <item value="Escoger una opción"/>
+          </model>
         </properties>
       </component>
       <component id="bc7f4" class="javax.swing.JList" binding="list1" default-binding="true">

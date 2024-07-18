@@ -1,6 +1,8 @@
 package Grafico;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class PlazoFijos {
     private JPanel PlazoFijosPanel;
@@ -14,4 +16,6 @@ public class PlazoFijos {
     private JButton gastosButton;
     private JButton proyeccionesButton;
     private JButton agregarPlazoFijoButton;
-}
+
+
+

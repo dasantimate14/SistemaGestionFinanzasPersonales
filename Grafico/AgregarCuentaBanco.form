@@ -83,15 +83,17 @@
               <text value="Saldo inicial"/>
             </properties>
           </component>
-          <component id="6b711" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+          <component id="6b711" class="javax.swing.JTextField" binding="tfNumeroCuenta">
             <constraints>
               <grid row="9" column="0" row-span="1" col-span="13" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <text value=""/>
+            </properties>
           </component>
-          <component id="56954" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+          <component id="56954" class="javax.swing.JTextField" binding="tfNombreCuenta">
             <constraints>
               <grid row="5" column="0" row-span="1" col-span="13" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -106,10 +108,13 @@
             <properties>
               <model>
                 <item value="Selecciona una opción"/>
+                <item value="Banco General"/>
+                <item value="Banco NAcional"/>
+                <item value="BAC"/>
               </model>
             </properties>
           </component>
-          <component id="69c88" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+          <component id="69c88" class="javax.swing.JTextField" binding="tfSaldoInicial">
             <constraints>
               <grid row="13" column="0" row-span="1" col-span="13" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>

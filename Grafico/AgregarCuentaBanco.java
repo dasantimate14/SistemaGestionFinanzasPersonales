@@ -36,6 +36,24 @@ public class  AgregarCuentaBanco extends JFrame {
                 dispose();
             }
         });
+        crearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    validarDatos();
+                    String nombre = tfNombreCuenta.getText();
+                    String numero = tfNumeroCuenta.getText();
+
+                    Cuenta cuenta = new Cuenta(nombre, numero);
+                    agregarCuenta(cuenta);
+                    JOptionPane.showMessageDialog(AgregarCuentaBanco.this, "Cuenta agregada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    tfNombreCuenta.setText("");
+                    tfNumeroCuenta.setText("");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(AgregarCuentaBanco.this, "Por favor, ingrese datos válidos. " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
 
     @Override
