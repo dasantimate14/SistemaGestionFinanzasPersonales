@@ -3,6 +3,7 @@ package sistemagestionfinanzas;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,7 +131,12 @@ public class CuentaBancaria extends FinanceItem{
         try {
             BaseDeDatos.establecerConexion();
             rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
-            ultima_fecha_interes = LocalDate.parse(rs.getString("fecha_mas_reciente"));
+            if(rs.next()){
+                String fecha_mas_reciente = rs.getString("fecha_mas_reciente");
+                if (fecha_mas_reciente != null) {
+                    ultima_fecha_interes = LocalDate.parse(fecha_mas_reciente);
+                }
+            }
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -227,7 +233,14 @@ public class CuentaBancaria extends FinanceItem{
 
     //Metodo que aplica la ecuacion del interes
     public float calcularInteresSobreBalance(float balance_mensual){
-        return (balance_mensual *((getTasaInteres()/100)/12));
+        float interes = (balance_mensual *((getTasaInteres()/100)/12));
+
+        // Formateamos el resultado a dos decimales
+        DecimalFormat formato = new DecimalFormat("#.##");
+        String interes_formateado = formato.format(interes);
+
+        //Convierte el resultado a flotante y lo devuelve
+        return Float.parseFloat(interes_formateado);
     }
 
     //Metodo para obtener el balance para un mes en especifico
