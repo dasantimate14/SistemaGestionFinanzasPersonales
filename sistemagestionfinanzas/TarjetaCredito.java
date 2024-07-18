@@ -1,6 +1,7 @@
 package sistemagestionfinanzas;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +18,13 @@ public class TarjetaCredito extends FinanceItem {
 
     // Constructor
     public TarjetaCredito(String nombre, String descripcion, float montoOriginal, String tipo, float tasaInteres, LocalDate fechaInicio,
-                          String tipoTarjeta, float limiteCredito, float saldoActual, String numero) {
+                          String tipoTarjeta, float limiteCredito, float saldoActual, String numero, CuentaBancaria cuentaBancaria) {
         super(nombre, descripcion, montoOriginal, tipo, tasaInteres, fechaInicio);
         this.tipoTarjeta = tipoTarjeta;
         this.limiteCredito = limiteCredito;
         this.saldoActual = saldoActual;
         this.numero = numero;
+        this.cuentaBancaria = cuentaBancaria;
         this.creditoUsado = calcularCreditoUsado();
         instanciasTarjetas.add(this);
     }
@@ -77,6 +79,14 @@ public class TarjetaCredito extends FinanceItem {
 
     public float getCreditoUsado() {
         return creditoUsado;
+    }
+
+    public CuentaBancaria getCuentaBancaria() {
+        return cuentaBancaria;
+    }
+
+    public void setCuentaBancaria(CuentaBancaria cuentaBancaria) {
+        this.cuentaBancaria = cuentaBancaria;
     }
 
     // Método para calcular el porcentaje de representación
@@ -134,5 +144,36 @@ public class TarjetaCredito extends FinanceItem {
     protected void actualizarInformacion() throws IOException {
         // Implementación específica no necesaria para esta prueba
     }
+
+    // Método para pagar la tarjeta de crédito
+    public void pagarTarjeta(float monto) throws SQLException {
+        if (cuentaBancaria != null && cuentaBancaria.getMontoActual() >= monto) {
+            // Retirar monto de la cuenta bancaria
+            cuentaBancaria.retirarMonto(monto);
+
+            // Descontar el monto del saldo de la tarjeta de crédito
+            this.saldoActual -= monto;
+
+            // Si el saldo actual es menor o igual a cero, ajustar valores
+            if (this.saldoActual <= 0) {
+                this.saldoActual = 0;
+                this.creditoUsado = 0;
+                System.out.println("Crédito disponible: " + limiteCredito);
+                System.out.println("Crédito usado: " + creditoUsado);
+            } else {
+                this.creditoUsado = calcularCreditoUsado();
+            }
+
+            // Registrar el pago como un gasto en la base de datos
+            String consulta = "INSERT INTO gastos (idUsuario, idCuentaBancaria, idTarjetaCredito, montoOriginal, fechaInicio) VALUES (?, ?, ?, ?, ?)";
+            String[] parametros = { cuentaBancaria.getIdUsuario(), String.valueOf(cuentaBancaria.getId()), String.valueOf(this.getId()), String.valueOf(monto), String.valueOf(LocalDate.now()) };
+            BaseDeDatos.ejecutarActualizacion(consulta, parametros);
+
+            System.out.println("Pago de tarjeta realizado con éxito y registrado como gasto.");
+        } else {
+            System.out.println("Fondos insuficientes en la cuenta bancaria para realizar el pago.");
+        }
+    }
 }
+
 
