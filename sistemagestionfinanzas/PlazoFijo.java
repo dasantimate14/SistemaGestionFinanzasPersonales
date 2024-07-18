@@ -4,30 +4,30 @@ import java.time.LocalDate;
 
 public class PlazoFijo {
     private int plazo;
-    private LocalDate fechaFinal;
+    private LocalDate fecha_final;
     private CuentaBancaria cuenta;
 
     public PlazoFijo(int plazo, CuentaBancaria cuenta) {
         this.plazo = plazo;
         this.cuenta = cuenta;
-        this.fechaFinal = LocalDate.now().plusMonths(plazo);
+        this.fecha_final = LocalDate.now().plusMonths(plazo);
     }
 
     public int getPlazo() {
         return plazo;
     }
 
-    public void setPlazo(int nuevoPlazo) {
-        this.plazo = nuevoPlazo;
-        this.fechaFinal = LocalDate.now().plusMonths(nuevoPlazo);
+    public void setPlazo(int nuevo_plazo) {
+        this.plazo = nuevo_plazo;
+        this.fecha_final = LocalDate.now().plusMonths(nuevo_plazo);
     }
 
     public LocalDate getFechaFinal() {
-        return fechaFinal;
+        return fecha_final;
     }
 
-    public void setFechaFinal(LocalDate nuevaFechaFinal) {
-        this.fechaFinal = nuevaFechaFinal;
+    public void setFechaFinal(LocalDate nueva_fecha_final) {
+        this.fecha_final = nueva_fecha_final;
     }
 
     public CuentaBancaria getCuenta() {
@@ -39,22 +39,22 @@ public class PlazoFijo {
     }
 
     public void depositarInteres() {
-        float interesAcumulado = calcularInteresAcumulado();
-        cuenta.depositarMonto(interesAcumulado);
+        float interes_acumulado = calcularInteresAcumulado();
+        cuenta.depositarMonto(interes_acumulado);
     }
 
     public float calcularInteresAcumulado() {
         // Asumiendo que la tasa de interés está en la cuenta y es anual
-        float tasaInteres = cuenta.getInteres(); // Obtenemos la tasa de interés de la cuenta
-        float montoOriginal = cuenta.getMontoOriginal();
+        float tasa_interes = cuenta.getInteres(); // Obtenemos la tasa de interés de la cuenta
+        float monto_original = cuenta.getMontoOriginal();
         int meses = plazo;
-        float interesAcumulado = montoOriginal * (tasaInteres / 100) * (meses / 12.0f);
-        return interesAcumulado;
+        float interes_acumulado = monto_original * (tasa_interes / 100) * (meses / 12.0f);
+        return interes_acumulado;
     }
 
     public float calcularMontoFinal() {
-        float montoOriginal = cuenta.getMontoOriginal();
-        float interesAcumulado = calcularInteresAcumulado();
-        return montoOriginal + interesAcumulado;
+        float monto_original = cuenta.getMontoOriginal();
+        float interes_acumulado = calcularInteresAcumulado();
+        return monto_original + interes_acumulado;
     }
 }
