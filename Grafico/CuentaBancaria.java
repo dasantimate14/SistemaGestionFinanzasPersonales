@@ -28,6 +28,14 @@ public class CuentaBancaria extends JFrame {
         btnAgregarCuenta.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                AgregarCuentaBanco newframe = new AgregarCuentaBanco();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        consultarMovimientosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 ConsultarMovimientos newframe = new ConsultarMovimientos();
                 newframe.setVisible(true);
                 dispose();

@@ -4,6 +4,8 @@ import org.jdatepicker.impl.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -16,6 +18,7 @@ public class ConsultarMovimientos extends JFrame {
     private JComboBox cbNombreCuenta;
     private JList<String> list1;
     private JButton btnBuscar;
+    private JButton Volverbtn;
     private JDatePickerImpl datePicker;
 
     public ConsultarMovimientos() {
@@ -37,6 +40,14 @@ public class ConsultarMovimientos extends JFrame {
 
         datePanelContainer.setLayout(new BorderLayout());
         datePanelContainer.add(datePicker, BorderLayout.CENTER);
+        Volverbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CuentaBancaria newframe = new CuentaBancaria();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
     }
 
     public static void main(String[] args) {
