@@ -8,6 +8,13 @@ public class BaseDeDatos {
     private static Connection con = null;
 
     public static void establecerConexion() throws SQLException {
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            // Lanza una SQLException personalizada indicando que el controlador no fue encontrado
+            throw new SQLException("No se encontró el controlador JDBC de MariaDB.");
+        }
         con = DriverManager.getConnection("jdbc:mariadb://localhost:3306", "root", "");
     }
 
