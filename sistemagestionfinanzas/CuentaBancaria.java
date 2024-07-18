@@ -116,19 +116,19 @@ public class CuentaBancaria extends FinanceItem{
     //Metodo que registra el interes en la base de datos como un objeto Ingreso
     public void registrarInteres(){
         //Calcular el balance hasta el primero del mes anterior
-        float balanceMensual = getMontoOriginal();
-        float interesMensual = 0;
-        LocalDate fechaInicial;
-        LocalDate fechaActual = LocalDate.now();
+        float balance_mensual = getMontoOriginal();
+        float interes_mensual = 0;
+        LocalDate fecha_inicial;
+        LocalDate fecha_actual = LocalDate.now();
         String consulta = "SELECT MAX(fechaInicio) AS fecha_mas_reciente FROM ingresos WHERE idUsuario = '" + getIdUsuario() + "' AND idCuentaBancaria = '" + getId() + "' AND nombre = 'Interes'";
         ResultSet rs = null;
-        LocalDate ultimaFechaInteres = null;
+        LocalDate ultima_fecha_interes = null;
 
         //Se realiza la consulta a la base de datos
         try {
             BaseDeDatos.establecerConexion();
             rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
-            ultimaFechaInteres = LocalDate.parse(rs.getString("fecha_mas_reciente"));
+            ultima_fecha_interes = LocalDate.parse(rs.getString("fecha_mas_reciente"));
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -137,68 +137,74 @@ public class CuentaBancaria extends FinanceItem{
         }
 
         //Si la ultima fecha es null entonces nunca se le han registrado los intereses a la cuenta. Se crean todos los intereses por mes desde la creacion de la cuenta hasta la fecha acutal
-        if (ultimaFechaInteres == null){
-            fechaInicial = getFechaInicio();
+        if (ultima_fecha_interes == null){
+            fecha_inicial = getFechaInicio();
 
             //Se establece un rango del primero de un mes al otro, representando el deposito de intereses el primero de cada mes
-            fechaInicial = fechaInicial.withDayOfMonth(1);
-            fechaActual = fechaActual.withDayOfMonth(1);
-            while (fechaInicial.isBefore(fechaActual)){
+            fecha_inicial = fecha_inicial.withDayOfMonth(1);
+            fecha_actual = fecha_actual.withDayOfMonth(1);
+            while (fecha_inicial.isBefore(fecha_actual)){
                 try {
-                    balanceMensual = calcularBalanceMensual(String.valueOf(fechaInicial), balanceMensual);
+                    balance_mensual = calcularBalanceMensual(String.valueOf(fecha_inicial), balance_mensual);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                interesMensual = calcularInteresSobreBalance(balanceMensual);
+                interes_mensual = calcularInteresSobreBalance(balance_mensual);
                 //Se mueve la fechaInicial al siguiente mes
-                fechaInicial = fechaInicial.plusMonths(1);
+                fecha_inicial = fecha_inicial.plusMonths(1);
 
                 //Se crea un objeto ingreso para que registre el interes
 
                 //Se actualiza el deposito del monto al valor actual de cuenta
-                depositarMonto(interesMensual);
+                depositarMonto(interes_mensual);
             }
 
         //Si la ultima fecha es diferente de null entonces ya se han registrado depositos de interes antes y se empieza a registrar intereses apartir de este ultimo deposito
         } else {
             //Se establece el rango inferior de las fechas al ultimo deposito que se hizo
-            fechaInicial = ultimaFechaInteres;
+            fecha_inicial = ultima_fecha_interes;
 
             //Se establece un rango del primero de un mes al otro, representando el deposito de intereses el primero de cada mes
-            fechaInicial = fechaInicial.withDayOfMonth(1);
-            fechaActual = fechaActual.withDayOfMonth(1);
+            fecha_inicial = fecha_inicial.withDayOfMonth(1);
+            fecha_actual = fecha_actual.withDayOfMonth(1);
 
             //Se obtiene el balance del mes anterior utilizando la fechaInicial como limite superior de la funcion calcularBalancePrevio
             try {
-                balanceMensual = calcularBalancePrevio(String.valueOf(fechaInicial));
+                balance_mensual = calcularBalancePrevio(String.valueOf(fecha_inicial));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
 
-            while(fechaInicial.isBefore(fechaActual)){
+            while(fecha_inicial.isBefore(fecha_actual)){
                 try{
-                    balanceMensual = calcularBalanceMensual(String.valueOf(fechaInicial), balanceMensual);
+                    balance_mensual = calcularBalanceMensual(String.valueOf(fecha_inicial), balance_mensual);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                interesMensual = calcularInteresSobreBalance(balanceMensual);
+                interes_mensual = calcularInteresSobreBalance(balance_mensual);
 
                 //Se mueve la fechaInicial al siguiente mes
-                fechaInicial = fechaInicial.plusMonths(1);
+                fecha_inicial = fecha_inicial.plusMonths(1);
 
-                //Se crea un objeto ingreso para que registre el interes
+                //Se crea un objeto ingreso y se registra en la base de datos
+                guardarInteres(interes_mensual, fecha_inicial);
 
                 //Se actualiza el deposito del monto al valor actual de cuenta
-                depositarMonto(interesMensual);
+                depositarMonto(interes_mensual);
             }
         }
     }
 
+    //Metodo para guardar interes en la base de datos
+    public void guardarInteres(float interes_mensual, LocalDate fecha_deposito){
+        Ingreso ingreso = new Ingreso("Interes", "Interes mensual generado por esta cuenta", interes_mensual, fecha_deposito, getBanco(), this);
+
+
+    }
+
     //Metodo que aplica la ecuacion del interes
     public float calcularInteresSobreBalance(float balanceMensual){
-        float interesMensual = 0;
-        interesMensual = balanceMensual*((this.interes/100)/12);
-        return interesMensual;
+        return (balanceMensual*((getTasaInteres()/100)/12));
     }
 
     //Metodo para obtener el balance para un mes en especifico
@@ -301,8 +307,8 @@ public class CuentaBancaria extends FinanceItem{
             ResultSet rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
             if(rs != null){
                 interesAcumulado = rs.getFloat("interes_total");
+                rs.close();
             }
-            rs.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
