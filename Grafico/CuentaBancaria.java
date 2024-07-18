@@ -28,17 +28,27 @@ public class CuentaBancaria extends JFrame {
         btnAgregarCuenta.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                try {
+                    validarDatosAgregarCuenta();
                 AgregarCuentaBanco newframe = new AgregarCuentaBanco();
                 newframe.setVisible(true);
                 dispose();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(CuentaBancaria.this, "Por favor, ingrese datos válidos. " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         consultarMovimientosButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ConsultarMovimientos newframe = new ConsultarMovimientos();
-                newframe.setVisible(true);
-                dispose();
+                try {
+                    validarDatosConsultarMovimientos();
+                    ConsultarMovimientos newframe = new ConsultarMovimientos();
+                    newframe.setVisible(true);
+                    dispose();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(CuentaBancaria.this, "Por favor, ingrese datos válidos. " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }
@@ -57,4 +67,38 @@ public class CuentaBancaria extends JFrame {
             }
         });
     }
+    private void validarDatosAgregarCuenta() throws Exception {
+        String nombreCuenta = "nombreCuentaEjemplo";
+        String numeroCuenta = "numeroCuentaEjemplo";
+
+        if (nombreCuenta.isEmpty() || nombreCuenta == null) {
+            throw new Exception("Debe ingresar el nombre de la cuenta.");
+        }
+
+
+        if (numeroCuenta.isEmpty() || numeroCuenta == null) {
+            throw new Exception("Debe ingresar el número de la cuenta.");
+        }
+        if (!numeroCuenta.matches("[0-9-]+")) {
+            throw new Exception("El número de cuenta solo puede contener números y guiones.");
+        }
+        if (numeroCuenta.length() > 20) {
+            throw new Exception("El número de cuenta no puede tener más de 20 caracteres.");
+        }
+    }
+
+    private void validarDatosConsultarMovimientos() throws Exception {
+
+        String numeroCuenta = "numeroCuentaEjemplo";
+        if (numeroCuenta.isEmpty() || numeroCuenta == null) {
+            throw new Exception("Debe ingresar el número de la cuenta.");
+        }
+        if (!numeroCuenta.matches("[0-9-]+")) {
+            throw new Exception("El número de cuenta solo puede contener números y guiones.");
+        }
+        if (numeroCuenta.length() > 20) {
+            throw new Exception("El número de cuenta no puede tener más de 20 caracteres.");
+        }
+    }
+
 }
