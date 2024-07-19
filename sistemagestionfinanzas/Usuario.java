@@ -5,22 +5,22 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Cliente {
+public class Usuario {
     private String nombre;
     private String email;
-    private String password;
+    private String contrasena;
     private String id;
     private ArrayList<FinanceItem> activos;
     private ArrayList<FinanceItem> pasivos;
 
     // Lista estática para almacenar todos los clientes
-    public static ArrayList<Cliente> instancias_clientes = new ArrayList<>();
+    public static ArrayList<Usuario> instancias_clientes = new ArrayList<>();
 
     // Constructor
-    public Cliente(String nombre, String email, String password) {
+    public Usuario(String nombre, String email, String password) {
         this.nombre = Objects.requireNonNull(nombre, "Nombre no puede ser nulo");
         this.email = Objects.requireNonNull(email, "Email no puede ser nulo");
-        this.password = Objects.requireNonNull(password, "Password no puede ser nulo");
+        this.contrasena = Objects.requireNonNull(contrasena, "Contraseña no puede ser nula");
         this.activos = new ArrayList<>();
         this.pasivos = new ArrayList<>();
         // Generar un ID único para el cliente
@@ -37,7 +37,7 @@ public class Cliente {
     }
 
     public void setPassword(String nuevaPassword) {
-        this.password = Objects.requireNonNull(nuevaPassword, "Password no puede ser nulo");
+        this.contrasena = Objects.requireNonNull(contrasena, "Contraseña no puede ser nula");
     }
 
     public String getNombre() {
@@ -48,8 +48,8 @@ public class Cliente {
         return this.email;
     }
 
-    public String getPassword() {
-        return this.password;
+    public String getCotrasena() {
+        return this.contrasena;
     }
 
     public String getId() {
@@ -61,9 +61,9 @@ public class Cliente {
     }
 
     // Métodos relacionados con la gestión de activos y pasivos
-    public void agregarFinanceItem(FinanceItem item, boolean esActivo) {
+    public void agregarFinanceItem(FinanceItem item) {
         Objects.requireNonNull(item, "FinanceItem no puede ser nulo");
-        if (esActivo) {
+        if (item.getTipo().equals("Activo")) {
             this.activos.add(item);
         } else {
             this.pasivos.add(item);
@@ -72,16 +72,35 @@ public class Cliente {
 
     public void eliminarFinanceItem(FinanceItem item, boolean esActivo) {
         Objects.requireNonNull(item, "FinanceItem no puede ser nulo");
-        if (esActivo) {
+        if (item.getTipo().equals("Activo")) {
             this.activos.remove(item);
         } else {
             this.pasivos.remove(item);
         }
     }
 
-    // Otros métodos
-    public void iniciarSesion() {
-        // Lógica para iniciar sesión del cliente
+    // Lógica para iniciar sesión del cliente
+    public static boolean auntentificacionIniciarSesion(String email, String contrasena) {
+        boolean es_usuario = false;
+        String consulta = "SELECT * FROM usuarios WHERE email = ?";
+
+        String[] parametros = {email};
+        try{
+            BaseDeDatos.establecerConexion();
+            ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
+            if(rs.next()) {
+                String contrasena_guardada = rs.getString("contrasena");
+                if(contrasena_guardada.equals(contrasena)) {
+                    es_usuario = true;
+                }
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+        return es_usuario;
     }
 
     // Método privado para generar un ID único (ejemplo sencillo)
@@ -112,7 +131,7 @@ public class Cliente {
     public void guardarClienteEnBaseDatos() {
         String consultaRegistro = "INSERT INTO clientes (id, nombre, email, password) VALUES (?, ?, ?, ?)";
 
-        String[] parametros = new String[]{getId(), getNombre(), getEmail(), getPassword()};
+        String[] parametros = new String[]{getId(), getNombre(), getEmail(), getCotrasena()};
 
         try {
             BaseDeDatos.establecerConexion();
@@ -141,11 +160,11 @@ public class Cliente {
                 String password = rs.getString("password");
 
                 // Crear el objeto Cliente con los datos capturados
-                Cliente cliente = new Cliente(nombre, email, password);
-                cliente.setId(id);
+                Usuario usuario = new Usuario(nombre, email, password);
+                usuario.setId(id);
 
                 // Agregar el cliente a la lista estática
-                instancias_clientes.add(cliente);
+                instancias_clientes.add(usuario);
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -155,13 +174,48 @@ public class Cliente {
     }
 
     // Método para buscar un cliente por ID
-    public static Cliente buscarClientePorId(String idBuscado) {
-        Objects.requireNonNull(idBuscado, "ID buscado no puede ser nulo");
-        for (Cliente cliente : instancias_clientes) {
-            if (cliente.getId().equals(idBuscado)) {
+    public static Usuario buscarClientePorId(String id_buscado) {
+        Objects.requireNonNull(id_buscado, "ID buscado no puede ser nulo");
+        for (Usuario cliente : instancias_clientes) {
+            if (cliente.getId().equals(id_buscado)) {
                 return cliente;
             }
         }
         return null; // Si no se encuentra el cliente
     }
+
+    //Metodo para verificar si el email ingresado ya existe
+    public static boolean correoExistente(String email){
+        String consulta = "SELECT * FROM usuarios WHERE email = ?";
+        String[] parametros = {email};
+        boolean correo_existente = false;
+
+        try{
+            BaseDeDatos.establecerConexion();
+            ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
+            if(rs.next()){
+                correo_existente = true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+        return correo_existente;
+    }
+
+    public float calcularBalance(){
+        float total_activos = 0;
+        float total_pasivos = 0;
+        for(FinanceItem item : activos){
+            total_activos += item.getMontoActual();
+        }
+        for(FinanceItem item : pasivos){
+            total_pasivos += item.getMontoActual();
+        }
+        return total_activos - total_pasivos;
+    }
+
+
 }
