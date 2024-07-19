@@ -2,7 +2,7 @@ package Grafico;
 
 import javax.swing.*;
 
-public class Tarjetas {
+public class Tarjetas extends JFrame {
     private JButton btMenu;
     private JButton cuentasBancariasButton;
     private JButton préstamoButton;

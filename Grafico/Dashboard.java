@@ -31,11 +31,15 @@ public class Dashboard extends JFrame {
                 dispose();
             }
         });
-    }
 
+        // Añade ActionListeners para otros botones si es necesario
+    } // Cierre del constructor
+
+    @Override
     public void setVisible(boolean b) {
         super.setVisible(b);
     }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -44,7 +48,6 @@ public class Dashboard extends JFrame {
                 frame.setVisible(true);
             }
         });
-
     }
 }
 
