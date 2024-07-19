@@ -12,16 +12,16 @@ public class Ingreso extends FinanceItem{
     //Declaracion de atributos
     private String fuente;
     private CuentaBancaria cuenta_bancaria;
-    private int frencuencia;
+    private int frecuencia;
     public static int cantidad_instancias = 0;
     public static List<Ingreso> instancias_ingresos = new ArrayList<>();
 
     //Constructor
-    public Ingreso(String nombre, String  descripcion, float montoOriginal, LocalDate fechaInicio, String fuente, CuentaBancaria cuenta_bancaria, int frencuencia) {
+    public Ingreso(String nombre, String  descripcion, float montoOriginal, LocalDate fechaInicio, String fuente, CuentaBancaria cuenta_bancaria, int frecuencia) {
         super(nombre, descripcion, montoOriginal, "Activo", fechaInicio);
         this.fuente = fuente;
         this.cuenta_bancaria = cuenta_bancaria;
-        this.frencuencia = frencuencia;
+        this.frecuencia = frecuencia;
         instancias_ingresos.add(this);
         cantidad_instancias++;
     }
@@ -34,11 +34,11 @@ public class Ingreso extends FinanceItem{
     //Metodos get y set
     public String getFuente(){ return fuente;}
     public CuentaBancaria getCuentaBancaria(){return cuenta_bancaria;}
-    public int getFrencuencia(){return frencuencia;}
+    public int getFrecuencia(){return frecuencia;}
 
     public void setFuente(String fuente){this.fuente = fuente;}
     public void setCuentaBancaria(CuentaBancaria cuenta_bancaria){this.cuenta_bancaria = cuenta_bancaria;}
-    public void setFrencuencia(int frencuencia){this.frencuencia = frencuencia;}
+    public void setFrencuencia(int frecuencia){this.frecuencia = frecuencia;}
 
 
     @Override
@@ -51,7 +51,7 @@ public class Ingreso extends FinanceItem{
         StringBuilder sb = new StringBuilder();
         sb.append("Fuente del Ingreso: ").append(fuente).append("\n");
         sb.append("Cuenta Bancaria Asociada: ").append(cuenta_bancaria.getId()).append("\n");
-        sb.append("Frecuencia de deposito: ").append(frencuencia).append("\n");
+        sb.append("Frecuencia de deposito: ").append(frecuencia).append("\n");
         return sb;
     }
 
@@ -73,7 +73,7 @@ public class Ingreso extends FinanceItem{
     //Método que permite registrar los ingresos con frecuencia
     @Override
     protected void actualizarInformacion() throws IOException {
-        if(getFrencuencia() != 0){
+        if(getFrecuencia() != 0){
             LocalDate fecha_final = LocalDate.now();
             LocalDate fecha_inicio = getFechaInicio();
             ResultSet rs = null;
@@ -101,7 +101,7 @@ public class Ingreso extends FinanceItem{
             while(fecha_inicio.isBefore(fecha_final)){
 
                 //Se crea el objeto que registra el ingreso automaticamente por el programa
-                fecha_inicio = fecha_inicio.plusMonths(getFrencuencia());
+                fecha_inicio = fecha_inicio.plusMonths(getFrecuencia());
                 //Si despues de sumarle un mes la fecha se pasa de la fecha actual entonces sale del ciclo
                 if(fecha_inicio.isAfter(fecha_final)){
                     break;
@@ -200,9 +200,6 @@ public class Ingreso extends FinanceItem{
 
         while(fecha_inicial.isBefore(fecha_actual)){
             String[] parametros = {id_usuario,fecha_inicial.toString(), String.valueOf(siguiente_mes)};
-            System.out.println("Fecha inicial: " + fecha_inicial);
-            System.out.println("Siguiente mes: " + siguiente_mes);
-            System.out.println("Fecha actual: " + fecha_actual+"\n");
             try{
                 BaseDeDatos.establecerConexion();
                 ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta,parametros);
@@ -228,7 +225,7 @@ public class Ingreso extends FinanceItem{
         return ingresos_mensuales;
     }
 
-    //Metodo para obtner los ingresos totales por año de los ultimos doce meses
+    //Metodo para obtner los ingresos totales por año de los ultimos 5 años
     public static List<Float> obtenerIngresosAnualesRecientes(String id_usuario){
         List<Float> ingresos_anuales = new ArrayList<>();
         LocalDate fecha_actual = LocalDate.now().withDayOfMonth(1);
@@ -271,7 +268,7 @@ public class Ingreso extends FinanceItem{
         String consulta_registro = "INSERT INTO ingresos (id, nombre, descripcion, montoOriginal, fechaInicio, fuente, frecuencia,  idUsuario, idCuentaBancaria) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?)";
 
         //Arreglo con los parametros de la consulta
-        String[] parametros = {getNombre(), getDescripcion(), String.valueOf(getMontoOriginal()), String.valueOf(getFechaInicio()), getFuente(), String.valueOf(getFrencuencia()), cuenta_bancaria.getIdUsuario(), cuenta_bancaria.getId()};
+        String[] parametros = {getNombre(), getDescripcion(), String.valueOf(getMontoOriginal()), String.valueOf(getFechaInicio()), getFuente(), String.valueOf(getFrecuencia()), cuenta_bancaria.getIdUsuario(), cuenta_bancaria.getId()};
 
         //Registro en la base de datos
         try{
@@ -282,6 +279,47 @@ public class Ingreso extends FinanceItem{
             }
         } catch (SQLException e){
             e.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+
+    }
+
+    public static void obtenerIngresosBaseDatos(String id_usuario){
+        Ingreso ingreso = null;
+        String consulta = "SELECT * FROM ingresos WHERE idUsuario = ?";
+        String[] parametros = {id_usuario};
+        try{
+            BaseDeDatos.establecerConexion();
+            ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
+            while (rs.next()) {
+                //Se leen cada uno de los campos en el resultset para crear el objeto
+                String id = rs.getString("id");
+                String nombre = rs.getString("nombre");
+                String descripcion = rs.getString("descripcion");
+                float monto_original = rs.getFloat("montoOriginal");
+                LocalDate fecha_inicio = rs.getDate("fechaInicio").toLocalDate();
+                String fuente = rs.getString("fuente");
+                int frecuencia = rs.getInt("frecuencia");
+                String id_cuenta_bancaria = rs.getString("idCuentaBancaria");
+
+                CuentaBancaria cuenta_viculada = null;
+                for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
+                    cuenta.obtenerInformacionCompleta();
+                    if(cuenta.getId().equals(id_cuenta_bancaria)) {
+                        cuenta_viculada = cuenta;
+                    }
+                }
+                if (cuenta_viculada == null) {
+                    System.out.println("No existe el cuenta  con ese ID");
+                }
+
+                //Se crea el objeto con los datos capturados
+                ingreso = new Ingreso(nombre, descripcion, monto_original, fecha_inicio, fuente, cuenta_viculada, frecuencia);
+                ingreso.setId(id);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
         } finally {
             BaseDeDatos.cerrarConexion();
         }

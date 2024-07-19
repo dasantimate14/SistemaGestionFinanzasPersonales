@@ -3,7 +3,6 @@ package sistemagestionfinanzas;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -462,6 +461,37 @@ public class CuentaBancaria extends FinanceItem{
             }
         } catch (SQLException e){
             e.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+
+    }
+
+    public static void obtenerCuentasBancariasBaseDatos(String id_usuario){
+        CuentaBancaria cuenta_bancaria = null;
+        String consulta = "SELECT * FROM cuentas_bancarias WHERE idUsuario = ?";
+        String[] parametros = {id_usuario};
+        try{
+            BaseDeDatos.establecerConexion();
+            ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
+            while (rs.next()) {
+                //Se leen cada uno de los campos en el resultset para crear el objeto
+                String id = rs.getString("id");
+                String nombre = rs.getString("nombre");
+                String descripcion = rs.getString("descripcion");
+                float monto_original = rs.getFloat("montoOriginal");
+                float tasa_interes = rs.getFloat("tasaInteres");
+                LocalDate fecha_inicio = rs.getDate("fechaInicio").toLocalDate();
+                String banco = rs.getString("banco");
+                String numero_cuenta = rs.getString("numeroCuenta");
+                String tipo_cuenta = rs.getString("tipoCuenta");
+
+                //Se crea el objeto con los datos capturados
+                cuenta_bancaria = new CuentaBancaria(nombre, descripcion, monto_original, tasa_interes,fecha_inicio, banco, numero_cuenta, tipo_cuenta, id_usuario);
+                cuenta_bancaria.setId(id);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
         } finally {
             BaseDeDatos.cerrarConexion();
         }

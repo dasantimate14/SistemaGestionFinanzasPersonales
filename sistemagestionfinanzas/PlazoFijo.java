@@ -198,7 +198,7 @@ public class PlazoFijo extends FinanceItem {
         System.out.println("El porcentaje representacion es " + redonderCantidad(porcentaje_representacion) + "% con un valor de " + getMontoActual());
     }
 
-    public static void cargarPlazoFijosBaseDatos(String id_usuario) {
+    public static void obtenerPlazoFijosBaseDatos(String id_usuario) {
         PlazoFijo plazo_fijo = null;
         String consulta = "SELECT * FROM plazos_fijos WHERE idUsuario = ?";
         String[] parametro = {id_usuario};
