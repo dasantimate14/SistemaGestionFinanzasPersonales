@@ -49,7 +49,7 @@ public class ConsultarMovimientos extends JFrame {
         Volverbtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CuentaBancaria newframe = new CuentaBancaria();
+                CuentaBancariaG newframe = new CuentaBancariaG();
                 newframe.setVisible(true);
                 dispose();
             }

@@ -72,7 +72,7 @@ public class Ingreso extends FinanceItem{
 
     //Método que permite registrar los ingresos con frecuencia
     @Override
-    protected void actualizarInformacion() throws IOException {
+    public void actualizarInformacion() throws IOException {
         if(getFrecuencia() != 0){
             LocalDate fecha_final = LocalDate.now();
             LocalDate fecha_inicio = getFechaInicio();

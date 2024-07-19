@@ -113,7 +113,7 @@ public class Gasto extends FinanceItem {
     }
 
     @Override
-    protected void actualizarInformacion() {
+    public void actualizarInformacion() {
         if(getFrecuencia() != 0){
             LocalDate fecha_final = LocalDate.now();
             LocalDate fecha_inicio = getFechaInicio();

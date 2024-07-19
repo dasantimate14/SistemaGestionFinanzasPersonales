@@ -13,8 +13,8 @@ public class CuentaBancaria extends FinanceItem{
     private String numero_cuenta;
     private String tipo_cuenta;
     private String id_usuario;
-    static int cantidad_instancias = 0;
-    static List<CuentaBancaria> intsancias_cuentas_bancarias = new ArrayList<>();
+    public static int cantidad_instancias = 0;
+    public static List<CuentaBancaria> intsancias_cuentas_bancarias = new ArrayList<>();
 
     //Constructor
     public CuentaBancaria(String nombre, String  descripcion, float montoOriginal, float tasaInteres, LocalDate fechaInicio, String banco, String numero_cuenta, String tipo_cuenta, String id_usuario) {
@@ -110,7 +110,7 @@ public class CuentaBancaria extends FinanceItem{
     }
 
     @Override
-    protected void actualizarInformacion() throws IOException {
+    public void actualizarInformacion() throws IOException {
         calcularValorActual();
         calcularInteresAcumulado();
         setGanaciaPerdida(calcularGanaciaPerdida());

@@ -14,7 +14,7 @@ public class PlazoFijo extends FinanceItem {
     private LocalDate fecha_final;
     private CuentaBancaria cuenta;
     static int cantidad_instancias_plazo_fijo;
-    static List<PlazoFijo> instancias_plazos_fijos = new ArrayList<>();
+    public static List<PlazoFijo> instancias_plazos_fijos = new ArrayList<>();
 
     public PlazoFijo(String nombre,String descripcion,float montoOriginal, float tasa_interes, LocalDate fecha_inicio, int plazo, CuentaBancaria cuenta) {
         super(nombre, descripcion, montoOriginal, "Activo", tasa_interes, fecha_inicio);
@@ -168,7 +168,7 @@ public class PlazoFijo extends FinanceItem {
     }
 
     @Override
-    protected void actualizarInformacion() throws IOException {
+    public void actualizarInformacion() throws IOException {
         try {
             depositarInteres();
         } catch (SQLException e) {

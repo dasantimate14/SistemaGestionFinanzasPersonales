@@ -16,8 +16,8 @@ public class Prestamo extends FinanceItem {
     private int estatus;
     private float cuotaMensual;
     private CuentaBancaria cuenta_bancaria;
-    private static int cantidadInstancias = 0;
-    private static List<Prestamo> instanciasPrestamos = new ArrayList<>();
+    public static int cantidadInstancias = 0;
+    public static List<Prestamo> instanciasPrestamos = new ArrayList<>();
 
     public Prestamo(String nombre, String descripcion, float montoOriginal, float tasaInteres, LocalDate fechaInicio,
                     String tipoPrestamo, int plazo, LocalDate fechaVencimiento, float cuotaMensual, CuentaBancaria cuenta_bancaria) {
@@ -76,7 +76,7 @@ public class Prestamo extends FinanceItem {
     }
 
     @Override
-    protected void actualizarInformacion() throws IOException {
+    public void actualizarInformacion() throws IOException {
         this.cuotaMensual = calcularPagoMensual();
     }
 

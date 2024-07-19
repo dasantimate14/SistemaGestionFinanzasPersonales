@@ -31,11 +31,37 @@ public class BaseDeDatos {
             }
 
             rs = pst.executeQuery();
-            return rs;
+            if(rs != null){
+                if (rs.next()) {
+                    return rs;
+                } else {
+                    System.out.println("Resultado no encontrado");
+                    return null;
+                }
+            }
+
         } catch (SQLException e) {
-            System.out.println("Error al realizar la consulta SELECT: " + e.getMessage());
-            throw e;
+            // Manejar la excepción
+            if (rs.isClosed()) {
+                System.out.println("La consulta no devolvió ningún resultado");
+            } else if (rs == null) {
+                System.out.println("El objeto ResultSet se ha cerrado");
+            } else {
+                e.printStackTrace();
+                return null;
+            }
+        } finally {
+            // No cerrar rs aquí porque el ResultSet se está devolviendo al llamado del método
+            // También es una buena práctica cerrar el PreparedStatement si no se va a utilizar más.
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+        return null;
     }
 
     // Método para ejecutar consultas SELECT usando una consulta creada por los desarrolladores
@@ -48,8 +74,23 @@ public class BaseDeDatos {
 
             //Se ejecuta la consulta y se obtienen los resultados
             rs = st.executeQuery(consulta);
+            if(rs != null){
+                if(rs.next()) {
+                    return rs;
+                } else{
+                    System.out.println("Resultado no encontrado");
+                }
+            }
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            // Manejar la excepción
+            if (rs.isClosed()) {
+                System.out.println("La consulta no devolvió ningún resultado");
+            } else if (rs == null) {
+                System.out.println("El objeto ResultSet se ha cerrado");
+            } else {
+                e.printStackTrace();
+            }
         }
         return rs;
     }

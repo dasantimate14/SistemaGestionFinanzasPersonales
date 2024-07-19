@@ -31,7 +31,7 @@ public class  AgregarCuentaBanco extends JFrame {
         Volverbtn2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CuentaBancaria newframe = new CuentaBancaria();
+                CuentaBancariaG newframe = new CuentaBancariaG();
                 newframe.setVisible(true);
                 dispose();
             }

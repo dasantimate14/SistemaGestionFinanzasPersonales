@@ -3,8 +3,6 @@ package Grafico;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class PlazoFijos extends JFrame{
     private JPanel PlazoFijosPanel;
@@ -53,7 +51,7 @@ public class PlazoFijos extends JFrame{
         cuentasBancariasButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CuentaBancaria newframe = new CuentaBancaria();
+                CuentaBancariaG newframe = new CuentaBancariaG();
                 newframe.setVisible(true);
                 dispose();
             }

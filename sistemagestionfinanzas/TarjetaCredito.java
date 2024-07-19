@@ -14,8 +14,8 @@ public class TarjetaCredito extends FinanceItem {
     private int numero;
     private float creditoUsado;
     private CuentaBancaria cuentaBancaria;
-    private int cantidad_instancias;
-    private static List<TarjetaCredito> instanciasTarjetas = new ArrayList<>();
+    public int cantidad_instancias;
+    public static List<TarjetaCredito> instanciasTarjetas = new ArrayList<>();
 
     // Constructor
     public TarjetaCredito(String nombre, String descripcion, float montoOriginal, LocalDate fechaInicio,
@@ -143,7 +143,7 @@ public class TarjetaCredito extends FinanceItem {
     }
 
     @Override
-    protected void actualizarInformacion() throws IOException {
+    public void actualizarInformacion() throws IOException {
         // Implementación específica no necesaria para esta prueba
     }
 

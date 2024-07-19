@@ -26,8 +26,8 @@ public class Stock extends FinanceItem{
     private float dividendo_acumulado;
     private float dividendo_estimado;
     private int frecuencia_dividendos;
-    static int cantidad_instancias = 0;
-    static List<Stock> instancias_stocks = new ArrayList<>();
+    public static int cantidad_instancias = 0;
+    public static List<Stock> instancias_stocks = new ArrayList<>();
 
     public Stock(String nombre, String descripcion,  LocalDate fechaInicio,
                  String nombreEmpresa, String simbolo, int cantidad, float precio_compra, String sector, float dividendo_por_accion, int frecuencia_dividendos){
@@ -143,7 +143,7 @@ public class Stock extends FinanceItem{
     }
 
     @Override
-    protected void actualizarInformacion() throws IOException {
+    public void actualizarInformacion() throws IOException {
         setGanaciaPerdida(calcularGanaciaPerdida());
         setMontoActual(calcularValorActual());
         setDividendoAcumulado(calcularDividendoAcumulado());
@@ -418,23 +418,26 @@ public class Stock extends FinanceItem{
         try {
             BaseDeDatos.establecerConexion();
             ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
-            while (rs.next()) {
-                // Se leen cada uno de los campos en el resultset para crear el objeto
-                String id = rs.getString("id");
-                String nombre = rs.getString("nombre");
-                String descripcion = rs.getString("descripcion");
-                LocalDate fecha_inicio = rs.getDate("fechaInicio").toLocalDate();
-                String nombre_empresa = rs.getString("nombreEmpresa");
-                String simbolo = rs.getString("simbolo"); // Cambiado de 'numeroCuenta' a 'simbolo'
-                int cantidad = rs.getInt("cantidad");
-                float precio_compra = rs.getFloat("precioCompra");
-                String sector = rs.getString("sector");
-                float dividendo_por_accion = rs.getFloat("dividendoPorAccion");
-                int frecuencia_dividendos = rs.getInt("frecuenciaDividendos");
+            if(rs != null){
+                while (rs.next()) {
+                    // Se leen cada uno de los campos en el resultset para crear el objeto
+                    String id = rs.getString("id");
+                    String nombre = rs.getString("nombre");
+                    String descripcion = rs.getString("descripcion");
+                    LocalDate fecha_inicio = rs.getDate("fechaInicio").toLocalDate();
+                    String nombre_empresa = rs.getString("nombreEmpresa");
+                    String simbolo = rs.getString("simbolo"); // Cambiado de 'numeroCuenta' a 'simbolo'
+                    int cantidad = rs.getInt("cantidad");
+                    float precio_compra = rs.getFloat("precioCompra");
+                    String sector = rs.getString("sector");
+                    float dividendo_por_accion = rs.getFloat("dividendoPorAccion");
+                    int frecuencia_dividendos = rs.getInt("frecuenciaDividendos");
 
-                // Se crea el objeto con los datos capturados
-                stocks = new Stock(nombre, descripcion, fecha_inicio, nombre_empresa, simbolo, cantidad, precio_compra, sector, dividendo_por_accion, frecuencia_dividendos);
-                stocks.setId(id);
+                    // Se crea el objeto con los datos capturados
+                    stocks = new Stock(nombre, descripcion, fecha_inicio, nombre_empresa, simbolo, cantidad, precio_compra, sector, dividendo_por_accion, frecuencia_dividendos);
+                    stocks.setId(id);
+
+                }
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

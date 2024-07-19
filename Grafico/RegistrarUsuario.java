@@ -1,5 +1,7 @@
 package Grafico;
 
+import sistemagestionfinanzas.Usuario;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +26,7 @@ public class RegistrarUsuario extends JFrame {
         // Acción para que se abra "iniciar sesión" al presionar si ya se tiene una cuenta
         this.BtnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 InicioSesion newframe = new InicioSesion();
                 newframe.setVisible(true);
                 RegistrarUsuario.this.dispose();
@@ -99,6 +102,8 @@ public class RegistrarUsuario extends JFrame {
             }
 
             JOptionPane.showMessageDialog(this, "Información guardada correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            Usuario usuario = new Usuario(nombre+" "+ apellido, correo, contrasena);
+            usuario.guardarClienteEnBaseDatos();
             this.tfNombre.setText("");
             this.tfApellido.setText("");
             this.tfCedula.setText("");

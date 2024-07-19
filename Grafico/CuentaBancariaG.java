@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CuentaBancaria extends JFrame {
+public class CuentaBancariaG extends JFrame {
     private JPanel CuentaBancoPanel;
     private JButton btnMenu2;
     private JButton prestamosButton;
@@ -18,7 +18,7 @@ public class CuentaBancaria extends JFrame {
     private JList list1;
     private JPanel PastelitoPanel;
 
-    public CuentaBancaria() {
+    public CuentaBancariaG() {
         // Configuración de la ventana
         setSize(930, 920);
         setTitle("Cuentas de Banco");
@@ -104,7 +104,7 @@ public class CuentaBancaria extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                CuentaBancaria frame = new CuentaBancaria();
+                CuentaBancariaG frame = new CuentaBancariaG();
                 frame.setVisible(true);
             }
         });

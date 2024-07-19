@@ -1153,7 +1153,7 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <CollationName>utf8_bin</CollationName>
     </schema>
     <schema id="328" parent="1" name="sistema_gestion_finanzas">
-      <LastIntrospectionLocalTimestamp>2024-07-19.11:58:43</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2024-07-19.15:14:01</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_general_ci</CollationName>
     </schema>
     <schema id="329" parent="1" name="test">
@@ -1171,697 +1171,656 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
     <user id="333" parent="1" name="pma">
       <Host>localhost</Host>
     </user>
-    <table id="334" parent="328" name="creditos_mensuales_usados">
+    <table id="334" parent="328" name="cuentas_bancarias">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_general_ci</CollationName>
     </table>
-    <table id="335" parent="328" name="cuentas_bancarias">
+    <table id="335" parent="328" name="gastos">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_general_ci</CollationName>
     </table>
-    <table id="336" parent="328" name="gastos">
+    <table id="336" parent="328" name="ingresos">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_general_ci</CollationName>
     </table>
-    <table id="337" parent="328" name="ingresos">
+    <table id="337" parent="328" name="plazos_fijos">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_general_ci</CollationName>
     </table>
-    <table id="338" parent="328" name="plazos_fijos">
+    <table id="338" parent="328" name="prestamos">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_general_ci</CollationName>
     </table>
-    <table id="339" parent="328" name="prestamos">
+    <table id="339" parent="328" name="stocks">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_general_ci</CollationName>
     </table>
-    <table id="340" parent="328" name="stocks">
+    <table id="340" parent="328" name="tarjetas_creditos">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_general_ci</CollationName>
     </table>
-    <table id="341" parent="328" name="tarjetas_creditos">
+    <table id="341" parent="328" name="usuarios">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_general_ci</CollationName>
     </table>
-    <table id="342" parent="328" name="usuarios">
-      <Engine>InnoDB</Engine>
-      <CollationName>utf8mb4_general_ci</CollationName>
-    </table>
-    <column id="343" parent="334" name="id">
-      <AutoIncrement>1</AutoIncrement>
-      <DasType>int(11)|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-    </column>
-    <column id="344" parent="334" name="creditoMensualUsado">
-      <DasType>float|0s</DasType>
-      <Position>2</Position>
-    </column>
-    <column id="345" parent="334" name="fechaCredito">
-      <DasType>date|0s</DasType>
-      <Position>3</Position>
-    </column>
-    <column id="346" parent="334" name="idTarjetaCredito">
-      <DasType>char(36)|0s</DasType>
-      <Position>4</Position>
-    </column>
-    <foreign-key id="347" parent="334" name="creditos_mensuales_usados_ibfk_1">
-      <ColNames>idTarjetaCredito</ColNames>
-      <RefColNames>id</RefColNames>
-      <RefTableName>tarjetas_creditos</RefTableName>
-    </foreign-key>
-    <index id="348" parent="334" name="PRIMARY">
-      <ColNames>id</ColNames>
-      <Type>btree</Type>
-      <Unique>1</Unique>
-    </index>
-    <index id="349" parent="334" name="idTarjetaCredito">
-      <ColNames>idTarjetaCredito</ColNames>
-      <Type>btree</Type>
-    </index>
-    <key id="350" parent="334" name="PRIMARY">
-      <NameSurrogate>1</NameSurrogate>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
-    </key>
-    <check id="351" parent="335" name="chk_numero_cuenta">
+    <check id="342" parent="334" name="chk_numero_cuenta">
       <Predicate>`numeroCuenta` regexp &apos;^[0-9-]+$&apos;</Predicate>
     </check>
-    <column id="352" parent="335" name="id">
+    <column id="343" parent="334" name="id">
       <DasType>char(36)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="353" parent="335" name="nombre">
+    <column id="344" parent="334" name="nombre">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="354" parent="335" name="descripcion">
+    <column id="345" parent="334" name="descripcion">
       <DasType>text|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="355" parent="335" name="montoOriginal">
+    <column id="346" parent="334" name="montoOriginal">
       <DasType>float|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="356" parent="335" name="tipo">
+    <column id="347" parent="334" name="tipo">
       <DasType>varchar(225)|0s</DasType>
       <DefaultExpression>&apos;Activo&apos;</DefaultExpression>
       <Position>5</Position>
     </column>
-    <column id="357" parent="335" name="tasaInteres">
+    <column id="348" parent="334" name="tasaInteres">
       <DasType>float|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <Position>6</Position>
     </column>
-    <column id="358" parent="335" name="fechaInicio">
+    <column id="349" parent="334" name="fechaInicio">
       <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>7</Position>
     </column>
-    <column id="359" parent="335" name="banco">
+    <column id="350" parent="334" name="banco">
       <DasType>varchar(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>8</Position>
     </column>
-    <column id="360" parent="335" name="numeroCuenta">
+    <column id="351" parent="334" name="numeroCuenta">
       <DasType>varchar(20)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>9</Position>
     </column>
-    <column id="361" parent="335" name="tipoCuenta">
+    <column id="352" parent="334" name="tipoCuenta">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>10</Position>
     </column>
-    <column id="362" parent="335" name="idUsuario">
+    <column id="353" parent="334" name="idUsuario">
       <DasType>char(36)|0s</DasType>
       <Position>11</Position>
     </column>
-    <foreign-key id="363" parent="335" name="cuentas_bancarias_ibfk_1">
+    <foreign-key id="354" parent="334" name="cuentas_bancarias_ibfk_1">
       <ColNames>idUsuario</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>usuarios</RefTableName>
     </foreign-key>
-    <index id="364" parent="335" name="PRIMARY">
+    <index id="355" parent="334" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="365" parent="335" name="unique_numeroCuenta">
+    <index id="356" parent="334" name="unique_numeroCuenta">
       <ColNames>numeroCuenta</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="366" parent="335" name="idUsuario">
+    <index id="357" parent="334" name="idUsuario">
       <ColNames>idUsuario</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="367" parent="335" name="PRIMARY">
+    <key id="358" parent="334" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="368" parent="335" name="unique_numeroCuenta">
+    <key id="359" parent="334" name="unique_numeroCuenta">
       <UnderlyingIndexName>unique_numeroCuenta</UnderlyingIndexName>
     </key>
-    <column id="369" parent="336" name="id">
+    <column id="360" parent="335" name="id">
       <DasType>char(36)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="370" parent="336" name="nombre">
+    <column id="361" parent="335" name="nombre">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="371" parent="336" name="descripcion">
+    <column id="362" parent="335" name="descripcion">
       <DasType>text|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="372" parent="336" name="montoOriginal">
+    <column id="363" parent="335" name="montoOriginal">
       <DasType>float|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="373" parent="336" name="tipo">
+    <column id="364" parent="335" name="tipo">
       <DasType>varchar(225)|0s</DasType>
       <DefaultExpression>&apos;Pasivo&apos;</DefaultExpression>
       <Position>5</Position>
     </column>
-    <column id="374" parent="336" name="fechaInicio">
+    <column id="365" parent="335" name="fechaInicio">
       <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>6</Position>
     </column>
-    <column id="375" parent="336" name="acreedor">
+    <column id="366" parent="335" name="acreedor">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>7</Position>
     </column>
-    <column id="376" parent="336" name="frecuencia">
+    <column id="367" parent="335" name="frecuencia">
       <DasType>int(11)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>8</Position>
     </column>
-    <column id="377" parent="336" name="categoriaGasto">
+    <column id="368" parent="335" name="categoriaGasto">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>9</Position>
     </column>
-    <column id="378" parent="336" name="estatus">
+    <column id="369" parent="335" name="estatus">
       <DasType>tinyint(1)|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <Position>10</Position>
     </column>
-    <column id="379" parent="336" name="idUsuario">
+    <column id="370" parent="335" name="idUsuario">
       <DasType>char(36)|0s</DasType>
       <Position>11</Position>
     </column>
-    <column id="380" parent="336" name="idCuentaBancaria">
+    <column id="371" parent="335" name="idCuentaBancaria">
       <DasType>char(36)|0s</DasType>
       <Position>12</Position>
     </column>
-    <foreign-key id="381" parent="336" name="gastos_ibfk_1">
+    <foreign-key id="372" parent="335" name="gastos_ibfk_1">
       <ColNames>idUsuario</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>usuarios</RefTableName>
     </foreign-key>
-    <foreign-key id="382" parent="336" name="gastos_ibfk_2">
+    <foreign-key id="373" parent="335" name="gastos_ibfk_2">
       <ColNames>idCuentaBancaria</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>cuentas_bancarias</RefTableName>
     </foreign-key>
-    <index id="383" parent="336" name="PRIMARY">
+    <index id="374" parent="335" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="384" parent="336" name="idUsuario">
+    <index id="375" parent="335" name="idUsuario">
       <ColNames>idUsuario</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="385" parent="336" name="idCuentaBancaria">
+    <index id="376" parent="335" name="idCuentaBancaria">
       <ColNames>idCuentaBancaria</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="386" parent="336" name="PRIMARY">
+    <key id="377" parent="335" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="387" parent="337" name="id">
+    <column id="378" parent="336" name="id">
       <DasType>char(36)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="388" parent="337" name="nombre">
+    <column id="379" parent="336" name="nombre">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="389" parent="337" name="descripcion">
+    <column id="380" parent="336" name="descripcion">
       <DasType>text|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="390" parent="337" name="montoOriginal">
+    <column id="381" parent="336" name="montoOriginal">
       <DasType>float|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="391" parent="337" name="tipo">
+    <column id="382" parent="336" name="tipo">
       <DasType>varchar(225)|0s</DasType>
       <DefaultExpression>&apos;Activo&apos;</DefaultExpression>
       <Position>5</Position>
     </column>
-    <column id="392" parent="337" name="fechaInicio">
+    <column id="383" parent="336" name="fechaInicio">
       <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>6</Position>
     </column>
-    <column id="393" parent="337" name="fuente">
+    <column id="384" parent="336" name="fuente">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>7</Position>
     </column>
-    <column id="394" parent="337" name="frecuencia">
+    <column id="385" parent="336" name="frecuencia">
       <DasType>int(11)|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <Position>8</Position>
     </column>
-    <column id="395" parent="337" name="idUsuario">
+    <column id="386" parent="336" name="idUsuario">
       <DasType>char(36)|0s</DasType>
       <Position>9</Position>
     </column>
-    <column id="396" parent="337" name="idCuentaBancaria">
+    <column id="387" parent="336" name="idCuentaBancaria">
       <DasType>char(36)|0s</DasType>
       <Position>10</Position>
     </column>
-    <foreign-key id="397" parent="337" name="ingresos_ibfk_1">
+    <foreign-key id="388" parent="336" name="ingresos_ibfk_1">
       <ColNames>idUsuario</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>usuarios</RefTableName>
     </foreign-key>
-    <foreign-key id="398" parent="337" name="ingresos_ibfk_2">
+    <foreign-key id="389" parent="336" name="ingresos_ibfk_2">
       <ColNames>idCuentaBancaria</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>cuentas_bancarias</RefTableName>
     </foreign-key>
-    <index id="399" parent="337" name="PRIMARY">
+    <index id="390" parent="336" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="400" parent="337" name="idCliente">
+    <index id="391" parent="336" name="idCliente">
       <ColNames>idUsuario</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="401" parent="337" name="idCuentaBancaria">
+    <index id="392" parent="336" name="idCuentaBancaria">
       <ColNames>idCuentaBancaria</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="402" parent="337" name="PRIMARY">
+    <key id="393" parent="336" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="403" parent="338" name="id">
+    <column id="394" parent="337" name="id">
       <DasType>char(36)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="404" parent="338" name="nombre">
+    <column id="395" parent="337" name="nombre">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="405" parent="338" name="descripcion">
+    <column id="396" parent="337" name="descripcion">
       <DasType>text|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="406" parent="338" name="montoOriginal">
+    <column id="397" parent="337" name="montoOriginal">
       <DasType>float|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="407" parent="338" name="tipo">
+    <column id="398" parent="337" name="tipo">
       <DasType>varchar(225)|0s</DasType>
       <DefaultExpression>&apos;Activo&apos;</DefaultExpression>
       <Position>5</Position>
     </column>
-    <column id="408" parent="338" name="tasaInteres">
+    <column id="399" parent="337" name="tasaInteres">
       <DasType>float|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <Position>6</Position>
     </column>
-    <column id="409" parent="338" name="fechaInicio">
+    <column id="400" parent="337" name="fechaInicio">
       <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>7</Position>
     </column>
-    <column id="410" parent="338" name="plazo">
+    <column id="401" parent="337" name="plazo">
       <DasType>int(11)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>8</Position>
     </column>
-    <column id="411" parent="338" name="fechaFinal">
+    <column id="402" parent="337" name="fechaFinal">
       <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>9</Position>
     </column>
-    <column id="412" parent="338" name="idUsuario">
+    <column id="403" parent="337" name="idUsuario">
       <DasType>char(36)|0s</DasType>
       <Position>10</Position>
     </column>
-    <column id="413" parent="338" name="idCuentaBancaria">
+    <column id="404" parent="337" name="idCuentaBancaria">
       <DasType>char(36)|0s</DasType>
       <Position>11</Position>
     </column>
-    <foreign-key id="414" parent="338" name="plazos_fijos_ibfk_1">
+    <foreign-key id="405" parent="337" name="plazos_fijos_ibfk_1">
       <ColNames>idUsuario</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>usuarios</RefTableName>
     </foreign-key>
-    <foreign-key id="415" parent="338" name="plazos_fijos_ibfk_2">
+    <foreign-key id="406" parent="337" name="plazos_fijos_ibfk_2">
       <ColNames>idCuentaBancaria</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>cuentas_bancarias</RefTableName>
     </foreign-key>
-    <index id="416" parent="338" name="PRIMARY">
+    <index id="407" parent="337" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="417" parent="338" name="idCliente">
+    <index id="408" parent="337" name="idCliente">
       <ColNames>idUsuario</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="418" parent="338" name="idCuentaBancaria">
+    <index id="409" parent="337" name="idCuentaBancaria">
       <ColNames>idCuentaBancaria</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="419" parent="338" name="PRIMARY">
+    <key id="410" parent="337" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="420" parent="339" name="id">
+    <column id="411" parent="338" name="id">
       <DasType>char(36)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="421" parent="339" name="nombre">
+    <column id="412" parent="338" name="nombre">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="422" parent="339" name="descripcion">
+    <column id="413" parent="338" name="descripcion">
       <DasType>text|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="423" parent="339" name="montoOriginal">
+    <column id="414" parent="338" name="montoOriginal">
       <DasType>float|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="424" parent="339" name="tipo">
+    <column id="415" parent="338" name="tipo">
       <DasType>varchar(225)|0s</DasType>
       <DefaultExpression>&apos;Pasivo&apos;</DefaultExpression>
       <Position>5</Position>
     </column>
-    <column id="425" parent="339" name="fechaInicio">
+    <column id="416" parent="338" name="fechaInicio">
       <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>6</Position>
     </column>
-    <column id="426" parent="339" name="tipoPrestamo">
+    <column id="417" parent="338" name="tipoPrestamo">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>7</Position>
     </column>
-    <column id="427" parent="339" name="plazo">
+    <column id="418" parent="338" name="plazo">
       <DasType>int(11)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>8</Position>
     </column>
-    <column id="428" parent="339" name="fechaVencimiento">
+    <column id="419" parent="338" name="fechaVencimiento">
       <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>9</Position>
     </column>
-    <column id="429" parent="339" name="estatus">
+    <column id="420" parent="338" name="estatus">
       <DasType>int(11)|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <Position>10</Position>
     </column>
-    <column id="430" parent="339" name="cuotaMensual">
+    <column id="421" parent="338" name="cuotaMensual">
       <DasType>float|0s</DasType>
       <Position>11</Position>
     </column>
-    <column id="431" parent="339" name="idUsuario">
+    <column id="422" parent="338" name="idUsuario">
       <DasType>char(36)|0s</DasType>
       <Position>12</Position>
     </column>
-    <column id="432" parent="339" name="idCuentaBancaria">
+    <column id="423" parent="338" name="idCuentaBancaria">
       <DasType>char(36)|0s</DasType>
       <Position>13</Position>
     </column>
-    <column id="433" parent="339" name="tasaInteres">
+    <column id="424" parent="338" name="tasaInteres">
       <DasType>float|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <Position>14</Position>
     </column>
-    <foreign-key id="434" parent="339" name="prestamos_ibfk_1">
+    <foreign-key id="425" parent="338" name="prestamos_ibfk_1">
       <ColNames>idUsuario</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>usuarios</RefTableName>
     </foreign-key>
-    <foreign-key id="435" parent="339" name="prestamos_prestamos__fk">
+    <foreign-key id="426" parent="338" name="prestamos_prestamos__fk">
       <ColNames>idCuentaBancaria</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>cuentas_bancarias</RefTableName>
     </foreign-key>
-    <index id="436" parent="339" name="PRIMARY">
+    <index id="427" parent="338" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="437" parent="339" name="idUsuario">
+    <index id="428" parent="338" name="idUsuario">
       <ColNames>idUsuario</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="438" parent="339" name="prestamos_prestamos__fk">
+    <index id="429" parent="338" name="prestamos_prestamos__fk">
       <ColNames>idCuentaBancaria</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="439" parent="339" name="PRIMARY">
+    <key id="430" parent="338" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="440" parent="340" name="id">
+    <column id="431" parent="339" name="id">
       <DasType>char(36)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="441" parent="340" name="nombre">
+    <column id="432" parent="339" name="nombre">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="442" parent="340" name="descripcion">
+    <column id="433" parent="339" name="descripcion">
       <DasType>text|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="443" parent="340" name="montoOriginal">
+    <column id="434" parent="339" name="montoOriginal">
       <DasType>float|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="444" parent="340" name="tipo">
+    <column id="435" parent="339" name="tipo">
       <DasType>varchar(225)|0s</DasType>
       <DefaultExpression>&apos;Activo&apos;</DefaultExpression>
       <Position>5</Position>
     </column>
-    <column id="445" parent="340" name="fechaInicio">
+    <column id="436" parent="339" name="fechaInicio">
       <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>6</Position>
     </column>
-    <column id="446" parent="340" name="nombreEmpresa">
+    <column id="437" parent="339" name="nombreEmpresa">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>7</Position>
     </column>
-    <column id="447" parent="340" name="simbolo">
+    <column id="438" parent="339" name="simbolo">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>8</Position>
     </column>
-    <column id="448" parent="340" name="cantidad">
+    <column id="439" parent="339" name="cantidad">
       <DasType>int(11)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>9</Position>
     </column>
-    <column id="449" parent="340" name="precioCompra">
+    <column id="440" parent="339" name="precioCompra">
       <DasType>float|0s</DasType>
       <NotNull>1</NotNull>
       <Position>10</Position>
     </column>
-    <column id="450" parent="340" name="sector">
+    <column id="441" parent="339" name="sector">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>11</Position>
     </column>
-    <column id="451" parent="340" name="dividendoPorAccion">
+    <column id="442" parent="339" name="dividendoPorAccion">
       <DasType>float|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <Position>12</Position>
     </column>
-    <column id="452" parent="340" name="frecuenciaDividendos">
+    <column id="443" parent="339" name="frecuenciaDividendos">
       <DasType>int(11)|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <Position>13</Position>
     </column>
-    <column id="453" parent="340" name="idUsuario">
+    <column id="444" parent="339" name="idUsuario">
       <DasType>char(36)|0s</DasType>
       <Position>14</Position>
     </column>
-    <foreign-key id="454" parent="340" name="fk_stocks_usuarios">
+    <foreign-key id="445" parent="339" name="fk_stocks_usuarios">
       <ColNames>idUsuario</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>usuarios</RefTableName>
     </foreign-key>
-    <index id="455" parent="340" name="PRIMARY">
+    <index id="446" parent="339" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="456" parent="340" name="fk_stocks_usuarios">
+    <index id="447" parent="339" name="fk_stocks_usuarios">
       <ColNames>idUsuario</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="457" parent="340" name="PRIMARY">
+    <key id="448" parent="339" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="458" parent="341" name="id">
+    <column id="449" parent="340" name="id">
       <DasType>char(36)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="459" parent="341" name="nombre">
+    <column id="450" parent="340" name="nombre">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="460" parent="341" name="descripcion">
+    <column id="451" parent="340" name="descripcion">
       <DasType>text|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="461" parent="341" name="montoOriginal">
+    <column id="452" parent="340" name="montoOriginal">
       <DasType>float|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="462" parent="341" name="tipo">
+    <column id="453" parent="340" name="tipo">
       <DasType>varchar(225)|0s</DasType>
       <DefaultExpression>&apos;Pasivo&apos;</DefaultExpression>
       <Position>5</Position>
     </column>
-    <column id="463" parent="341" name="fechaInicio">
+    <column id="454" parent="340" name="fechaInicio">
       <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>6</Position>
     </column>
-    <column id="464" parent="341" name="tipoTarjeta">
+    <column id="455" parent="340" name="tipoTarjeta">
       <DasType>varchar(225)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>7</Position>
     </column>
-    <column id="465" parent="341" name="limiteCredito">
+    <column id="456" parent="340" name="limiteCredito">
       <DasType>float|0s</DasType>
       <NotNull>1</NotNull>
       <Position>8</Position>
     </column>
-    <column id="466" parent="341" name="terminacionTarjeta">
+    <column id="457" parent="340" name="terminacionTarjeta">
       <DasType>int(4)|0s</DasType>
       <Position>9</Position>
     </column>
-    <column id="467" parent="341" name="idUsuario">
+    <column id="458" parent="340" name="idUsuario">
       <DasType>char(36)|0s</DasType>
       <Position>10</Position>
     </column>
-    <column id="468" parent="341" name="idCuentaBancaria">
+    <column id="459" parent="340" name="idCuentaBancaria">
       <DasType>char(36)|0s</DasType>
       <Position>11</Position>
     </column>
-    <foreign-key id="469" parent="341" name="tarjetas_creditos_ibfk_1">
+    <foreign-key id="460" parent="340" name="tarjetas_creditos_ibfk_1">
       <ColNames>idUsuario</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>usuarios</RefTableName>
     </foreign-key>
-    <foreign-key id="470" parent="341" name="tarjetas_creditos_ibfk_2">
+    <foreign-key id="461" parent="340" name="tarjetas_creditos_ibfk_2">
       <ColNames>idCuentaBancaria</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>cuentas_bancarias</RefTableName>
     </foreign-key>
-    <index id="471" parent="341" name="PRIMARY">
+    <index id="462" parent="340" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="472" parent="341" name="idUsuario">
+    <index id="463" parent="340" name="idUsuario">
       <ColNames>idUsuario</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="473" parent="341" name="idCuentaBancaria">
+    <index id="464" parent="340" name="idCuentaBancaria">
       <ColNames>idCuentaBancaria</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="474" parent="341" name="PRIMARY">
+    <key id="465" parent="340" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="475" parent="342" name="id">
+    <column id="466" parent="341" name="id">
       <DasType>char(36)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="476" parent="342" name="nombre">
+    <column id="467" parent="341" name="nombre">
       <DasType>varchar(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="477" parent="342" name="email">
+    <column id="468" parent="341" name="email">
       <DasType>varchar(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="478" parent="342" name="contrasena">
+    <column id="469" parent="341" name="contrasena">
       <DasType>varchar(225)|0s</DasType>
       <Position>4</Position>
     </column>
-    <index id="479" parent="342" name="PRIMARY">
+    <index id="470" parent="341" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="480" parent="342" name="email">
+    <index id="471" parent="341" name="email">
       <ColNames>email</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="481" parent="342" name="PRIMARY">
+    <key id="472" parent="341" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="482" parent="342" name="email">
+    <key id="473" parent="341" name="email">
       <UnderlyingIndexName>email</UnderlyingIndexName>
     </key>
   </database-model>

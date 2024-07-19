@@ -15,6 +15,10 @@ public class Usuario {
 
     // Lista estática para almacenar todos los clientes
     public static ArrayList<Usuario> instancias_clientes = new ArrayList<>();
+    public static Usuario usuario_actual;
+
+    public static void setUsuarioActual(Usuario usuario) {usuario_actual = usuario;}
+    public static Usuario getUsuarioActual() {return usuario_actual;}
 
     // Constructor
     public Usuario(String nombre, String email, String contrasena) {
@@ -86,16 +90,23 @@ public class Usuario {
         try{
             BaseDeDatos.establecerConexion();
             ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
-            if(rs.next()) {
-                String contrasena_guardada = rs.getString("contrasena");
-                if(contrasena_guardada.equals(contrasena)) {
-                    es_usuario = true;
+            if(rs != null){
+                if(rs.next()) {
+                    String email_guardado = rs.getString("email");
+                    if(email_guardado.equals(email)) {
+                        return false;
+                    }
+                    rs.close();
+                } else {
+                    rs.close();
+                    return true;
                 }
-                rs.close();
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
+
             BaseDeDatos.cerrarConexion();
         }
         return es_usuario;
@@ -140,7 +151,7 @@ public class Usuario {
 
     // Método estático para cargar todos los clientes desde la base de datos
     public static void cargarClientesDesdeBaseDeDatos() {
-        String consulta = "SELECT * FROM clientes";
+        String consulta = "SELECT * FROM usuarios";
         try {
             BaseDeDatos.establecerConexion();
             ResultSet rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
@@ -149,7 +160,7 @@ public class Usuario {
                 String id = rs.getString("id");
                 String nombre = rs.getString("nombre");
                 String email = rs.getString("email");
-                String password = rs.getString("password");
+                String password = rs.getString("contrasena");
 
                 // Crear el objeto Cliente con los datos capturados
                 Usuario usuario = new Usuario(nombre, email, password);
