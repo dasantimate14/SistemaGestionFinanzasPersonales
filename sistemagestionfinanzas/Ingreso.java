@@ -85,7 +85,10 @@ public class Ingreso extends FinanceItem{
                 BaseDeDatos.establecerConexion();
                 rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
                 if(rs.next()){
-                    fecha_inicio = LocalDate.parse(rs.getString("fecha_mas_reciente"));
+                    String fecha_mas_reciente = rs.getString("fecha_mas_reciente");
+                    if (fecha_mas_reciente != null) {
+                        fecha_inicio = LocalDate.parse(fecha_mas_reciente);
+                    }
                 }
                 rs.close();
             } catch (SQLException e){
