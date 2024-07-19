@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Prestamo extends FinanceItem {
@@ -12,11 +13,11 @@ public class Prestamo extends FinanceItem {
     private float saldoPendiente;
     private int plazo;
     private LocalDate fechaVencimiento;
-    private boolean estatus;
+    private int estatus;
     private float cuotaMensual;
     private CuentaBancaria cuenta_bancaria;
-    private static int cantidadInstancias;
-    private static List<Prestamo> instanciasPrestamos;
+    private static int cantidadInstancias = 0;
+    private static List<Prestamo> instanciasPrestamos = new ArrayList<>();
 
     public Prestamo(String nombre, String descripcion, float montoOriginal, float tasaInteres, LocalDate fechaInicio,
                     String tipoPrestamo, int plazo, LocalDate fechaVencimiento, float cuotaMensual, CuentaBancaria cuenta_bancaria) {
@@ -24,7 +25,7 @@ public class Prestamo extends FinanceItem {
         this.tipoPrestamo = tipoPrestamo;
         this.plazo = plazo;
         this.fechaVencimiento = fechaVencimiento;
-        this.estatus = false;
+        this.estatus = 1;
         this.cuotaMensual = cuotaMensual;
         this.cuenta_bancaria = cuenta_bancaria;
         instanciasPrestamos.add(this);
@@ -43,7 +44,7 @@ public class Prestamo extends FinanceItem {
         info.append("Saldo Pendiente: ").append(saldoPendiente).append("\n");
         info.append("Plazo: ").append(plazo).append("\n");
         info.append("Fecha de Vencimiento: ").append(fechaVencimiento).append("\n");
-        info.append("Estatus: ").append(estatus ? "Activo" : "Inactivo").append("\n");
+        info.append("Estatus: ").append(estatus).append("\n");
         info.append("Cuota Mensual: ").append(cuotaMensual).append("\n");
         info.append("Cuenta bancaria: ").append(cuenta_bancaria.getId()).append("\n");
         return info;
@@ -116,11 +117,11 @@ public class Prestamo extends FinanceItem {
         this.fechaVencimiento = nuevaFechaVencimiento;
     }
 
-    public boolean getEstatus() {
+    public int getEstatus() {
         return estatus;
     }
 
-    public void setEstatus(boolean nuevoEstatus) {
+    public void setEstatus(int nuevoEstatus) {
         this.estatus = nuevoEstatus;
     }
 
@@ -167,10 +168,10 @@ public class Prestamo extends FinanceItem {
 
     public void guardarPrestamoBaseDatos(){
         //Consulta para guardar el objeto prestamo en la base de datos
-        String consulta_registro = "INSERT INTO prestamos (id, nombre, descripcion, montoOriginal, tasaInteres, fechaInicio, tipoPrestamo, plazo, fechaVencimiento, estatus, cuotaMensual, idUsuario, idCuentaBancaria) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String consulta_registro = "INSERT INTO prestamos (id, nombre, descripcion, montoOriginal, fechaInicio, tipoPrestamo, plazo, fechaVencimiento, estatus, cuotaMensual, idUsuario, idCuentaBancaria, tasaInteres) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         //Arreglo con los parametros de la consulta
-        String[] parametros = {getNombre(), getDescripcion(), String.valueOf(getMontoOriginal()), String.valueOf(getTasaInteres()), String.valueOf(getFechaInicio()), getTipoPrestamo(), String.valueOf(getPlazo()), String.valueOf(fechaVencimiento),String.valueOf(estatus), String.valueOf(cuotaMensual) ,cuenta_bancaria.getIdUsuario(), cuenta_bancaria.getId()};
+        String[] parametros = {getNombre(), getDescripcion(), String.valueOf(getMontoOriginal()), String.valueOf(getFechaInicio()), getTipoPrestamo(), String.valueOf(getPlazo()), String.valueOf(fechaVencimiento),String.valueOf(estatus), String.valueOf(cuotaMensual) ,cuenta_bancaria.getIdUsuario(), cuenta_bancaria.getId(), String.valueOf(getTasaInteres())};
 
         //Registro en la base de datos
         try{
@@ -201,14 +202,14 @@ public class Prestamo extends FinanceItem {
                 String nombre = rs.getString("nombre");
                 String descripcion = rs.getString("descripcion");
                 float monto_original = rs.getFloat("montoOriginal");
-                float tasa_interes = rs.getFloat("tasaInteres");
                 LocalDate fecha_inicio = rs.getDate("fechaInicio").toLocalDate();
                 String tipo_prestamo = rs.getString("tipoPrestamo");
                 int plazo = rs.getInt("plazo");
                 LocalDate fecha_vencimiento = rs.getDate("fechaVencimiento").toLocalDate();
-                boolean estatus = rs.getBoolean("estatus");
+                int estatus = rs.getInt("estatus");
                 float cuota_mensual = rs.getFloat("cuotaMensual");
                 String id_cuenta_bancaria = rs.getString("idCuentaBancaria");
+                float tasa_interes = rs.getFloat("tasaInteres");
 
                 CuentaBancaria cuenta_viculada = null;
                 for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
@@ -223,6 +224,7 @@ public class Prestamo extends FinanceItem {
                 //Se crea el objeto con los datos capturados
                 prestamo = new Prestamo(nombre, descripcion, monto_original, tasa_interes,fecha_inicio, tipo_prestamo, plazo, fecha_vencimiento, cuota_mensual, cuenta_viculada);
                 prestamo.setId(id);
+                prestamo.setEstatus(estatus);
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

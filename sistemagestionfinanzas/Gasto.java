@@ -12,6 +12,7 @@ public class Gasto extends FinanceItem {
     private float sumatoria_pagos;
     private String categoria_gasto;
     private boolean estatus;
+    private int estatus_entero;
     private CuentaBancaria cuenta;
     public static int cantidad_instancias = 0;
     public static List<Gasto> instancias_gastos = new ArrayList<>();
@@ -76,6 +77,9 @@ public class Gasto extends FinanceItem {
     public void setCuenta(CuentaBancaria cuenta) {
         this.cuenta = cuenta;
     }
+
+    public int getEstatus_entero() {return this.estatus_entero;}
+    public void setEstatus_entero(int estatus_entero) {this.estatus_entero = estatus_entero;}
 
 
     @Override
@@ -151,6 +155,15 @@ public class Gasto extends FinanceItem {
             }
         }
     }
+    public int obtenerEstatusEntero(){
+        if(getEstatus()){
+            setEstatus_entero(1);
+        } else {
+            setEstatus_entero(0);
+        }
+        return getEstatus_entero();
+    }
+
 
     public void guardarGastoBaseDatos() {
         String consulta_registro = "INSERT INTO gastos (id, nombre, descripcion, montoOriginal, tipo, fechaInicio, acreedor, frecuencia, categoriaGasto, estatus, idUsuario, idCuentaBancaria) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -164,7 +177,7 @@ public class Gasto extends FinanceItem {
                 getAcreedor(),
                 String.valueOf(frecuencia),
                 getCategoriaGasto(),
-                String.valueOf(getEstatus() ? 1 : 0),
+                String.valueOf(obtenerEstatusEntero()),
                 getIdUsuario(),
                 getIdCuentaBancaria()
         };
