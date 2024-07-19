@@ -64,9 +64,10 @@ public class RegistrarUsuario extends JFrame {
             if (nombre.isEmpty() || nombre == null) {
                 throw new Exception("Debe ingresar el nombre.");
             }
-            if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ]+")) {
-                throw new Exception("El nombre solo puede contener letras.");
-            }
+           if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+               throw new Exception("El nombre solo puede contener letras y espacios.");
+           }
+
 
 
             if (apellido.isEmpty() || apellido == null) {

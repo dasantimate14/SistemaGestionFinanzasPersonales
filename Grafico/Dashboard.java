@@ -32,8 +32,49 @@ public class Dashboard extends JFrame {
             }
         });
 
-        // Añade ActionListeners para otros botones si es necesario
-    } // Cierre del constructor
+        // Añade ActionListeners
+        plazosFijosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PlazoFijos newframe = new PlazoFijos();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        btnIngresos.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IngresoYGastos newframe = new IngresoYGastos();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        btnStocks.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Stocks newframe = new Stocks();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        btnTarjetas.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Tarjetas newframe = new Tarjetas();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        prestamosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Prestamos newframe = new Prestamos();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+
+    }
 
     @Override
     public void setVisible(boolean b) {

@@ -14,15 +14,22 @@ public class Tarjetas extends JFrame {
     private JButton ingresosYGastosButton;
     private JPanel TarjetaPanel;
     private JComboBox comboBox1;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JTextField textField3;
+    private JTextField tfLimiteCredito;
+    private JTextField tfSaldoActual;
+    private JTextField tfNumeroTarjeta;
     private JComboBox comboBox2;
     private JButton agregarButton;
-    private JTextField textField4;
+    private JTextField tfCreditoUsado;
     private JButton calcularButton;
 
     public Tarjetas() {
+        // Configuración de la ventana
+        setSize(930, 920);
+        setTitle("Tarjetas");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setContentPane(TarjetaPanel);
+
         agregarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -34,13 +41,66 @@ public class Tarjetas extends JFrame {
                 }
             }
         });
+        btMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Dashboard newframe = new Dashboard();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        cuentasBancariasButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CuentaBancaria newframe = new CuentaBancaria();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        plazosFijosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PlazoFijos newframe = new PlazoFijos();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        ingresosYGastosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IngresoYGastos newframe = new IngresoYGastos();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        stocksButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Stocks newframe = new Stocks();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        préstamoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Prestamos newframe = new Prestamos();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
     }
 
     private void validarCampos() throws Exception {
         String tipoTarjeta = (String) comboBox1.getSelectedItem();
-        String limiteCredito = textField1.getText();
-        String saldoActual = textField2.getText();
-        String numeroTarjeta = textField3.getText();
+        String limiteCredito = tfLimiteCredito.getText();
+        String saldoActual = tfSaldoActual.getText();
+        String numeroTarjeta = tfNumeroTarjeta.getText();
         String cuentaBancaria = (String) comboBox2.getSelectedItem();
 
         if (tipoTarjeta == null || tipoTarjeta.isEmpty() || tipoTarjeta.equals("Selecciona una opción")) {

@@ -3,6 +3,8 @@ package Grafico;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class PlazoFijos extends JFrame{
     private JPanel PlazoFijosPanel;
@@ -14,8 +16,20 @@ public class PlazoFijos extends JFrame{
     private JButton tarjetasDeCreditosButton;
     private JButton prestamosButton;
     private JButton gastosButton;
-    private JButton proyeccionesButton;
-    private JButton agregarPlazoFijoButton;
+    private JTextField tfNombre;
+    private JTextField tfMontOriginal;
+    private JTextField tfTasaInt;
+    private JTextField tfPlazo;
+    private JButton btnAgregarPlazo;
+    private JComboBox cbCuentaBanco;
+    private JTextField tfIdPlazo;
+    private JPanel FechaInicioPanel;
+    private JButton btnEliminarPlazo;
+    private JScrollBar scrollBar1;
+    private JTextField tfInteresMensual;
+    private JTextField tfInteresAnual;
+    private JTextField tfInteresActual;
+    private JTextField tfInteresAcumulado;
 
     public PlazoFijos() {
         // Configuración de la ventana
@@ -25,12 +39,55 @@ public class PlazoFijos extends JFrame{
         setLocationRelativeTo(null);
         setContentPane(PlazoFijosPanel);
 
+        //Action listeners para dashboard
         menuPrincipalButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Acción para el botón del menú principal
                 Dashboard dashboard = new Dashboard();
                 dashboard.setVisible(true);
+                dispose();
+            }
+        });
+
+        cuentasBancariasButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CuentaBancaria newframe = new CuentaBancaria();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+
+        stocksButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Stocks newframe = new Stocks();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        tarjetasDeCreditosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Tarjetas newframe = new Tarjetas();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        prestamosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Prestamos newframe = new Prestamos();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        ingresosYGastosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IngresoYGastos newframe = new IngresoYGastos();
+                newframe.setVisible(true);
                 dispose();
             }
         });
