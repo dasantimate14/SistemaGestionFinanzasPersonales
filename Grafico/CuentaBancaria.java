@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 public class CuentaBancaria extends JFrame {
     private JPanel CuentaBancoPanel;
     private JButton btnMenu2;
-    private JButton proyeccionesButton;
     private JButton prestamosButton;
     private JButton tarjetasDeCreditoButton;
     private JButton stocksButton;
@@ -16,6 +15,8 @@ public class CuentaBancaria extends JFrame {
     private JButton cuentasBancariasButton;
     private JButton btnAgregarCuenta;
     private JButton consultarMovimientosButton;
+    private JList list1;
+    private JPanel PastelitoPanel;
 
     public CuentaBancaria() {
         // Configuración de la ventana
@@ -28,14 +29,9 @@ public class CuentaBancaria extends JFrame {
         btnAgregarCuenta.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    validarDatosAgregarCuenta();
                 AgregarCuentaBanco newframe = new AgregarCuentaBanco();
                 newframe.setVisible(true);
                 dispose();
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(CuentaBancaria.this, "Por favor, ingrese datos válidos. " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
             }
         });
         consultarMovimientosButton.addActionListener(new ActionListener() {
@@ -51,6 +47,46 @@ public class CuentaBancaria extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Dashboard newframe = new Dashboard();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        plazosFijosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PlazoFijos newframe = new PlazoFijos();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        ingresosYGastosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IngresoYGastos newframe = new IngresoYGastos();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        stocksButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Stocks newframe = new Stocks();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        tarjetasDeCreditoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Tarjetas newframe = new Tarjetas();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        prestamosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Prestamos newframe = new Prestamos();
                 newframe.setVisible(true);
                 dispose();
             }

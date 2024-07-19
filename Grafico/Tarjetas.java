@@ -23,6 +23,13 @@ public class Tarjetas extends JFrame {
     private JButton calcularButton;
 
     public Tarjetas() {
+        // Configuración de la ventana
+        setSize(930, 920);
+        setTitle("Tarjetas");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setContentPane(TarjetaPanel);
+
         agregarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -34,6 +41,59 @@ public class Tarjetas extends JFrame {
                 }
             }
         });
+        btMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Dashboard newframe = new Dashboard();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        cuentasBancariasButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CuentaBancaria newframe = new CuentaBancaria();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        plazosFijosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PlazoFijos newframe = new PlazoFijos();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        ingresosYGastosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IngresoYGastos newframe = new IngresoYGastos();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        stocksButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Stocks newframe = new Stocks();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        préstamoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Prestamos newframe = new Prestamos();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
     }
 
     private void validarCampos() throws Exception {

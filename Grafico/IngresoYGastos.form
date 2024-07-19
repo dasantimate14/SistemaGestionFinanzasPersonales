@@ -3,14 +3,14 @@
   <grid id="27dc6" binding="IngresoPanel" layout-manager="GridLayoutManager" row-count="36" column-count="42" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="1835" height="1025"/>
+      <xy x="20" y="20" width="1877" height="1025"/>
     </constraints>
     <properties>
       <preferredSize width="960" height="920"/>
     </properties>
     <border type="none" title=""/>
     <children>
-      <grid id="458b6" layout-manager="GridLayoutManager" row-count="12" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="458b6" layout-manager="GridLayoutManager" row-count="11" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="1" column="0" row-span="35" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -76,22 +76,14 @@
               <text value="Prestamos"/>
             </properties>
           </component>
-          <component id="9eb45" class="javax.swing.JButton" binding="proyeccionesButton" default-binding="true">
-            <constraints>
-              <grid row="9" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Proyecciones"/>
-            </properties>
-          </component>
           <vspacer id="f4e9d">
             <constraints>
-              <grid row="11" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
           <vspacer id="2562f">
             <constraints>
-              <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <grid row="9" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
           <component id="7bbb7" class="javax.swing.JSeparator">
@@ -132,11 +124,6 @@
           </component>
         </children>
       </grid>
-      <hspacer id="2518">
-        <constraints>
-          <grid row="35" column="39" row-span="1" col-span="3" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-      </hspacer>
       <vspacer id="3a9bd">
         <constraints>
           <grid row="2" column="39" row-span="33" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
@@ -181,16 +168,6 @@
             <item value="Selecciona una opción"/>
             <item value="Ingreso"/>
             <item value="Gastos"/>
-          </model>
-        </properties>
-      </component>
-      <component id="ddff8" class="javax.swing.JComboBox" binding="comboBox3" default-binding="true">
-        <constraints>
-          <grid row="4" column="1" row-span="1" col-span="38" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <model>
-            <item value="Escoge una fuente"/>
           </model>
         </properties>
       </component>
@@ -263,12 +240,6 @@
           <text value="Fuente"/>
         </properties>
       </component>
-      <component id="88259" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
-        <constraints>
-          <grid row="20" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties/>
-      </component>
       <component id="558e9" class="javax.swing.JLabel">
         <constraints>
           <grid row="21" column="10" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -326,6 +297,19 @@
         <properties>
           <model>
             <item value="Seleccionar una opción"/>
+            <item value="0"/>
+            <item value="1"/>
+            <item value="2"/>
+            <item value="3"/>
+            <item value="4"/>
+            <item value="5"/>
+            <item value="6"/>
+            <item value="7"/>
+            <item value="8"/>
+            <item value="9"/>
+            <item value="10"/>
+            <item value="11"/>
+            <item value="12"/>
           </model>
         </properties>
       </component>
@@ -416,7 +400,24 @@
         <constraints>
           <grid row="22" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <model>
+            <item value="Selecciona una opción"/>
+            <item value="0"/>
+            <item value="1"/>
+            <item value="2"/>
+            <item value="3"/>
+            <item value="4"/>
+            <item value="5"/>
+            <item value="6"/>
+            <item value="7"/>
+            <item value="8"/>
+            <item value="9"/>
+            <item value="10"/>
+            <item value="11"/>
+            <item value="12"/>
+          </model>
+        </properties>
       </component>
       <component id="e67cb" class="javax.swing.JLabel">
         <constraints>
@@ -484,6 +485,14 @@
         <border type="none"/>
         <children/>
       </grid>
+      <component id="b82f6" class="javax.swing.JTextField" binding="textField5" default-binding="true">
+        <constraints>
+          <grid row="20" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
     </children>
   </grid>
 </form>

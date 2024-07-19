@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class IngresoYGastos {
+public class IngresoYGastos extends JFrame{
     private JButton menuPrincipalButton;
     private JButton cuentaBancariaButton;
     private JButton plazoFijosButton;
@@ -12,7 +12,6 @@ public class IngresoYGastos {
     private JButton stocksButton;
     private JButton tarjetasDeCreditoButton;
     private JButton prestamosButton;
-    private JButton proyeccionesButton;
     private JPanel IngresoPanel;
     private JButton promedioMensualDeGastosButton;
     private JTextField textField1;
@@ -28,8 +27,16 @@ public class IngresoYGastos {
     private JComboBox<String> comboBox2;
     private JList<String> list1;
     private JTextField textField4;
+    private JTextField textField5;
 
-public IngresoYGastos() {
+    public IngresoYGastos() {
+    // Configuración de la ventana
+    setSize(930, 920);
+    setTitle("Ingreso y Gastos");
+    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    setLocationRelativeTo(null);
+    setContentPane(IngresoPanel);
+
     agregarIngresoButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -55,7 +62,62 @@ public IngresoYGastos() {
             }
         }
     });
+    //Action Listeners
+    menuPrincipalButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Dashboard newframe = new Dashboard();
+            newframe.setVisible(true);
+            dispose();
+        }
+    });
+    cuentaBancariaButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            CuentaBancaria newframe = new CuentaBancaria();
+            newframe.setVisible(true);
+            dispose();
+        }
+    });
+    plazoFijosButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            PlazoFijos newframe = new PlazoFijos();
+            newframe.setVisible(true);
+            dispose();
+        }
+    });
+
+    stocksButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Stocks newframe = new Stocks();
+            newframe.setVisible(true);
+            dispose();
+        }
+    });
+    tarjetasDeCreditoButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Tarjetas newframe = new Tarjetas();
+            newframe.setVisible(true);
+            dispose();
+        }
+    });
+    prestamosButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Prestamos newframe = new Prestamos();
+            newframe.setVisible(true);
+            dispose();
+        }
+    });
 }
+
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+    }
 
 private void validarCamposIngreso() throws Exception {
     String fuenteIngreso = textField1.getText();
@@ -132,3 +194,4 @@ public static void main(String[] args) {
     });
 }
 }
+

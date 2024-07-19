@@ -14,7 +14,6 @@ public class PlazoFijos extends JFrame{
     private JButton tarjetasDeCreditosButton;
     private JButton prestamosButton;
     private JButton gastosButton;
-    private JButton proyeccionesButton;
     private JButton agregarPlazoFijoButton;
 
     public PlazoFijos() {
@@ -25,6 +24,7 @@ public class PlazoFijos extends JFrame{
         setLocationRelativeTo(null);
         setContentPane(PlazoFijosPanel);
 
+        //Action listeners para dashboard
         menuPrincipalButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -34,6 +34,49 @@ public class PlazoFijos extends JFrame{
                 dispose();
             }
         });
+
+        cuentasBancariasButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CuentaBancaria newframe = new CuentaBancaria();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+
+        stocksButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Stocks newframe = new Stocks();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        tarjetasDeCreditosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Tarjetas newframe = new Tarjetas();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        prestamosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Prestamos newframe = new Prestamos();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        ingresosYGastosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IngresoYGastos newframe = new IngresoYGastos();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+
     }
 
     @Override
