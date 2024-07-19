@@ -411,7 +411,7 @@ public class Stock extends FinanceItem{
         }
     }
 
-    public static void cargarStocksBaseDatos(String id_usuario){
+    public static void obtenerStocksBaseDatos(String id_usuario){
         Stock stocks = null;
         String consulta = "SELECT * FROM stocks WHERE idUsuario = 'def456'";
         try {
