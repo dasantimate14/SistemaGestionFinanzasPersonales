@@ -8,7 +8,14 @@ public class BaseDeDatos {
     private static Connection con = null;
 
     public static void establecerConexion() throws SQLException {
-        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306", "root", "");
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            // Lanza una SQLException personalizada indicando que el controlador no fue encontrado
+            throw new SQLException("No se encontró el controlador JDBC de MariaDB.");
+        }
+        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/sistema_gestion_finanzas", "root", "");
     }
 
     // Método para ejecutar consultas SELECT con proteccion a SQL Injections, usar cuando se guardan datos ingresados por el usuario
@@ -59,6 +66,7 @@ public class BaseDeDatos {
             // Devuelve true si se afectó al menos una fila
             return filasAfectadas > 0;
         } catch (SQLException e) {
+            e.getMessage();
             System.out.println("Error al ejecutar la actualización: " + e.getMessage());
             throw e;
         }
