@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -24,12 +25,12 @@ public class Stock extends FinanceItem{
     private float dividendo_acumulado;
     private float dividendo_estimado;
     private int frecuencia_dividendos;
-    private static int cantidadInstancias = 0;
-    private static List<Stock> instanciasStocks = new ArrayList<>();
+    static int cantidad_instancias = 0;
+    static List<Stock> instancias_stocks = new ArrayList<>();
 
-    public Stock(String nombre, String descripcion, float tasaInteres, LocalDate fechaInicio,
+    public Stock(String nombre, String descripcion,  LocalDate fechaInicio,
                  String nombreEmpresa, String simbolo, int cantidad, float precio_compra, String sector, float dividendo_por_accion, int frecuencia_dividendos){
-        super(nombre, descripcion, (cantidad* precio_compra), "Activo", tasaInteres, fechaInicio);
+        super(nombre, descripcion, (cantidad* precio_compra), "Activo", fechaInicio);
         this.nombre_empresa = nombreEmpresa;
         this.simbolo = simbolo;
         this.cantidad = cantidad;
@@ -39,14 +40,14 @@ public class Stock extends FinanceItem{
         this.frecuencia_dividendos = frecuencia_dividendos;
 
         //Se guarda la instancia dentro de un arreglo que pertenece a la clase misma y no a la instancia
-        instanciasStocks.add(this);
-        cantidadInstancias++;
+        instancias_stocks.add(this);
+        cantidad_instancias++;
     }
 
     // Constructor con dividendoPorAccion por defecto
-    public Stock(String nombre, String descripcion, float tasaInteres, LocalDate fechaInicio,
+    public Stock(String nombre, String descripcion,  LocalDate fechaInicio,
                  String nombreEmpresa, String simbolo, int cantidad, float precio_compra, String sector) {
-        this(nombre, descripcion, tasaInteres, fechaInicio, nombreEmpresa, simbolo, cantidad, precio_compra, sector, 0.0f, 0);
+        this(nombre, descripcion, fechaInicio, nombreEmpresa, simbolo, cantidad, precio_compra, sector, 0.0f, 0);
     }
 
     //Metodos get y set de la clase
@@ -58,7 +59,7 @@ public class Stock extends FinanceItem{
     public float getDividendoPorAccion() {return dividendo_por_accion;}
     public float getDividendoAcumulado(){return dividendo_acumulado;}
     public float getDividendoEstimado(){return dividendo_estimado;}
-    public static int getCantidadInstancias() {return cantidadInstancias;}
+    public static int getCantidadInstancias() {return cantidad_instancias;}
     public float getPrecioActual(){return precio_actual;}
     public int getFrecuenciaDividendos(){return frecuencia_dividendos;}
 
@@ -74,8 +75,8 @@ public class Stock extends FinanceItem{
 
     @Override
     protected float calcularValorActual() throws IOException {
-        setPrecioActual(obtenerPrecioActual() + calcularDividendoAcumulado());
-        return getPrecioActual();
+        setMontoActual((obtenerPrecioActual()*getCantidad()) + calcularDividendoAcumulado());
+        return getMontoActual();
     }
 
     @Override
@@ -122,7 +123,7 @@ public class Stock extends FinanceItem{
         for (float precio : precios_mensuales) {
             suma_precios += precio;
         }
-        setPromedioMensual(suma_precios / precios_mensuales.size());
+        setPromedioMensual(redonderCantidad(suma_precios / precios_mensuales.size()));
 
         return getPromedioMensual();
     }
@@ -137,7 +138,7 @@ public class Stock extends FinanceItem{
         for (float precio : precios_anuales) {
             suma_promedio += precio;
         }
-        return suma_promedio / precios_anuales.size();
+        return redonderCantidad(suma_promedio / precios_anuales.size());
     }
 
     @Override
@@ -145,6 +146,8 @@ public class Stock extends FinanceItem{
         setGanaciaPerdida(calcularGanaciaPerdida());
         setMontoActual(calcularValorActual());
         setDividendoAcumulado(calcularDividendoAcumulado());
+        setPorcentajeGanancia(calcularPorcentajeGananciaPerdida());
+        setPromedioMensual(calcularPromedioMensual());
     }
 
     //Metodo para obtener el porcentaje de representacion de una instancia de stock
@@ -153,7 +156,7 @@ public class Stock extends FinanceItem{
         float valor_stock_simbolo = 0;
         float porcentaje_representacion = 0;
         //Por cada stock que coincida con el simbolo se suma su monto del simbolo y por cada stock se suma a una variable de todos los stocks
-        for(Stock instanciaStock : instanciasStocks){
+        for(Stock instanciaStock : instancias_stocks){
             valor_total_stocks = instanciaStock.getMontoActual() + valor_total_stocks;
             if(instanciaStock.getSimbolo().equals(simbolo)){
                 valor_stock_simbolo = instanciaStock.getMontoActual() + valor_stock_simbolo;
@@ -172,7 +175,7 @@ public class Stock extends FinanceItem{
             while(!fecha_compra.isAfter(fecha_hoy)){
                 //Se debe acumular el dividendo si es el primero del mes
                 if(fecha_compra.getDayOfMonth() == 1 || fecha_compra.isBefore(fecha_hoy)){
-                    dividendo_acumulado += (dividendo_por_accion * cantidad);
+                    dividendo_acumulado += redonderCantidad(dividendo_por_accion * cantidad);
                 }
                 //Avanza al proximo mes
                 fecha_compra = fecha_compra.plusMonths(frecuencia_dividendos);
@@ -384,6 +387,27 @@ public class Stock extends FinanceItem{
         }
         System.out.println(precios_anuales);
         return precios_anuales;
+    }
+
+    public void guardarStockBaseDatos(String id_usuario){
+        //Consulta para guardar el objeto stock en la base de datos
+        String consulta_registro = "INSERT INTO stocks (id, nombre, descripcion, montoOriginal, fechaInicio, nombreEmpresa, simbolo, cantidad, precioCompra, sector, dividendoPorAccion, frecuenciaDividendos, idUsuario) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        //Arreglo de los parametros para la consulta
+        String[] parametros = {getNombre(), getDescripcion(), String.valueOf(getMontoOriginal()), String.valueOf(getFechaInicio()), getNombreEmpresa(), getSimbolo(), String.valueOf(getCantidad()), String.valueOf(getPrecioCompra()), getSector(), String.valueOf(getDividendoPorAccion()), String.valueOf(getFrecuenciaDividendos()), id_usuario};
+
+        //Registro en la base de datos
+        try{
+            BaseDeDatos.establecerConexion();
+            boolean registro_exitoso = BaseDeDatos.ejecutarActualizacion(consulta_registro, parametros);
+            if (registro_exitoso){
+                System.out.println("Registro exitoso de Stock." );
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
     }
 
 }
