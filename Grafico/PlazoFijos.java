@@ -14,7 +14,18 @@ public class PlazoFijos extends JFrame{
     private JButton tarjetasDeCreditosButton;
     private JButton prestamosButton;
     private JButton gastosButton;
-    private JButton agregarPlazoFijoButton;
+    private JTextField tfNombre;
+    private JTextField tfMontOriginal;
+    private JTextField tfTasaInt;
+    private JTextField tfPlazo;
+    private JButton btnAgregarPlazo;
+    private JComboBox cbCuentaBanco;
+    private JTextField tfIdPlazo;
+    private JPanel FechaInicioPanel;
+    private JButton btnEliminarPlazo;
+    private JScrollBar scrollBar1;
+    private JTextField textField1;
+    private JTextField textField2;
 
     public PlazoFijos() {
         // Configuración de la ventana
