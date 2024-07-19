@@ -3,6 +3,8 @@ package Grafico;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class PlazoFijos extends JFrame{
     private JPanel PlazoFijosPanel;
@@ -24,8 +26,10 @@ public class PlazoFijos extends JFrame{
     private JPanel FechaInicioPanel;
     private JButton btnEliminarPlazo;
     private JScrollBar scrollBar1;
-    private JTextField textField1;
-    private JTextField textField2;
+    private JTextField tfInteresMensual;
+    private JTextField tfInteresAnual;
+    private JTextField tfInteresActual;
+    private JTextField tfInteresAcumulado;
 
     public PlazoFijos() {
         // Configuración de la ventana
@@ -88,6 +92,31 @@ public class PlazoFijos extends JFrame{
             }
         });
 
+        scrollBar1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                System.out.println("Mouse clicked on JScrollBar. Current value: " + scrollBar1.getValue());
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                System.out.println("Mouse pressed on JScrollBar. Current value: " + scrollBar1.getValue());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                System.out.println("Mouse released on JScrollBar. Current value: " + scrollBar1.getValue());
+            }
+        });
+
+        // Añadir el JScrollBar al panel principal
+        PlazoFijosPanel.add(scrollBar1);
+
+        // Hacer visible la ventana
+        setVisible(true);
     }
 
     @Override

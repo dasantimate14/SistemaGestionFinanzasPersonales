@@ -341,7 +341,7 @@
           <text value="Interes Mensual"/>
         </properties>
       </component>
-      <component id="2418f" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+      <component id="2418f" class="javax.swing.JTextField" binding="tfInteresAnual">
         <constraints>
           <grid row="6" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -365,7 +365,7 @@
           <text value="Interes Acumulado"/>
         </properties>
       </component>
-      <component id="8baf6" class="javax.swing.JTextField" default-binding="true">
+      <component id="8baf6" class="javax.swing.JTextField" binding="tfInteresAcumulado">
         <constraints>
           <grid row="7" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -381,7 +381,7 @@
           <text value="Interes Actual"/>
         </properties>
       </component>
-      <component id="31e52" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+      <component id="31e52" class="javax.swing.JTextField" binding="tfInteresMensual">
         <constraints>
           <grid row="5" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -389,7 +389,7 @@
         </constraints>
         <properties/>
       </component>
-      <component id="9f7df" class="javax.swing.JTextField" default-binding="true">
+      <component id="9f7df" class="javax.swing.JTextField" binding="tfInteresActual">
         <constraints>
           <grid row="4" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
