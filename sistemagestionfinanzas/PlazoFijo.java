@@ -175,6 +175,7 @@ public class PlazoFijo extends FinanceItem {
             e.printStackTrace();
         }
         setInteres(calcularInteresAcumulado());
+        setMontoActual(getMontoOriginal() + getInteres());
     }
 
     // Método para encontrar un plazo fijo por ID
