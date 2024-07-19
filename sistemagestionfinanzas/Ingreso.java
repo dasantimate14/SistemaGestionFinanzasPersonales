@@ -288,5 +288,45 @@ public class Ingreso extends FinanceItem{
 
     }
 
+    public static void obtenerIngresosBaseDatos(String id_usuario){
+        Ingreso ingreso = null;
+        String consulta = "SELECT * FROM ingresos WHERE idUsuario = 'abc123'";
+        try{
+            BaseDeDatos.establecerConexion();
+            ResultSet rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
+            while (rs.next()) {
+                //Se leen cada uno de los campos en el resultset para crear el objeto
+                String id = rs.getString("id");
+                String nombre = rs.getString("nombre");
+                String descripcion = rs.getString("descripcion");
+                float monto_original = rs.getFloat("montoOriginal");
+                LocalDate fecha_inicio = rs.getDate("fechaInicio").toLocalDate();
+                String fuente = rs.getString("fuente");
+                int frecuencia = rs.getInt("frecuencia");
+                String id_cuenta_bancaria = rs.getString("idCuentaBancaria");
+
+                CuentaBancaria cuenta_viculada = null;
+                for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
+                    cuenta.obtenerInformacionCompleta();
+                    if(cuenta.getId().equals(id_cuenta_bancaria)) {
+                        cuenta_viculada = cuenta;
+                    }
+                }
+                if (cuenta_viculada == null) {
+                    System.out.println("No existe el cuenta  con ese ID");
+                }
+
+                //Se crea el objeto con los datos capturados
+                ingreso = new Ingreso(nombre, descripcion, monto_original, fecha_inicio, fuente, cuenta_viculada, frecuencia);
+                ingreso.setId(id);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+
+    }
+
 
 }
