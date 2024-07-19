@@ -1,6 +1,8 @@
 package Grafico;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Tarjetas extends JFrame {
     private JButton btMenu;
@@ -19,4 +21,78 @@ public class Tarjetas extends JFrame {
     private JButton agregarButton;
     private JTextField textField4;
     private JButton calcularButton;
+
+    public Tarjetas() {
+        agregarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    validarCampos();
+                    JOptionPane.showMessageDialog(null, "Tarjeta agregada correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+    }
+
+    private void validarCampos() throws Exception {
+        String tipoTarjeta = (String) comboBox1.getSelectedItem();
+        String limiteCredito = textField1.getText();
+        String saldoActual = textField2.getText();
+        String numeroTarjeta = textField3.getText();
+        String cuentaBancaria = (String) comboBox2.getSelectedItem();
+
+        if (tipoTarjeta == null || tipoTarjeta.isEmpty() || tipoTarjeta.equals("Selecciona una opción")) {
+            throw new Exception("Debe seleccionar un tipo de tarjeta.");
+        }
+
+        if (limiteCredito.isEmpty()) {
+            throw new Exception("Debe ingresar el límite de crédito.");
+        }
+        if (!limiteCredito.matches("\\d+(\\.\\d{1,2})?")) {
+            throw new Exception("No se pueden ingresar letras ni valores con más de dos decimales.");
+        }
+        try {
+            Double.parseDouble(limiteCredito);
+        } catch (NumberFormatException e) {
+            throw new Exception("El límite de crédito debe ser un número válido.");
+        }
+
+        if (saldoActual.isEmpty()) {
+            throw new Exception("Debe ingresar el saldo actual.");
+        }
+        if (!saldoActual.matches("\\d+(\\.\\d{1,2})?")) {
+            throw new Exception("No se pueden ingresar letras ni valores con más de dos decimales.");
+        }
+        try {
+            Double.parseDouble(saldoActual);
+        } catch (NumberFormatException e) {
+            throw new Exception("El saldo actual debe ser un número válido.");
+        }
+
+        if (numeroTarjeta.isEmpty()) {
+            throw new Exception("Debe ingresar el número de tarjeta.");
+        }
+        if (!numeroTarjeta.matches("\\d{1,22}")) {
+            throw new Exception("El número de tarjeta puede contener hasta 22 dígitos.");
+        }
+
+        if (cuentaBancaria == null || cuentaBancaria.isEmpty() || cuentaBancaria.equals("Selecciona una opción")) {
+            throw new Exception("Debe seleccionar una cuenta bancaria.");
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JFrame frame = new JFrame("Tarjetas");
+                frame.setContentPane(new Tarjetas().TarjetaPanel);
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.pack();
+                frame.setVisible(true);
+            }
+        });
+    }
 }
