@@ -197,7 +197,7 @@ public class Stocks extends JFrame {
         int frecuencia_dividendos = Integer.parseInt(tfFrecuenciaDividendos.getText());
         LocalDate fecha_actual = LocalDate.now();
 
-        Stock nuevoStock = new Stock(nombre, "Este es un stock de " + nombre_empresa, fecha_actual, nombre_empresa, simbolo, cantidad, precio_compra, "Sector? Falta en el form",dividendo, frecuencia_dividendos);
+        Stock nuevoStock = new Stock(nombre, "Este es un stock de " + nombre_empresa, fecha_actual, nombre_empresa, simbolo, cantidad, precio_compra, "Sector? Falta en el form", dividendo, frecuencia_dividendos);
         Usuario.getUsuarioActual().agregarFinanceItem(nuevoStock);
         limpiarCampos();
     }
