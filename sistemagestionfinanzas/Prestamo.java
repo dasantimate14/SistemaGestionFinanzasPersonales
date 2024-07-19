@@ -137,7 +137,7 @@ public class Prestamo extends FinanceItem {
         return (saldoPendiente * tasaInteresMensual) / (1 - (float)Math.pow(1 + tasaInteresMensual, -numeroPagos));
     }
 
-    public float calcularTipoRestante() {
+    public float calcularTiempoRestante() {
         return saldoPendiente * (super.getTasaInteres() / 100);
     }
 
@@ -163,6 +163,29 @@ public class Prestamo extends FinanceItem {
         }
         float porcentaje = (getMontoActual() / totalPrestamos) * 100;
         System.out.println("Porcentaje de Representación: " + porcentaje + "%");
+    }
+
+    public void guardarPrestamoBaseDatos(){
+        //Consulta para guardar el objeto prestamo en la base de datos
+        String consulta_registro = "INSERT INTO prestamos (id, nombre, descripcion, montoOriginal, tasaInteres, fechaInicio, tipoPrestamo, plazo, fechaVencimiento, estatus, cuotaMensual, idUsuario, idCuentaBancaria) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        //Arreglo con los parametros de la consulta
+        String[] parametros = {getNombre(), getDescripcion(), String.valueOf(getMontoOriginal()), String.valueOf(getTasaInteres()), String.valueOf(getFechaInicio()), getTipoPrestamo(), String.valueOf(getPlazo()), String.valueOf(fechaVencimiento),String.valueOf(estatus), String.valueOf(cuotaMensual) ,cuenta_bancaria.getIdUsuario(), cuenta_bancaria.getId()};
+
+        //Registro en la base de datos
+        try{
+            BaseDeDatos.establecerConexion();
+            boolean registro_exitoso = BaseDeDatos.ejecutarActualizacion(consulta_registro, parametros);
+            if (registro_exitoso){
+                System.out.println("Registro exitoso de Prestamo." );
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+
+
     }
 
     public static void obtenerPrestamosBaseDatos(String id_usuario) {

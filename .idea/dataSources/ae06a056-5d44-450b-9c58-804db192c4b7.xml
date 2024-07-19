@@ -1153,7 +1153,7 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <CollationName>utf8_bin</CollationName>
     </schema>
     <schema id="328" parent="1" name="sistema_gestion_finanzas">
-      <LastIntrospectionLocalTimestamp>2024-07-19.08:59:51</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2024-07-19.09:40:02</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_general_ci</CollationName>
     </schema>
     <schema id="329" parent="1" name="test">
@@ -1361,8 +1361,8 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <NotNull>1</NotNull>
       <Position>7</Position>
     </column>
-    <column id="376" parent="336" name="fechaVencimiento">
-      <DasType>date|0s</DasType>
+    <column id="376" parent="336" name="frecuencia">
+      <DasType>int(11)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>8</Position>
     </column>

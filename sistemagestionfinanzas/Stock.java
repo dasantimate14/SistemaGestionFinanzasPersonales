@@ -413,10 +413,11 @@ public class Stock extends FinanceItem{
 
     public static void obtenerStocksBaseDatos(String id_usuario){
         Stock stocks = null;
-        String consulta = "SELECT * FROM stocks WHERE idUsuario = 'def456'";
+        String consulta = "SELECT * FROM stocks WHERE idUsuario = ?";
+        String[] parametros = {id_usuario};
         try {
             BaseDeDatos.establecerConexion();
-            ResultSet rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
+            ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
             while (rs.next()) {
                 // Se leen cada uno de los campos en el resultset para crear el objeto
                 String id = rs.getString("id");
