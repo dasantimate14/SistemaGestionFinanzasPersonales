@@ -234,11 +234,12 @@ public class Ingreso extends FinanceItem{
         float ingreso_anual = 0;
 
         //Consulta que seleciona todos los datos entre un rango de fecha que en este caso va de un mes a otro
-        String consulta = "SELECT SUM(montoOriginal) AS ingreso_anual FROM ingresos WHERE idUsuario = '" + id_usuario + "' AND fechaInicio BETWEEN '" + java.sql.Date.valueOf(fecha_inicial)  + "' AND DATE_ADD('" + java.sql.Date.valueOf(fecha_inicial.withDayOfMonth(1)) + "', INTERVAL 1 YEAR)";
+        String consulta = "SELECT SUM(montoOriginal) AS ingreso_anual FROM ingresos WHERE idUsuario = ? AND fechaInicio BETWEEN ? AND ? ";
         while(fecha_inicial.isBefore(fecha_actual)){
+            String[] parametros = {id_usuario,fecha_inicial.toString(), String.valueOf(siguiente_anio)};
             try{
                 BaseDeDatos.establecerConexion();
-                ResultSet rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
+                ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
 
                 //Analisis del resultset y guardado del resultado en el array list
                 if(rs.next()){
@@ -250,6 +251,7 @@ public class Ingreso extends FinanceItem{
                 }
                 ingresos_anuales.add(ingreso_anual);
                 fecha_inicial = fecha_inicial.plusYears(1);
+                siguiente_anio = fecha_inicial.plusYears(1);
             } catch (SQLException e){
                 e.printStackTrace();
             } finally {
