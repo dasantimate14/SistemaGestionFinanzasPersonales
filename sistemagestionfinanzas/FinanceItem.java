@@ -67,12 +67,12 @@ public abstract class FinanceItem {
     protected abstract float calcularValorActual() throws IOException;
 
     protected float calcularGanaciaPerdida() throws IOException {
-        setGanaciaPerdida(calcularValorActual() - montoOriginal);
+        setGanaciaPerdida(redonderCantidad(calcularValorActual() - montoOriginal));
         return getGanaciaPerdida();
     }
 
     protected float calcularPorcentajeGananciaPerdida() throws IOException {
-        return (calcularGanaciaPerdida()/ montoOriginal) * 100;
+        return redonderCantidad((calcularGanaciaPerdida()/ montoOriginal) * 100);
     }
 
     //Metodo para imprimir los atributos de la clase
@@ -85,7 +85,7 @@ public abstract class FinanceItem {
         sb.append("Monto Original: ").append(montoOriginal).append("\n");
         sb.append("Interes: ").append(interes).append("\n");
         sb.append("Tasa interes: ").append(tasaInteres).append("%\n");
-        sb.append("Cantidad de Ganancia/Perdida: ").append(ganaciaPerdida).append("%\n");
+        sb.append("Cantidad de Ganancia/Perdida: ").append(ganaciaPerdida).append("\n");
         sb.append("Porcentaje de ganancia: ").append(porcentajeGanancia).append("%\n");
         sb.append("Monto Actual: ").append(montoActual).append("\n");
         sb.append("Valor Mensual Promedio: ").append(promedioMensual).append("\n");
@@ -135,6 +135,12 @@ public abstract class FinanceItem {
 
     //Metodo que usa todos los otros metodos que calculan valores que cambian con el tiempo y se actualizen al momento actual
     protected abstract void actualizarInformacion() throws IOException;
+
+    //Metodo para redondear la cantidad de dinero a dos decimales
+    protected float redonderCantidad(float cantidad){
+        return Math.round(cantidad* 100.0f) / 100.0f;
+
+    }
 
 
 
