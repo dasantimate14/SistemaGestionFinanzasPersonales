@@ -17,14 +17,12 @@ public class Usuario {
     public static ArrayList<Usuario> instancias_clientes = new ArrayList<>();
 
     // Constructor
-    public Usuario(String nombre, String email, String password) {
+    public Usuario(String nombre, String email, String contrasena) {
         this.nombre = Objects.requireNonNull(nombre, "Nombre no puede ser nulo");
         this.email = Objects.requireNonNull(email, "Email no puede ser nulo");
         this.contrasena = Objects.requireNonNull(contrasena, "Contraseña no puede ser nula");
         this.activos = new ArrayList<>();
         this.pasivos = new ArrayList<>();
-        // Generar un ID único para el cliente
-        this.id = generarIdUnico();
     }
 
     // Métodos getter y setter
@@ -103,12 +101,6 @@ public class Usuario {
         return es_usuario;
     }
 
-    // Método privado para generar un ID único (ejemplo sencillo)
-    private String generarIdUnico() {
-        // Lógica para generar un ID único (puedes implementar según tus necesidades)
-        return "ID_" + this.nombre.hashCode();
-    }
-
     // Método para obtener información general del cliente
     protected StringBuilder obtenerInformacionGeneral() {
         StringBuilder sb = new StringBuilder();
@@ -129,9 +121,9 @@ public class Usuario {
 
     // Método para guardar el cliente en la base de datos
     public void guardarClienteEnBaseDatos() {
-        String consultaRegistro = "INSERT INTO clientes (id, nombre, email, password) VALUES (?, ?, ?, ?)";
+        String consultaRegistro = "INSERT INTO usuarios (id, nombre, email, contrasena) VALUES (UUID(), ?, ?, ?)";
 
-        String[] parametros = new String[]{getId(), getNombre(), getEmail(), getCotrasena()};
+        String[] parametros = new String[]{getNombre(), getEmail(), getCotrasena()};
 
         try {
             BaseDeDatos.establecerConexion();
