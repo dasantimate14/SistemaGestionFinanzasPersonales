@@ -244,6 +244,6 @@ public class TarjetaCredito extends FinanceItem {
         } finally {
             BaseDeDatos.cerrarConexion();
         }
-
     }
 }
+
