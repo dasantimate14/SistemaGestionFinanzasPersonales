@@ -1,6 +1,7 @@
 package sistemagestionfinanzas;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,23 +11,24 @@ public class TarjetaCredito extends FinanceItem {
     private String tipoTarjeta;
     private float limiteCredito;
     private float saldoActual;
-    private String numero;
+    private int numero;
     private float creditoUsado;
     private CuentaBancaria cuentaBancaria;
-
+    private int cantidad_instancias;
     private static List<TarjetaCredito> instanciasTarjetas = new ArrayList<>();
 
     // Constructor
-    public TarjetaCredito(String nombre, String descripcion, float montoOriginal, String tipo, float tasaInteres, LocalDate fechaInicio,
-                          String tipoTarjeta, float limiteCredito, float saldoActual, String numero, CuentaBancaria cuentaBancaria) {
-        super(nombre, descripcion, montoOriginal, tipo, tasaInteres, fechaInicio);
+    public TarjetaCredito(String nombre, String descripcion, float montoOriginal, LocalDate fechaInicio,
+                          String tipoTarjeta, float limiteCredito, int numero, CuentaBancaria cuentaBancaria) {
+        super(nombre, descripcion, montoOriginal, "Pasivo", 0, fechaInicio);
         this.tipoTarjeta = tipoTarjeta;
         this.limiteCredito = limiteCredito;
-        this.saldoActual = saldoActual;
+        this.saldoActual = limiteCredito;
         this.numero = numero;
         this.cuentaBancaria = cuentaBancaria;
         this.creditoUsado = calcularCreditoUsado();
         instanciasTarjetas.add(this);
+        cantidad_instancias ++;
     }
 
     // Métodos para calcular el crédito usado
@@ -69,11 +71,11 @@ public class TarjetaCredito extends FinanceItem {
         this.tasaInteres = tasaInteres;
     }
 
-    public String getNumero() {
+    public int getNumero() {
         return numero;
     }
 
-    public void setNumero(String numero) {
+    public void setNumero(int numero) {
         this.numero = numero;
     }
 
@@ -147,6 +149,7 @@ public class TarjetaCredito extends FinanceItem {
 
     // Método para pagar la tarjeta de crédito
     public void pagarTarjeta(float monto) throws SQLException {
+        LocalDate fecha_hoy = LocalDate.now();
         if (cuentaBancaria != null && cuentaBancaria.getMontoActual() >= monto) {
             // Retirar monto de la cuenta bancaria
             cuentaBancaria.retirarMonto(monto);
@@ -165,9 +168,9 @@ public class TarjetaCredito extends FinanceItem {
             }
 
             // Registrar el pago como un gasto en la base de datos
-            String consulta = "INSERT INTO gastos (idUsuario, idCuentaBancaria, idTarjetaCredito, montoOriginal, fechaInicio) VALUES (?, ?, ?, ?, ?)";
-            String[] parametros = { cuentaBancaria.getIdUsuario(), String.valueOf(cuentaBancaria.getId()), String.valueOf(this.getId()), String.valueOf(monto), String.valueOf(LocalDate.now()) };
-            BaseDeDatos.ejecutarActualizacion(consulta, parametros);
+            cuentaBancaria.retirarMonto(monto);
+            Gasto pago_tarjeta = new Gasto("Pago Tarejta de Credito", "Se pagó la tarjeta con la terminación " + getNumero(), getCreditoUsado(), fecha_hoy, cuentaBancaria.getBanco(), 0, "Pago Tarjeta", getCuentaBancaria());
+            pago_tarjeta.guardarGastoBaseDatos();
 
             System.out.println("Pago de tarjeta realizado con éxito y registrado como gasto.");
         } else {
@@ -175,31 +178,26 @@ public class TarjetaCredito extends FinanceItem {
         }
     }
 
-    // Método para guardar la tarjeta de crédito en la base de datos
-    public void guardarTarjetaCreditoBaseDatos() {
-        // Consulta para guardar el objeto tarjeta de crédito en la base de datos
-        String consulta_registro = "INSERT INTO tarjetas_credito (id, nombre, descripcion, montoOriginal, fechaInicio, tasaInteres, tipoTarjeta, limiteCredito, saldoActual, numero, idCuentaBancaria) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public void guardarTarjetaBaseDatos(){
+        String consulta_registro = "INSERT INTO tarjetas_creditos (id, nombre, descripcion, montoOriginal, fechaInicio, tipoTarjeta, limiteCredito, terminacionTarjeta, idUsuario, idCuentaBancaria) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        // Arreglo con los parámetros de la consulta
         String[] parametros = new String[]{
                 getNombre(),
                 getDescripcion(),
                 String.valueOf(getMontoOriginal()),
                 String.valueOf(getFechaInicio()),
-                String.valueOf(getTasaInteres()),
                 getTipoTarjeta(),
                 String.valueOf(getLimiteCredito()),
-                String.valueOf(getSaldoActual()),
-                getNumero(),
-                String.valueOf(getCuentaBancaria().getId()) // Obtener el id de la cuenta bancaria asociada
+                String.valueOf(getNumero()),
+                cuentaBancaria.getIdUsuario(),
+                cuentaBancaria.getId()
         };
 
-        // Registro en la base de datos
         try {
             BaseDeDatos.establecerConexion();
             boolean registro_exitoso = BaseDeDatos.ejecutarActualizacion(consulta_registro, parametros);
             if (registro_exitoso) {
-                System.out.println("Registro exitoso de tarjeta de crédito.");
+                System.out.println("Registro exitoso de gasto.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -207,7 +205,47 @@ public class TarjetaCredito extends FinanceItem {
             BaseDeDatos.cerrarConexion();
         }
     }
-}
 
+    public static void obtenerTarjetaCreditoBaseDatos(String id_usuario){
+        TarjetaCredito tarjeta_credito = null;
+        String consulta = "SELECT * FROM tarjetas_creditos WHERE idUsuario = ?";
+        String[] parametro = {id_usuario};
+        try {
+            BaseDeDatos.establecerConexion();
+            ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametro);
+            while (rs.next()) {
+                // Leer cada uno de los campos en el ResultSet para manejar la información
+                String id = rs.getString("id");
+                String nombre = rs.getString("nombre");
+                String descripcion = rs.getString("descripcion");
+                float monto_original = rs.getFloat("montoOriginal");
+                LocalDate fecha_inicio = rs.getDate("fechaInicio").toLocalDate();
+                String tipo_tarjeta = rs.getString("tipoTarjeta");
+                float limite_credito = rs.getFloat("limiteCredito");
+                int terminacion_tarjeta = rs.getInt("terminacionTarjeta");
+                String id_cuenta_bancaria = rs.getString("idCuentaBancaria");
+
+                CuentaBancaria cuenta_viculada = null;
+                for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
+                    if(cuenta.getId().equals(id_cuenta_bancaria)) {
+                        cuenta_viculada = cuenta;
+                    }
+                }
+                if (cuenta_viculada == null) {
+                    System.out.println("No existe el cuenta  con ese ID");
+                }
+
+                //Se crea el objeto con los datos capturados
+                tarjeta_credito = new TarjetaCredito(nombre, descripcion, monto_original, fecha_inicio, tipo_tarjeta, limite_credito, terminacion_tarjeta, cuenta_viculada);
+                tarjeta_credito.setId(id);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+
+    }
+}
 
 
