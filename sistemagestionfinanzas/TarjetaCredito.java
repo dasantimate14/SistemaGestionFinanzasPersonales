@@ -247,5 +247,3 @@ public class TarjetaCredito extends FinanceItem {
 
     }
 }
-
-
