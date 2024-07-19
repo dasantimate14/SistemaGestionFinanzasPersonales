@@ -174,6 +174,40 @@ public class TarjetaCredito extends FinanceItem {
             System.out.println("Fondos insuficientes en la cuenta bancaria para realizar el pago.");
         }
     }
+
+    // Método para guardar la tarjeta de crédito en la base de datos
+    public void guardarTarjetaCreditoBaseDatos() {
+        // Consulta para guardar el objeto tarjeta de crédito en la base de datos
+        String consulta_registro = "INSERT INTO tarjetas_credito (id, nombre, descripcion, montoOriginal, fechaInicio, tasaInteres, tipoTarjeta, limiteCredito, saldoActual, numero, idCuentaBancaria) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        // Arreglo con los parámetros de la consulta
+        String[] parametros = new String[]{
+                getNombre(),
+                getDescripcion(),
+                String.valueOf(getMontoOriginal()),
+                String.valueOf(getFechaInicio()),
+                String.valueOf(getTasaInteres()),
+                getTipoTarjeta(),
+                String.valueOf(getLimiteCredito()),
+                String.valueOf(getSaldoActual()),
+                getNumero(),
+                String.valueOf(getCuentaBancaria().getId()) // Obtener el id de la cuenta bancaria asociada
+        };
+
+        // Registro en la base de datos
+        try {
+            BaseDeDatos.establecerConexion();
+            boolean registro_exitoso = BaseDeDatos.ejecutarActualizacion(consulta_registro, parametros);
+            if (registro_exitoso) {
+                System.out.println("Registro exitoso de tarjeta de crédito.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+    }
 }
+
 
 
