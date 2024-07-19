@@ -14,12 +14,12 @@ public class Tarjetas extends JFrame {
     private JButton ingresosYGastosButton;
     private JPanel TarjetaPanel;
     private JComboBox comboBox1;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JTextField textField3;
+    private JTextField tfLimiteCredito;
+    private JTextField tfSaldoActual;
+    private JTextField tfNumeroTarjeta;
     private JComboBox comboBox2;
     private JButton agregarButton;
-    private JTextField textField4;
+    private JTextField tfCreditoUsado;
     private JButton calcularButton;
 
     public Tarjetas() {
@@ -98,9 +98,9 @@ public class Tarjetas extends JFrame {
 
     private void validarCampos() throws Exception {
         String tipoTarjeta = (String) comboBox1.getSelectedItem();
-        String limiteCredito = textField1.getText();
-        String saldoActual = textField2.getText();
-        String numeroTarjeta = textField3.getText();
+        String limiteCredito = tfLimiteCredito.getText();
+        String saldoActual = tfSaldoActual.getText();
+        String numeroTarjeta = tfNumeroTarjeta.getText();
         String cuentaBancaria = (String) comboBox2.getSelectedItem();
 
         if (tipoTarjeta == null || tipoTarjeta.isEmpty() || tipoTarjeta.equals("Selecciona una opción")) {

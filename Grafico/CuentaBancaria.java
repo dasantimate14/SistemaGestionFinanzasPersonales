@@ -37,9 +37,9 @@ public class CuentaBancaria extends JFrame {
         consultarMovimientosButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    ConsultarMovimientos newframe = new ConsultarMovimientos();
-                    newframe.setVisible(true);
-                    dispose();
+                ConsultarMovimientos newframe = new ConsultarMovimientos();
+                newframe.setVisible(true);
+                dispose();
             }
         });
         //Action Listeners para los botones del dashboard

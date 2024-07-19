@@ -98,7 +98,7 @@ public class ConsultarMovimientos extends JFrame {
         }
     }
 
-
+//Formatter para que la libreria se extienda
     public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
         private String datePattern = "dd/MM/yyyy";
         private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);

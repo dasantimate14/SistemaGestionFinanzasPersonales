@@ -13,7 +13,13 @@ public class Stocks extends JFrame {
     private JButton stocksButton;
     private JButton plazoFijosButton;
     private JButton ingresosYGastosButton;
-    private JList list1;
+    private JTextField textField1;
+    private JTextField textField2;
+    private JLabel lbNombre;
+    private JTextField textField3;
+    private JButton agregarNuevoStockButton;
+    private JTextField textField4;
+    private JTextField textField5;
 
 
     public Stocks() {
