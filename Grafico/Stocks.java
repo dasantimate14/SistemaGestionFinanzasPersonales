@@ -3,6 +3,8 @@ package Grafico;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 
 public class Stocks extends JFrame {
     private JPanel StocksPanel;
@@ -20,6 +22,7 @@ public class Stocks extends JFrame {
     private JButton agregarNuevoStockButton;
     private JTextField textField4;
     private JTextField textField5;
+    private JScrollBar scrollBar1;
 
 
     public Stocks() {
@@ -76,6 +79,14 @@ public class Stocks extends JFrame {
                 Prestamos newframe = new Prestamos();
                 newframe.setVisible(true);
                 dispose();
+            }
+        });
+        // Añadir un AdjustmentListener al JScrollBar
+        scrollBar1.addAdjustmentListener(new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                // Acción a realizar cuando se ajusta la barra de desplazamiento
+                System.out.println("El valor de la barra de desplazamiento es: " + scrollBar1.getValue());
             }
         });
     }

@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="IngresoPanel" layout-manager="GridLayoutManager" row-count="36" column-count="44" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="2043" height="1025"/>
+      <xy x="20" y="20" width="2043" height="1041"/>
     </constraints>
     <properties>
       <preferredSize width="960" height="920"/>
@@ -138,7 +138,7 @@
           <text value="Visualiza tus ingresos y gastos"/>
         </properties>
       </component>
-      <component id="9572d" class="javax.swing.JButton" binding="promedioMensualDeGastosButton" default-binding="true">
+      <component id="9572d" class="javax.swing.JButton" binding="promedioMensualDeGastosButton">
         <constraints>
           <grid row="2" column="42" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -248,7 +248,7 @@
           <text value="Cuenta de Banco"/>
         </properties>
       </component>
-      <component id="6fd" class="javax.swing.JComboBox" default-binding="true">
+      <component id="6fd" class="javax.swing.JComboBox" binding="cbCuentaBanco">
         <constraints>
           <grid row="21" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -272,7 +272,7 @@
           <text value="Frecuencia"/>
         </properties>
       </component>
-      <component id="6a007" class="javax.swing.JComboBox" default-binding="true">
+      <component id="6a007" class="javax.swing.JComboBox" binding="cbFrecuenciaGast">
         <constraints>
           <grid row="22" column="13" row-span="1" col-span="26" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -370,7 +370,7 @@
           <text value="Frecuencia"/>
         </properties>
       </component>
-      <component id="7885f" class="javax.swing.JComboBox" default-binding="true">
+      <component id="7885f" class="javax.swing.JComboBox" binding="cbFrecuenciaIng">
         <constraints>
           <grid row="22" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -493,6 +493,42 @@
         </constraints>
         <properties>
           <text value=""/>
+        </properties>
+      </component>
+      <component id="659cc" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="24" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Monto"/>
+        </properties>
+      </component>
+      <component id="30231" class="javax.swing.JTextField" binding="tfMontoIngr">
+        <constraints>
+          <grid row="24" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="3c3c5" class="javax.swing.JTextField" binding="tfMontoGastos">
+        <constraints>
+          <grid row="24" column="14" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="d8bb9" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="24" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Monto"/>
         </properties>
       </component>
     </children>
