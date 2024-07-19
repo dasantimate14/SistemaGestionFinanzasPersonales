@@ -75,7 +75,7 @@ public class Stock extends FinanceItem{
 
     @Override
     protected float calcularValorActual() throws IOException {
-        setMontoActual(obtenerPrecioActual() + calcularDividendoAcumulado());
+        setMontoActual((obtenerPrecioActual()*getCantidad()) + calcularDividendoAcumulado());
         return getMontoActual();
     }
 
@@ -123,7 +123,7 @@ public class Stock extends FinanceItem{
         for (float precio : precios_mensuales) {
             suma_precios += precio;
         }
-        setPromedioMensual(suma_precios / precios_mensuales.size());
+        setPromedioMensual(redonderCantidad(suma_precios / precios_mensuales.size()));
 
         return getPromedioMensual();
     }
@@ -138,7 +138,7 @@ public class Stock extends FinanceItem{
         for (float precio : precios_anuales) {
             suma_promedio += precio;
         }
-        return suma_promedio / precios_anuales.size();
+        return redonderCantidad(suma_promedio / precios_anuales.size());
     }
 
     @Override
@@ -146,6 +146,8 @@ public class Stock extends FinanceItem{
         setGanaciaPerdida(calcularGanaciaPerdida());
         setMontoActual(calcularValorActual());
         setDividendoAcumulado(calcularDividendoAcumulado());
+        setPorcentajeGanancia(calcularPorcentajeGananciaPerdida());
+        setPromedioMensual(calcularPromedioMensual());
     }
 
     //Metodo para obtener el porcentaje de representacion de una instancia de stock
@@ -173,7 +175,7 @@ public class Stock extends FinanceItem{
             while(!fecha_compra.isAfter(fecha_hoy)){
                 //Se debe acumular el dividendo si es el primero del mes
                 if(fecha_compra.getDayOfMonth() == 1 || fecha_compra.isBefore(fecha_hoy)){
-                    dividendo_acumulado += (dividendo_por_accion * cantidad);
+                    dividendo_acumulado += redonderCantidad(dividendo_por_accion * cantidad);
                 }
                 //Avanza al proximo mes
                 fecha_compra = fecha_compra.plusMonths(frecuencia_dividendos);
