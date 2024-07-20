@@ -127,7 +127,7 @@ public class Usuario {
     }
 
     // Método para obtener información general del cliente
-    protected StringBuilder obtenerInformacionGeneral() {
+    public StringBuilder obtenerInformacionGeneral() {
         StringBuilder sb = new StringBuilder();
         sb.append("Nombre: ").append(nombre).append("\n");
         sb.append("ID: ").append(id).append("\n");
