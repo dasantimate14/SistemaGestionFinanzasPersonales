@@ -48,6 +48,7 @@ public class InicioSesion extends JFrame {
                     }
                     Usuario.setUsuarioActual(usuario);
                     if (usuario != null) {
+                        obtenerDatosBaseDatos();
                         Dashboard newframe = new Dashboard();
                         newframe.setVisible(true);
                         dispose();
@@ -131,7 +132,7 @@ public class InicioSesion extends JFrame {
 
             // Validación del formato del correo
             if (!correo.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
-                throw new Exception("El correo solo puede contener puntos, arrobas, letras y números.");
+                throw new Exception("El correo ingresado no es válido.");
             }
 
             if (password.isEmpty() || password == null) {

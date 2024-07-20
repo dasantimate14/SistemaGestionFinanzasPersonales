@@ -18,7 +18,7 @@ public class Dashboard extends JFrame {
     private JButton btnStocks;
     private JButton btnTarjetas;
     private JButton prestamosButton;
-    private JButton btnProyecciones;
+    private JTextField tfNombreUsuario;  //Se utilizara para asignar el nombre del usuario en hola nombre
 
     public Dashboard() {
         this.usuario = Usuario.getUsuarioActual();

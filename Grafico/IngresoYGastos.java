@@ -1,7 +1,5 @@
 package Grafico;
 
-import sistemagestionfinanzas.CuentaBancaria;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,8 +18,8 @@ public class IngresoYGastos extends JFrame {
     private JComboBox<String> cbCuentaBancoIng;
     private JComboBox<String> cbFrecuenciaIng;
     private JTextField tfMontoIngr;
-    private JTextField ingresoIDTextField;
-    private JTextField gastoIDTextField;
+    private JTextField tfIngresoID;
+    private JTextField tfGastoID;
     private JButton eliminarIngresoButton;
     private JButton eliminarGastoButton;
     private JButton btnAgregarGast;
@@ -30,9 +28,13 @@ public class IngresoYGastos extends JFrame {
     private JComboBox<String> cbFrecuenciaGast;
     private JTextField tfMontoGastos;
     private JPanel FechaIngresoPanel;
-    private JScrollBar scrollBar1;
     private JPanel FechaGastosPanel;
     private JComboBox<String> cbCuentaBAncoGast;
+    private JTextField tfNombreGasto;
+    private JTextField tfNombreIngresos;
+    private JTable tableIngresosGastos;
+    private JScrollPane spIngresoGastos;
+    private JTextField tfAcreedor;
 
     public IngresoYGastos() {
         actualizarComboBoxes();
@@ -239,8 +241,8 @@ public class IngresoYGastos extends JFrame {
     }
 
     private void validarCampoIDIngresoGasto() throws Exception {
-        String ingresoID = ingresoIDTextField.getText();
-        String gastoID = gastoIDTextField.getText();
+        String ingresoID = tfIngresoID.getText();
+        String gastoID = tfGastoID.getText();
 
         if (ingresoID.isEmpty()) {
             throw new Exception("Debe ingresar el ID del ingreso.");

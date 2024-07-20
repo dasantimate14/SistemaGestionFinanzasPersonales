@@ -8,13 +8,15 @@ import java.util.List;
 
 public class  AgregarCuentaBanco extends JFrame {
     private JPanel AgregarCuentaBancoPanel;
-    private JComboBox<String> comboBox1;
+    private JComboBox<String> cbTipoCuenta;
     private JTextField tfNombreCuenta;
     private JTextField tfNumeroCuenta;
-    private JTextField tfSaldoInicial;
-    private JComboBox<String> comboBox2;
     private JButton crearButton;
     private JButton Volverbtn2;
+    private JTextField tfBancoOrigen;
+    private JTextField tfSaldoInicial;
+    private JTextField tfTasaInteres;
+    private JTextField tfDescripcion;
 
 
     private static List<Cuenta> cuentas = new ArrayList<>();

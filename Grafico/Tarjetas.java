@@ -17,10 +17,8 @@ public class Tarjetas extends JFrame {
     private JTextField tfLimiteCredito;
     private JTextField tfSaldoActual;
     private JTextField tfNumeroTarjeta;
-    private JComboBox comboBox2;
+    private JComboBox cbCuentaBancaria;
     private JButton agregarButton;
-    private JTextField tfCreditoUsado;
-    private JButton calcularButton;
 
     public Tarjetas() {
         // Configuración de la ventana
@@ -101,7 +99,7 @@ public class Tarjetas extends JFrame {
         String limiteCredito = tfLimiteCredito.getText();
         String saldoActual = tfSaldoActual.getText();
         String numeroTarjeta = tfNumeroTarjeta.getText();
-        String cuentaBancaria = (String) comboBox2.getSelectedItem();
+        String cuentaBancaria = (String) cbCuentaBancaria.getSelectedItem();
 
         if (tipoTarjeta == null || tipoTarjeta.isEmpty() || tipoTarjeta.equals("Selecciona una opción")) {
             throw new Exception("Debe seleccionar un tipo de tarjeta.");

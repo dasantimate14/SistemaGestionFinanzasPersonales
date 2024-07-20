@@ -3,25 +3,31 @@ package Grafico;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
+import sistemagestionfinanzas.BaseDeDatos;
+import sistemagestionfinanzas.Usuario;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Properties;
+import java.sql.ResultSet;
 
 public class ConsultarMovimientos extends JFrame {
     private JPanel datePanelContainer;
     private JPanel MovPanel;
     private JComboBox cbNumeroCuenta;
     private JComboBox<String> cbNombreCuenta;
-    private JTextField tfNumeroCuenta;
-    private JList<String> list1;
+    private JTextField tfNumeroCuenta; //se está usando el que no es probablemente
     private JButton btnBuscar;
     private JButton Volverbtn;
+    private JTable movimientosTable;
+    private DefaultTableModel modelo;
     private JDatePickerImpl datePicker;
 
     public ConsultarMovimientos() {
@@ -43,6 +49,10 @@ public class ConsultarMovimientos extends JFrame {
 
         datePanelContainer.setLayout(new BorderLayout());
         datePanelContainer.add(datePicker, BorderLayout.CENTER);
+
+        modelo = new DefaultTableModel();
+        modelo.setColumnIdentifiers(new String[]{"ID", "Nombre", "Descripción", "Monto", "Tipo", "Fecha"});
+        movimientosTable.setModel(modelo);
 
         actualizarComboBoxes();
 
@@ -148,6 +158,30 @@ public class ConsultarMovimientos extends JFrame {
                 return dateFormatter.format(cal.getTime());
             }
             return "";
+        }
+
+        public void buscarMovimientos() throws SQLException {
+            try {
+                ResultSet movimientos = BaseDeDatos.realizarConsultaSelect("SELECT id, nombre, descripcion, montoOriginal, tipo, fechaInicio, frecuencia, idCuentaBancaria " +
+                                "FROM ingresos " +
+                                "WHERE idUsuario = ? " +
+                                "UNION " +
+                                "SELECT id, nombre, descripcion, montoOriginal, tipo, fechaInicio, frecuencia, idCuentaBancaria " +
+                                "FROM gastos " +
+                                "WHERE idUsuario = ?",
+                        new String[]{Usuario.usuario_actual.getId(), Usuario.usuario_actual.getId()});
+
+                while(movimientos.next()){
+                    Object[] movimiento = {movimientos.getString("id"), movimientos.getString("nombre"), movimientos.getString("descripcion"), movimientos.getFloat("montoOriginal"), movimientos.getString("tipo"), movimientos.getString("fechaInicio"), movimientos.getString("frecuencia"), movimientos.getString("idCuentaBancaria")};
+                    modelo.addRow(movimiento);
+                }
+            }
+            catch (Exception e)
+            {
+                System.out.println(e.getMessage());
+            }
+
+
         }
     }
 }

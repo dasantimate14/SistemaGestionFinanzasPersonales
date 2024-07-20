@@ -26,6 +26,7 @@
             </constraints>
             <properties>
               <background color="-16757148"/>
+              <foreground color="-327681"/>
               <text value="Menu Principal"/>
             </properties>
           </component>
@@ -217,14 +218,6 @@
             </constraints>
             <properties/>
           </component>
-          <component id="b2408" class="javax.swing.JTextField" binding="tfLimiteCredito">
-            <constraints>
-              <grid row="4" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-            </constraints>
-            <properties/>
-          </component>
           <component id="ba028" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
             <constraints>
               <grid row="2" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -260,7 +253,7 @@
               <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
-          <component id="bb7cd" class="javax.swing.JComboBox" binding="comboBox2" default-binding="true">
+          <component id="bb7cd" class="javax.swing.JComboBox" binding="cbCuentaBancaria">
             <constraints>
               <grid row="9" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -277,6 +270,14 @@
             <properties>
               <text value="Agregar"/>
             </properties>
+          </component>
+          <component id="b2408" class="javax.swing.JTextField" binding="tfLimiteCredito">
+            <constraints>
+              <grid row="4" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
           </component>
         </children>
       </grid>
@@ -317,35 +318,11 @@
           <grid row="3" column="11" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
         </constraints>
       </vspacer>
-      <component id="eb69" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Creditos Usados"/>
-        </properties>
-      </component>
-      <component id="6917d" class="javax.swing.JTextField" binding="tfCreditoUsado">
-        <constraints>
-          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties/>
-      </component>
       <hspacer id="d0a17">
         <constraints>
           <grid row="3" column="6" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
       </hspacer>
-      <component id="cad36" class="javax.swing.JButton" binding="calcularButton" default-binding="true">
-        <constraints>
-          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Calcular"/>
-        </properties>
-      </component>
     </children>
   </grid>
 </form>

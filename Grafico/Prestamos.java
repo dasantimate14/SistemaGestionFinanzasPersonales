@@ -5,26 +5,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Prestamos extends JFrame{
-    private JButton páginaPrincipalButton;
+    private JButton paginaPrincipalButton;
     private JButton cuentasBancariasButton;
     private JButton plazosFijosButton;
     private JButton ingresosYGastosButton;
     private JButton stocksButton;
-    private JButton tarjetasDeCréditoButton;
-    private JButton préstamosButton;
-    private JButton agregarPréstamoButton;
-    private JButton mostrarInterésPendienteButton;
-    private JButton mostrarInterésAcumuladoButton;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JList list1;
-    private JComboBox comboBox1;
-    private JTextField textField3;
-    private JTextField textField4;
-    private JComboBox comboBox2;
-    private JTextField textField5;
+    private JButton tarjetasDeCreditoButton;
+    private JButton prestamosButton;
     private JPanel FechaDeVencimientoPanel;
     private JPanel PrestamosPanel;
+    private JTextField tfDescripcion;
+    private JTextField tfNombre;
+    private JComboBox cbTipo;
+    private JTextField tfMontoOriginal;
+    private JTextField tfPlazo;
+    private JTextField tfCuotaMensual;
+    private JPanel fechaInicioPanel;
+    private JPanel fechaFinalPanel;
+    private JTextField tfCutaMesual;
+    private JComboBox cbEstatus;
+    private JButton btnAgregarPrestamo;
 
 
     public Prestamos() {
@@ -35,7 +35,7 @@ public class Prestamos extends JFrame{
         setLocationRelativeTo(null);
         setContentPane(PrestamosPanel);
 
-        páginaPrincipalButton.addActionListener(new ActionListener() {
+        paginaPrincipalButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             Dashboard newframe = new Dashboard();
@@ -75,7 +75,7 @@ public class Prestamos extends JFrame{
                 dispose();
             }
         });
-        tarjetasDeCréditoButton.addActionListener(new ActionListener() {
+        tarjetasDeCreditoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Tarjetas newframe = new Tarjetas();

@@ -33,8 +33,7 @@ public class RegistrarUsuario extends JFrame {
             }
         });
 
-        // Acción para que se redirija a la interfaz de inicio de sesión
-        // Se debe almacenar los datos ingresados en la base de datos aquí
+
         this.BtnEnviar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (RegistrarUsuario.this.guardarUsuario()) {

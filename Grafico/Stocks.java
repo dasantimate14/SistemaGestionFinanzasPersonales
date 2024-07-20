@@ -25,11 +25,12 @@ public class Stocks extends JFrame {
     private JLabel lbNombre;
     private JTextField tfDividendoAccion;
     private JButton agregarNuevoStockButton;
-    private JTextField tfValorTotal;
-    private JTextField tfDividendoacumulado;
+    private JTable tablaStocks;
+    private JTextField tdDescripcion;
     private JScrollBar scrollBar1;
     private JTextField tfSimbolo;
     private JTextField tfPrecioCompra;
+    private JTextField tfDividendoAccio;
     private JTextField tfFrecuenciaDividendos;
     private JTextField tfPrecioSctual;
     private JComboBox<String> cbFrecuenciaIng;
