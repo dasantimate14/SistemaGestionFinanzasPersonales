@@ -84,29 +84,43 @@ public class Usuario {
     // Lógica para iniciar sesión del cliente
     public static boolean auntentificacionIniciarSesion(String email, String contrasena) {
         boolean es_usuario = false;
-        String consulta = "SELECT * FROM usuarios WHERE email = ?";
+        String consulta = "SELECT contrasena FROM usuarios WHERE email = ?";
 
         String[] parametros = {email};
+        ResultSet rs = null;
         try{
             BaseDeDatos.establecerConexion();
-            ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
-            if(rs != null){
-                if(rs.next()) {
-                    String email_guardado = rs.getString("email");
-                    if(email_guardado.equals(email)) {
-                        return false;
-                    }
-                    rs.close();
+            rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
+            System.out.println("Consulta ejecutada: " + consulta);
+            System.out.println("Parámetro: " + email);
+            System.out.println(rs);
+            if (rs == null) {
+                System.out.println("ResultSet es null.");
+            } else if (!rs.next()) {
+                System.out.println("No se encontró ningún usuario con ese correo.");
+            } else {
+                String contrasenaGuardada = rs.getString("contrasena");
+                System.out.println("Contraseña guardada en la base de datos: " + contrasenaGuardada);
+
+                if (contrasenaGuardada.equals(contrasena)) {
+                    es_usuario = true;
+                    System.out.println("Contraseña coincide.");
                 } else {
-                    rs.close();
-                    return true;
+                    System.out.println("Contraseña no coincide.");
                 }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
 
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
             BaseDeDatos.cerrarConexion();
         }
         return es_usuario;
