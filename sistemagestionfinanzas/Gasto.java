@@ -147,7 +147,7 @@ public class Gasto extends FinanceItem {
                 if(fecha_inicio.isAfter(fecha_final)){
                     break;
                 }
-                Gasto gasto = new Gasto(getNombre(), getDescripcion(), getMontoOriginal(), fecha_inicio, getAcreedor(), getFrecuencia(), getCategoriaGasto(), getCuenta());
+                Gasto gasto = new Gasto(getNombre(), getDescripcion(), getMontoOriginal(), fecha_inicio, getAcreedor(), 0, getCategoriaGasto(), getCuenta());
                 cuenta.retirarMonto(gasto.montoOriginal);
 
                 //Se guarda el ingreso repetido en la base de datos
@@ -222,12 +222,13 @@ public class Gasto extends FinanceItem {
                     }
                 }
                 if (cuenta_viculada == null) {
-                    System.out.println("No existe el cuenta  con ese ID");
+                    System.out.println("No existe cuenta con ese ID");
                 }
 
                 //Se crea el objeto con los datos capturados
                 gasto = new Gasto(nombre, descripcion, monto_original, fecha_inicio, acreedor, frecuencia, categoria_gasto, cuenta_viculada);
                 gasto.setId(id);
+                gasto.setEstatus(estatus);
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
