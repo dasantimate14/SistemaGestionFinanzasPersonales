@@ -88,24 +88,6 @@
               <text value="Contraseña"/>
             </properties>
           </component>
-          <component id="8e5b6" class="javax.swing.JTextField" binding="tfCedula">
-            <constraints>
-              <grid row="15" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-            </constraints>
-            <properties>
-              <text value=""/>
-            </properties>
-          </component>
-          <component id="1d729" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="14" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Cedula"/>
-            </properties>
-          </component>
           <component id="2a991" class="javax.swing.JTextField" binding="tfCorreo">
             <constraints>
               <grid row="12" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">

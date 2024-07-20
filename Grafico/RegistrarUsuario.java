@@ -11,7 +11,6 @@ public class RegistrarUsuario extends JFrame {
     private JTextField tfNombre;
     private JTextField tfApellido;
     private JTextField tfCorreo;
-    private JTextField tfCedula;
     private JPasswordField tfContrasena;
     private JButton BtnEnviar;
     private JButton BtnLogin;
@@ -60,7 +59,6 @@ public class RegistrarUsuario extends JFrame {
             String nombre = this.tfNombre.getText();
             String apellido = this.tfApellido.getText();
             String correo = this.tfCorreo.getText();
-            String cedula = this.tfCedula.getText();
             String contrasena = new String(this.tfContrasena.getPassword());
 
             if (nombre.isEmpty() || nombre == null) {
@@ -70,15 +68,12 @@ public class RegistrarUsuario extends JFrame {
                throw new Exception("El nombre solo puede contener letras y espacios.");
            }
 
-
-
             if (apellido.isEmpty() || apellido == null) {
                 throw new Exception("Debe ingresar el apellido.");
             }
             if (!apellido.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ]+")) {
                 throw new Exception("El apellido solo puede contener letras.");
             }
-
 
             if (correo.isEmpty() || correo == null) {
                 throw new Exception("Debe ingresar el correo.");
@@ -95,26 +90,9 @@ public class RegistrarUsuario extends JFrame {
                 throw new Exception("La cédula solo puede contener números y guiones.");
             }
 
-
             if (contrasena.isEmpty() || contrasena == null) {
                 throw new Exception("Debe ingresar la contraseña.");
             }
 
-            JOptionPane.showMessageDialog(this, "Información guardada correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            Usuario usuario = new Usuario(nombre+" "+ apellido, correo, contrasena);
-            usuario.guardarClienteEnBaseDatos();
-            this.tfNombre.setText("");
-            this.tfApellido.setText("");
-            this.tfCedula.setText("");
-            this.tfContrasena.setText("");
-            this.tfCorreo.setText("");
-            return true;
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Por favor, ingrese datos válidos. " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Por favor, ingrese datos válidos. " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
     }
 }
