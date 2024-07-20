@@ -51,8 +51,6 @@ public class BaseDeDatos {
                 return null;
             }
         } finally {
-            // No cerrar rs aquí porque el ResultSet se está devolviendo al llamado del método
-            // También es una buena práctica cerrar el PreparedStatement si no se va a utilizar más.
             if (pst != null) {
                 try {
                     pst.close();

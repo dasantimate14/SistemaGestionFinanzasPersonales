@@ -194,13 +194,16 @@ public class Gasto extends FinanceItem {
             BaseDeDatos.cerrarConexion();
         }
     }
-    public static void obtenerGastoBaseDatos(String id_usuario) {
+    public static void obtenerGastoBaseDatos(String id_usuario) throws SQLException {
         Gasto gasto = null;
         String consulta = "SELECT * FROM gastos WHERE idUsuario = ?";
         String[] parametro = {id_usuario};
         try{
             BaseDeDatos.establecerConexion();
             ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametro);
+            if(rs == null){
+                throw new SQLException("No se pudo obtener ningún ingresos para este usuario");
+            }
             while (rs.next()) {
                 //Se leen cada uno de los campos en el resultset para crear el objeto
                 String id = rs.getString("id");
@@ -216,22 +219,19 @@ public class Gasto extends FinanceItem {
 
                 CuentaBancaria cuenta_viculada = null;
                 for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
-                    cuenta.obtenerInformacionCompleta();
                     if(cuenta.getId().equals(id_cuenta_bancaria)) {
                         cuenta_viculada = cuenta;
+                        //Se crea el objeto con los datos capturados
+                        gasto = new Gasto(nombre, descripcion, monto_original, fecha_inicio, acreedor, frecuencia, categoria_gasto, cuenta_viculada);
+                        gasto.setId(id);
+                        gasto.setEstatus(estatus);
+                        System.out.println("Gasto obtenido Correctamente");
+                        break;
                     }
                 }
-                if (cuenta_viculada == null) {
-                    System.out.println("No existe cuenta con ese ID");
-                }
-
-                //Se crea el objeto con los datos capturados
-                gasto = new Gasto(nombre, descripcion, monto_original, fecha_inicio, acreedor, frecuencia, categoria_gasto, cuenta_viculada);
-                gasto.setId(id);
-                gasto.setEstatus(estatus);
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            throw ex;
         } finally {
             BaseDeDatos.cerrarConexion();
         }

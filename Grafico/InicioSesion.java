@@ -9,6 +9,12 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static sistemagestionfinanzas.Usuario.getIdUsuarioActual;
+import static sistemagestionfinanzas.Usuario.usuario_actual;
 
 public class InicioSesion extends JFrame {
     BufferedReader entrada = new BufferedReader(new InputStreamReader(System.in));
@@ -41,7 +47,8 @@ public class InicioSesion extends JFrame {
                     Usuario.cargarUsuariosDesdeBaseDeDatos();
                     Usuario usuario = Usuario.buscarUsuarioPorEmail(correo);
                     Usuario.setUsuarioActual(usuario);
-                    obtenerDatosBaseDatos();
+                    String id_usuario = getIdUsuarioActual();
+                    obtenerDatosBaseDatos(id_usuario);
                     Dashboard newframe = new Dashboard();
                     newframe.setVisible(true);
                     dispose();
@@ -62,30 +69,50 @@ public class InicioSesion extends JFrame {
         setVisible(true);
     }
 
-    private void obtenerDatosBaseDatos() {
-        Usuario usuario_actual = Usuario.getUsuarioActual();
-        String usuario_id = usuario_actual.getId();
-        Gasto.obtenerGastoBaseDatos(usuario_id);
-        Ingreso.obtenerIngresosBaseDatos(usuario_id);
-        PlazoFijo.obtenerPlazoFijosBaseDatos(usuario_id);
-        Prestamo.obtenerPrestamosBaseDatos(usuario_id);
-        Stock.obtenerStocksBaseDatos(usuario_id);
-        TarjetaCredito.obtenerTarjetaCreditoBaseDatos(usuario_id);
-
+    private void obtenerDatosBaseDatos(String id_usuario) {
         try{
-            if(!Gasto.instancias_gastos.isEmpty()){
-                for (Gasto gasto : Gasto.instancias_gastos) {
-                    gasto.actualizarInformacion();
-                    usuario_actual.agregarFinanceItem(gasto);
-                }
+            try {
+                CuentaBancaria.obtenerCuentasBancariasBaseDatos(id_usuario);
+            } catch (SQLException e){
+                System.out.println(e.getMessage());
             }
 
-            if(!Ingreso.instancias_ingresos.isEmpty()){
-                for (Ingreso ingreso : Ingreso.instancias_ingresos) {
-                    ingreso.actualizarInformacion();
-                    usuario_actual.agregarFinanceItem(ingreso);
+            try {
+                Gasto.obtenerGastoBaseDatos(id_usuario);
+                if(!Gasto.instancias_gastos.isEmpty()){
+                    for (Gasto gasto : Gasto.instancias_gastos) {
+                        gasto.actualizarInformacion();
+                        usuario_actual.agregarFinanceItem(gasto);
+                    }
                 }
+            } catch (SQLException e){
+                System.out.println(e.getMessage());
             }
+
+            try {
+                Ingreso.obtenerIngresosBaseDatos(id_usuario);
+                List<Ingreso> ingresos_actuales = new ArrayList<>(Ingreso.instancias_ingresos);
+                System.out.println(Ingreso.cantidad_instancias);
+                if(!Ingreso.instancias_ingresos.isEmpty()){
+                    for(Ingreso ingreso: ingresos_actuales){
+                        ingreso.actualizarInformacion();
+                    }
+                }
+            } catch (SQLException e){
+                System.out.println(e.getMessage());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+
+            PlazoFijo.obtenerPlazoFijosBaseDatos(id_usuario);
+            Prestamo.obtenerPrestamosBaseDatos(id_usuario);
+            Stock.obtenerStocksBaseDatos(id_usuario);
+            TarjetaCredito.obtenerTarjetaCreditoBaseDatos(id_usuario);
+
+
+
+
 
             if (!PlazoFijo.instancias_plazos_fijos.isEmpty()){
                 for (PlazoFijo plazo_fijo : PlazoFijo.instancias_plazos_fijos) {
@@ -122,9 +149,10 @@ public class InicioSesion extends JFrame {
                 }
             }
 
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
         }
+
 
     }
 

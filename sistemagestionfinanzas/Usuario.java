@@ -17,6 +17,7 @@ public class Usuario {
     public static ArrayList<Usuario> instancias_clientes = new ArrayList<>();
     public static Usuario usuario_actual;
 
+    public static String getIdUsuarioActual(){return usuario_actual.getId();}
     public static void setUsuarioActual(Usuario usuario) {usuario_actual = usuario;}
     public static Usuario getUsuarioActual() {return usuario_actual;}
 
@@ -59,7 +60,7 @@ public class Usuario {
     }
 
     public void setId(String nuevoId) {
-        this.id = Objects.requireNonNull(nuevoId, "ID no puede ser nulo");
+        this.id = nuevoId;
     }
 
     // Métodos relacionados con la gestión de activos y pasivos
@@ -109,7 +110,7 @@ public class Usuario {
     }
 
     // Método para obtener información general del cliente
-    protected StringBuilder obtenerInformacionGeneral() {
+    public StringBuilder obtenerInformacionGeneral() {
         StringBuilder sb = new StringBuilder();
         sb.append("Nombre: ").append(nombre).append("\n");
         sb.append("ID: ").append(id).append("\n");
@@ -175,9 +176,9 @@ public class Usuario {
     // Método para buscar un cliente por ID
     public static Usuario buscarUsuarioPorEmail(String email_buscado) {
         Objects.requireNonNull(email_buscado, "email buscado no puede ser nulo");
-        for (Usuario cliente : instancias_clientes) {
-            if (cliente.getEmail().equals(email_buscado)) {
-                return cliente;
+        for (Usuario usuario : instancias_clientes) {
+            if (usuario.getEmail().equals(email_buscado)) {
+                return usuario;
             }
         }
         return null; // Si no se encuentra el cliente
