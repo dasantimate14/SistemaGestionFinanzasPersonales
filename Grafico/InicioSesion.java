@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 
 public class InicioSesion extends JFrame {
     BufferedReader entrada = new BufferedReader(new InputStreamReader(System.in));
-    private String correo;
     private JPanel LoginPanel;
     private JTextField tfCorreo;
     private JPasswordField pfContrasena;
@@ -38,21 +37,14 @@ public class InicioSesion extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (guardarDatos()) {
                     //Se crean los objetos del usuario una vez se haya validado
-                    Usuario.cargarClientesDesdeBaseDeDatos();
-                    Usuario usuario = null;
-                    for (Usuario usuarios : Usuario.instancias_clientes) {
-                        if (usuarios.getEmail().equals(correo)) {
-                            usuario = usuarios;
-                            break; // Salir del bucle una vez encontrado el usuario
-                        }
-                    }
+                    String correo = tfCorreo.getText();
+                    Usuario.cargarUsuariosDesdeBaseDeDatos();
+                    Usuario usuario = Usuario.buscarUsuarioPorEmail(correo);
                     Usuario.setUsuarioActual(usuario);
-                    if (usuario != null) {
-                        obtenerDatosBaseDatos();
-                        Dashboard newframe = new Dashboard();
-                        newframe.setVisible(true);
-                        dispose();
-                    }
+                    obtenerDatosBaseDatos();
+                    Dashboard newframe = new Dashboard();
+                    newframe.setVisible(true);
+                    dispose();
                 }
             }
         });
@@ -79,39 +71,55 @@ public class InicioSesion extends JFrame {
         Prestamo.obtenerPrestamosBaseDatos(usuario_id);
         Stock.obtenerStocksBaseDatos(usuario_id);
         TarjetaCredito.obtenerTarjetaCreditoBaseDatos(usuario_id);
+
         try{
-            for (Gasto gasto : Gasto.instancias_gastos) {
-                gasto.actualizarInformacion();
-                usuario_actual.agregarFinanceItem(gasto);
-            }
-            for (Ingreso ingreso : Ingreso.instancias_ingresos) {
-                ingreso.actualizarInformacion();
-                usuario_actual.agregarFinanceItem(ingreso);
+            if(!Gasto.instancias_gastos.isEmpty()){
+                for (Gasto gasto : Gasto.instancias_gastos) {
+                    gasto.actualizarInformacion();
+                    usuario_actual.agregarFinanceItem(gasto);
+                }
             }
 
-            for (PlazoFijo plazo_fijo : PlazoFijo.instancias_plazos_fijos) {
-                plazo_fijo.actualizarInformacion();
-                usuario_actual.agregarFinanceItem(plazo_fijo);
+            if(!Ingreso.instancias_ingresos.isEmpty()){
+                for (Ingreso ingreso : Ingreso.instancias_ingresos) {
+                    ingreso.actualizarInformacion();
+                    usuario_actual.agregarFinanceItem(ingreso);
+                }
             }
 
-            for (Prestamo prestamo : Prestamo.instanciasPrestamos) {
-                prestamo.actualizarInformacion();
-                usuario_actual.agregarFinanceItem(prestamo);
+            if (!PlazoFijo.instancias_plazos_fijos.isEmpty()){
+                for (PlazoFijo plazo_fijo : PlazoFijo.instancias_plazos_fijos) {
+                    plazo_fijo.actualizarInformacion();
+                    usuario_actual.agregarFinanceItem(plazo_fijo);
+                }
             }
 
-            for (Stock stock : Stock.instancias_stocks) {
-                stock.actualizarInformacion();
-                usuario_actual.agregarFinanceItem(stock);
+            if(!Prestamo.instanciasPrestamos.isEmpty()){
+                for (Prestamo prestamo : Prestamo.instanciasPrestamos) {
+                    prestamo.actualizarInformacion();
+                    usuario_actual.agregarFinanceItem(prestamo);
+                }
             }
 
-            for (TarjetaCredito tarjeta_credito : TarjetaCredito.instanciasTarjetas) {
-                tarjeta_credito.actualizarInformacion();
-                usuario_actual.agregarFinanceItem(tarjeta_credito);
+            if(!Stock.instancias_stocks.isEmpty()){
+                for (Stock stock : Stock.instancias_stocks) {
+                    stock.actualizarInformacion();
+                    usuario_actual.agregarFinanceItem(stock);
+                }
             }
 
-            for (CuentaBancaria cuenta_bancaria : CuentaBancaria.intsancias_cuentas_bancarias) {
-                cuenta_bancaria.actualizarInformacion();
-                usuario_actual.agregarFinanceItem(cuenta_bancaria);
+            if(!TarjetaCredito.instanciasTarjetas.isEmpty()){
+                for (TarjetaCredito tarjeta_credito : TarjetaCredito.instanciasTarjetas) {
+                    tarjeta_credito.actualizarInformacion();
+                    usuario_actual.agregarFinanceItem(tarjeta_credito);
+                }
+            }
+
+            if(!CuentaBancaria.intsancias_cuentas_bancarias.isEmpty()){
+                for (CuentaBancaria cuenta_bancaria : CuentaBancaria.intsancias_cuentas_bancarias) {
+                    cuenta_bancaria.actualizarInformacion();
+                    usuario_actual.agregarFinanceItem(cuenta_bancaria);
+                }
             }
 
         } catch (IOException ex) {
@@ -123,8 +131,8 @@ public class InicioSesion extends JFrame {
 
     private boolean guardarDatos() {
         try {
-            correo = this.tfCorreo.getText();
-            String password = new String(this.pfContrasena.getPassword());
+            String correo = tfCorreo.getText();
+            String password = new String(pfContrasena.getPassword());
 
             if (correo.isEmpty() || correo == null) {
                 throw new Exception("Debe ingresar el correo.");

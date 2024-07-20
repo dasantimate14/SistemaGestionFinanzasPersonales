@@ -84,43 +84,25 @@ public class Usuario {
     // Lógica para iniciar sesión del cliente
     public static boolean auntentificacionIniciarSesion(String email, String contrasena) {
         boolean es_usuario = false;
-        String consulta = "SELECT contrasena FROM usuarios WHERE email = ?";
+        String consulta = "SELECT * FROM usuarios WHERE email = ? AND contrasena = ?";
 
-        String[] parametros = {email};
-        ResultSet rs = null;
-        try{
+        String[] parametros = {email, contrasena};
+        try {
             BaseDeDatos.establecerConexion();
-            rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
-            System.out.println("Consulta ejecutada: " + consulta);
-            System.out.println("Parámetro: " + email);
-            System.out.println(rs);
+            ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
             if (rs == null) {
-                System.out.println("ResultSet es null.");
-            } else if (!rs.next()) {
-                System.out.println("No se encontró ningún usuario con ese correo.");
-            } else {
-                String contrasenaGuardada = rs.getString("contrasena");
-                System.out.println("Contraseña guardada en la base de datos: " + contrasenaGuardada);
-
-                if (contrasenaGuardada.equals(contrasena)) {
-                    es_usuario = true;
-                    System.out.println("Contraseña coincide.");
-                } else {
-                    System.out.println("Contraseña no coincide.");
-                }
+                return false;
             }
-
+            String usuario_email = rs.getString("email");
+            String usuario_contrasena = rs.getString("contrasena");
+            if (usuario_email.equals(email) && usuario_contrasena.equals(contrasena)) {
+                es_usuario = true;
+            } else {
+                es_usuario = false;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-
         } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
             BaseDeDatos.cerrarConexion();
         }
         return es_usuario;
@@ -164,7 +146,7 @@ public class Usuario {
     }
 
     // Método estático para cargar todos los clientes desde la base de datos
-    public static void cargarClientesDesdeBaseDeDatos() {
+    public static void cargarUsuariosDesdeBaseDeDatos() {
         String consulta = "SELECT * FROM usuarios";
         try {
             BaseDeDatos.establecerConexion();
@@ -191,10 +173,10 @@ public class Usuario {
     }
 
     // Método para buscar un cliente por ID
-    public static Usuario buscarClientePorId(String id_buscado) {
-        Objects.requireNonNull(id_buscado, "ID buscado no puede ser nulo");
+    public static Usuario buscarUsuarioPorEmail(String email_buscado) {
+        Objects.requireNonNull(email_buscado, "email buscado no puede ser nulo");
         for (Usuario cliente : instancias_clientes) {
-            if (cliente.getId().equals(id_buscado)) {
+            if (cliente.getEmail().equals(email_buscado)) {
                 return cliente;
             }
         }
