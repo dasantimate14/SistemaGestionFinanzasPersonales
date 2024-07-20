@@ -6,7 +6,6 @@ create table sistema_gestion_finanzas.stocks
     descripcion          text                          null,
     montoOriginal        float                         not null,
     tipo                 varchar(225) default 'Activo' null,
-    tasaInteres          float        default 0        null,
     fechaInicio          date                          not null,
     nombreEmpresa        varchar(225)                  not null,
     simbolo              varchar(225)                  not null,

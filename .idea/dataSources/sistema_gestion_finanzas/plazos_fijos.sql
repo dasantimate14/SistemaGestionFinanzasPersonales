@@ -10,16 +10,16 @@ create table sistema_gestion_finanzas.plazos_fijos
     fechaInicio      date                          not null,
     plazo            int                           not null,
     fechaFinal       date                          not null,
-    idCliente        char(36)                      null,
+    idUsuario        char(36)                      null,
     idCuentaBancaria char(36)                      null,
     constraint plazos_fijos_ibfk_1
-        foreign key (idCliente) references sistema_gestion_finanzas.usuarios (id),
+        foreign key (idUsuario) references sistema_gestion_finanzas.usuarios (id),
     constraint plazos_fijos_ibfk_2
         foreign key (idCuentaBancaria) references sistema_gestion_finanzas.cuentas_bancarias (id)
 );
 
 create index idCliente
-    on sistema_gestion_finanzas.plazos_fijos (idCliente);
+    on sistema_gestion_finanzas.plazos_fijos (idUsuario);
 
 create index idCuentaBancaria
     on sistema_gestion_finanzas.plazos_fijos (idCuentaBancaria);
