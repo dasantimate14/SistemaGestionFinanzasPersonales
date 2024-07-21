@@ -1,5 +1,7 @@
 package Grafico;
 
+import sistemagestionfinanzas.CuentaBancaria;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -163,8 +165,7 @@ public class IngresoYGastos extends JFrame {
         cbCuentaBancoIng.removeAllItems();
         cbCuentaBAncoGast.removeAllItems();
 
-        List<AgregarCuentaBanco.Cuenta> cuentas = AgregarCuentaBanco.getCuentas();
-        for (AgregarCuentaBanco.Cuenta cuenta : cuentas) {
+        for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias){
             cbCuentaBancoIng.addItem(cuenta.toString());
             cbCuentaBAncoGast.addItem(cuenta.toString());
         }

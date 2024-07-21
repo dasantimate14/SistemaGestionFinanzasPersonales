@@ -4,6 +4,7 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 import sistemagestionfinanzas.BaseDeDatos;
+import sistemagestionfinanzas.CuentaBancaria;
 import sistemagestionfinanzas.Usuario;
 
 import javax.swing.*;
@@ -91,8 +92,8 @@ public class ConsultarMovimientos extends JFrame {
     private void actualizarComboBoxes() {
         cbNumeroCuenta.removeAllItems();
         cbNombreCuenta.removeAllItems();
-        for (AgregarCuentaBanco.Cuenta cuenta : AgregarCuentaBanco.getCuentas()) {
-            cbNumeroCuenta.addItem(cuenta.getNumero());
+        for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias){
+            cbNumeroCuenta.addItem(cuenta.getNumeroCuenta());
             cbNombreCuenta.addItem(cuenta.getNombre());
         }
     }

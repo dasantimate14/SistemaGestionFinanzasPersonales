@@ -66,7 +66,7 @@ public class Prestamo extends FinanceItem {
     }
 
     @Override
-    protected float calcularPromedioMensual() throws SQLException, IOException {
+    protected float calcularPromedioMensual() throws IOException {
         return calcularPagoMensual();
     }
 
@@ -132,6 +132,18 @@ public class Prestamo extends FinanceItem {
     public void setFrecuenciaPago(int nuevaFrecuenciaPago) {
     }
 
+    public CuentaBancaria getCuentaBancaria(){
+        return cuenta_bancaria;
+    }
+
+    public float getCuotaMensual() {
+        return cuotaMensual;
+    }
+
+    public void setCuotaMensual(float cuotaMensual) {
+        this.cuotaMensual = cuotaMensual;
+    }
+
     public float calcularPagoMensual() {
         float tasaInteresMensual = super.getTasaInteres() / 12 / 100;
         int numeroPagos = plazo * 12;
@@ -185,8 +197,6 @@ public class Prestamo extends FinanceItem {
         } finally {
             BaseDeDatos.cerrarConexion();
         }
-
-
     }
 
     public static void obtenerPrestamosBaseDatos(String id_usuario) {
@@ -212,25 +222,40 @@ public class Prestamo extends FinanceItem {
                 float tasa_interes = rs.getFloat("tasaInteres");
 
                 CuentaBancaria cuenta_viculada = null;
+
                 for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
                     if(cuenta.getId().equals(id_cuenta_bancaria)) {
                         cuenta_viculada = cuenta;
+                        //Se crea el objeto con los datos capturados
+                        prestamo = new Prestamo(nombre, descripcion, monto_original, tasa_interes,fecha_inicio, tipo_prestamo, plazo, fecha_vencimiento, cuota_mensual, cuenta_viculada);
+                        prestamo.setId(id);
+                        prestamo.setEstatus(estatus);
+                        break;
                     }
                 }
-                if (cuenta_viculada == null) {
-                    System.out.println("No existe el cuenta  con ese ID");
-                }
-
-                //Se crea el objeto con los datos capturados
-                prestamo = new Prestamo(nombre, descripcion, monto_original, tasa_interes,fecha_inicio, tipo_prestamo, plazo, fecha_vencimiento, cuota_mensual, cuenta_viculada);
-                prestamo.setId(id);
-                prestamo.setEstatus(estatus);
             }
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
         } finally {
             BaseDeDatos.cerrarConexion();
         }
     }
 
+    public static void eliminarPrestamo(String id_prestamo){
+        //Consulta para eliminar el prestamo
+        String consulta_eliminar = "DELETE FROM prestamos WHERE id = ?";
+        String[] parametro = {id_prestamo};
+
+        try {
+            BaseDeDatos.establecerConexion();
+            boolean eliminacion_exitosa = BaseDeDatos.ejecutarActualizacion(consulta_eliminar, parametro);
+            if (eliminacion_exitosa){
+                System.out.println("Eliminacion exitosa del prestamo");
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+    }
 }
