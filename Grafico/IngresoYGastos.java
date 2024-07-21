@@ -10,9 +10,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Properties;
 
+import sistemagestionfinanzas.CuentaBancaria;
+import sistemagestionfinanzas.Ingreso;
 
 public class IngresoYGastos extends JFrame {
     private JButton btn_menu_principal;
@@ -33,7 +36,7 @@ public class IngresoYGastos extends JFrame {
     private JButton btn_eliminar_gasto;
     private JButton btn_agregar_gast;
     private JButton btn_agregar_ingr;
-    private JTextField tf_fuente_gasto;
+    private JTextField tf_descripcion_gasto;
     private JComboBox<String> cb_frecuencia_gasto;
     private JTextField tf_monto_gasto;
     private JPanel fecha_ingreso_panel;
@@ -44,7 +47,7 @@ public class IngresoYGastos extends JFrame {
     private JTable table_ingresos_gastos;
     private JScrollPane sp_ingreso_gastos;
     private JTextField tf_acreedor_gast;
-    private JTextField tf_acreedor_ingr;
+    private JTextField tf_descripcion_ingr;
     private JDatePickerImpl date_picker_ingreso;
     private JDatePickerImpl date_picker_gastos;
 
@@ -86,27 +89,46 @@ public class IngresoYGastos extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    validarCamposIngreso();
-                    // Código para agregar ingreso aquí
+                    String nombre = tf_nombre_ingresos.getText();
+                    String descripcion = tf_descripcion_ingr.getText();
+                    // Obtener la fecha del JDatePicker y convertirla a LocalDate
+                    java.util.Date date_ingreso = (java.util.Date) date_picker_ingreso.getModel().getValue();
+                    LocalDate fechaInicio = date_ingreso.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+                    int frecuencia = (int) cb_frecuencia_ing.getSelectedItem();
+                    String fuente = tf_fuente_ingreso.getText();
+                    float montoOriginal = Float.parseFloat(tf_monto_ingreso.getText());
+                    CuentaBancaria cuenta_bancaria = (CuentaBancaria) cb_cuenta_banco.getSelectedItem();
+
+                    Ingreso ingreso = new Ingreso(nombre, descripcion, montoOriginal, fechaInicio, fuente, cuenta_bancaria, frecuencia);
+
+                    ingreso.actualizarInformacion();
+                    //ingreso.guardarIngresoBaseDatos(); recuerda borrar
+
                     JOptionPane.showMessageDialog(null, "Ingreso agregado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
+                    // Mostrar mensaje de error en caso de excepción
                     JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-
         btn_agregar_gast.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    validarCamposGastos();
-                    // Código para agregar gastos aquí
-                    JOptionPane.showMessageDialog(null, "Gasto agregado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
+                try{
+                    String nombre= tf_nombre_gasto.getText();
+                    String descripcion= tf_descripcion_gasto.getText();
+                    float montoOriginal= Float.parseFloat(tf_monto_gasto.getText());
+                    java.util.Date date_gasto = (java.util.Date) date_picker_gastos.getModel().getValue();
+                    LocalDate fechaInicio = date_gasto.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+                    String acreedor = tf_acreedor_gast
+                    int frecuencia= (int) cb_frecuencia_ing.getSelectedItem();
+                    String categoriaGasto=
+                    CuentaBancaria cuenta
             }
         });
+    }
+
+
 
         btn_eliminar_ing.addActionListener(new ActionListener() {
             @Override
@@ -195,77 +217,6 @@ public class IngresoYGastos extends JFrame {
         super.setVisible(b);
     }
 
-    private void validarCamposIngreso() throws Exception {
-        String fuenteIngreso = tf_fuente_ingreso.getText();
-        String montoIngreso = tf_monto_ingreso.getText();
-        String cuentaBancaria = (String) cb_cuenta_banco_ingreso.getSelectedItem();
-        String frecuencia = (String) cb_frecuencia_ing.getSelectedItem();
-
-        if (fuenteIngreso.isEmpty()) {
-            throw new Exception("Debe ingresar la fuente del ingreso.");
-        }
-
-        if (montoIngreso.isEmpty()) {
-            throw new Exception("Debe ingresar el monto del ingreso.");
-        }
-
-        if (cuentaBancaria == null || cuentaBancaria.isEmpty() || cuentaBancaria.equals("Selecciona una opción")) {
-            throw new Exception("Debe seleccionar una cuenta bancaria.");
-        }
-
-        if (frecuencia == null || frecuencia.isEmpty() || frecuencia.equals("Selecciona una opción")) {
-            throw new Exception("Debe seleccionar una frecuencia.");
-        }
-
-        try {
-            Double.parseDouble(montoIngreso);
-        } catch (NumberFormatException e) {
-            throw new Exception("El monto del ingreso debe ser un número válido.");
-        }
-    }
-
-    private void validarCamposGastos() throws Exception {
-        String fuenteGasto = tf_fuente_gasto.getText();
-        String montoGasto = tf_monto_gasto.getText();
-        String cuentaBancaria = (String) cb_cuenta_banco.getSelectedItem();
-        String frecuencia = (String) cb_frecuencia_gasto.getSelectedItem();
-
-        if (fuenteGasto.isEmpty()) {
-            throw new Exception("Debe ingresar la fuente del gasto.");
-        }
-
-        if (montoGasto.isEmpty()) {
-            throw new Exception("Debe ingresar el monto del gasto.");
-        }
-
-        if (cuentaBancaria == null || cuentaBancaria.isEmpty() || cuentaBancaria.equals("Selecciona una opción")) {
-            throw new Exception("Debe seleccionar una cuenta bancaria.");
-        }
-
-        if (frecuencia == null || frecuencia.isEmpty() || frecuencia.equals("Selecciona una opción")) {
-            throw new Exception("Debe seleccionar una frecuencia.");
-        }
-
-        try {
-            Double.parseDouble(montoGasto);
-        } catch (NumberFormatException e) {
-            throw new Exception("El monto del gasto debe ser un número válido.");
-        }
-    }
-
-    private void validarCampoIDIngresoGasto() throws Exception {
-        String ingresoID = tf_ingreso_id.getText();
-        String gastoID = tf_gasto_id.getText();
-
-        if (ingresoID.isEmpty()) {
-            throw new Exception("Debe ingresar el ID del ingreso.");
-        }
-
-        if (gastoID.isEmpty()) {
-            throw new Exception("Debe ingresar el ID del gasto.");
-        }
-
-    }
     // Formatter para que la librería se extienda
     public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
         private String datePattern = "dd/MM/yyyy";
