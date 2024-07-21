@@ -97,7 +97,7 @@ public abstract class FinanceItem {
     protected abstract StringBuilder obtenerInformacionSubclase();
 
     //Metodo para obtener toda la informacion
-    protected final void obtenerInformacionCompleta(){
+    public final void obtenerInformacionCompleta(){
         StringBuilder informacionGeneral = obtenerInformacionGeneral();
         StringBuilder informacionSubclase = obtenerInformacionSubclase();
         System.out.println(informacionGeneral.toString());
