@@ -467,13 +467,16 @@ public class CuentaBancaria extends FinanceItem{
 
     }
 
-    public static void obtenerCuentasBancariasBaseDatos(String id_usuario){
+    public static void obtenerCuentasBancariasBaseDatos(String id_usuario) throws SQLException {
         CuentaBancaria cuenta_bancaria = null;
         String consulta = "SELECT * FROM cuentas_bancarias WHERE idUsuario = ?";
         String[] parametros = {id_usuario};
         try{
             BaseDeDatos.establecerConexion();
             ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
+            if (rs == null){
+                throw new SQLException("No se puede obtener una cuenta Bancaria.");
+            }
             while (rs.next()) {
                 //Se leen cada uno de los campos en el resultset para crear el objeto
                 String id = rs.getString("id");
@@ -487,11 +490,13 @@ public class CuentaBancaria extends FinanceItem{
                 String tipo_cuenta = rs.getString("tipoCuenta");
 
                 //Se crea el objeto con los datos capturados
-                cuenta_bancaria = new CuentaBancaria(nombre, descripcion, monto_original, tasa_interes,fecha_inicio, banco, numero_cuenta, tipo_cuenta, id_usuario);
+                cuenta_bancaria = new CuentaBancaria(nombre, descripcion, monto_original, tasa_interes, fecha_inicio, banco, numero_cuenta, tipo_cuenta, id_usuario);
                 cuenta_bancaria.setId(id);
+
+
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            throw ex;
         } finally {
             BaseDeDatos.cerrarConexion();
         }

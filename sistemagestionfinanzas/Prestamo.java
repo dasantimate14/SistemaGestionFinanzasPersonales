@@ -189,13 +189,16 @@ public class Prestamo extends FinanceItem {
 
     }
 
-    public static void obtenerPrestamosBaseDatos(String id_usuario) {
+    public static void obtenerPrestamosBaseDatos(String id_usuario) throws SQLException{
         Prestamo prestamo = null;
         String consulta = "SELECT * FROM prestamos WHERE idUsuario = ?";
         String[] parametro = {id_usuario};
         try {
             BaseDeDatos.establecerConexion();
             ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametro);
+            if(rs == null){
+                throw new SQLException("No se puede obtener ningun prestamo para este usuario");
+            }
             while (rs.next()) {
                 // Leer cada uno de los campos en el ResultSet para manejar la información
                 String id = rs.getString("id");
@@ -215,19 +218,16 @@ public class Prestamo extends FinanceItem {
                 for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
                     if(cuenta.getId().equals(id_cuenta_bancaria)) {
                         cuenta_viculada = cuenta;
+                        //Se crea el objeto con los datos capturados
+                        prestamo = new Prestamo(nombre, descripcion, monto_original, tasa_interes,fecha_inicio, tipo_prestamo, plazo, fecha_vencimiento, cuota_mensual, cuenta_viculada);
+                        prestamo.setId(id);
+                        prestamo.setEstatus(estatus);
+                        break;
                     }
                 }
-                if (cuenta_viculada == null) {
-                    System.out.println("No existe el cuenta  con ese ID");
-                }
-
-                //Se crea el objeto con los datos capturados
-                prestamo = new Prestamo(nombre, descripcion, monto_original, tasa_interes,fecha_inicio, tipo_prestamo, plazo, fecha_vencimiento, cuota_mensual, cuenta_viculada);
-                prestamo.setId(id);
-                prestamo.setEstatus(estatus);
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            throw ex;
         } finally {
             BaseDeDatos.cerrarConexion();
         }

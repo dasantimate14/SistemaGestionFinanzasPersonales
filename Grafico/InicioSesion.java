@@ -9,10 +9,14 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static sistemagestionfinanzas.Usuario.usuario_actual;
 
 public class InicioSesion extends JFrame {
     BufferedReader entrada = new BufferedReader(new InputStreamReader(System.in));
-    private String correo;
     private JPanel LoginPanel;
     private JTextField tfCorreo;
     private JPasswordField pfContrasena;
@@ -22,6 +26,7 @@ public class InicioSesion extends JFrame {
     private JLabel lbIniciarSesion;
     private JLabel lbCorreo;
     private JLabel lbContrasena;
+    private String correo;
 
     public InicioSesion() {
         // Configuración de la ventana
@@ -38,21 +43,17 @@ public class InicioSesion extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (guardarDatos()) {
                     //Se crean los objetos del usuario una vez se haya validado
-                    Usuario.cargarClientesDesdeBaseDeDatos();
-                    Usuario usuario = null;
-                    for (Usuario usuarios : Usuario.instancias_clientes) {
-                        if (usuarios.getEmail().equals(correo)) {
-                            usuario = usuarios;
-                            break; // Salir del bucle una vez encontrado el usuario
-                        }
+                    System.out.println("correo: " + correo);
+                    try {
+                        Usuario.cargarUsuariosDesdeBaseDeDatos(correo);
+                    } catch (SQLException ex) {
+                        System.out.println(ex.getMessage());
                     }
-                    Usuario.setUsuarioActual(usuario);
-                    if (usuario != null) {
-                        obtenerDatosBaseDatos();
-                        Dashboard newframe = new Dashboard();
-                        newframe.setVisible(true);
-                        dispose();
-                    }
+                    String id_usuario = usuario_actual.getId();
+                    obtenerDatosBaseDatos(id_usuario);
+                    Dashboard newframe = new Dashboard();
+                    newframe.setVisible(true);
+                    dispose();
                 }
             }
         });
@@ -70,61 +71,138 @@ public class InicioSesion extends JFrame {
         setVisible(true);
     }
 
-    private void obtenerDatosBaseDatos() {
-        Usuario usuario_actual = Usuario.getUsuarioActual();
-        String usuario_id = usuario_actual.getId();
-        Gasto.obtenerGastoBaseDatos(usuario_id);
-        Ingreso.obtenerIngresosBaseDatos(usuario_id);
-        PlazoFijo.obtenerPlazoFijosBaseDatos(usuario_id);
-        Prestamo.obtenerPrestamosBaseDatos(usuario_id);
-        Stock.obtenerStocksBaseDatos(usuario_id);
-        TarjetaCredito.obtenerTarjetaCreditoBaseDatos(usuario_id);
-        try{
-            for (Gasto gasto : Gasto.instancias_gastos) {
-                gasto.actualizarInformacion();
-                usuario_actual.agregarFinanceItem(gasto);
-            }
-            for (Ingreso ingreso : Ingreso.instancias_ingresos) {
-                ingreso.actualizarInformacion();
-                usuario_actual.agregarFinanceItem(ingreso);
-            }
-
-            for (PlazoFijo plazo_fijo : PlazoFijo.instancias_plazos_fijos) {
-                plazo_fijo.actualizarInformacion();
-                usuario_actual.agregarFinanceItem(plazo_fijo);
-            }
-
-            for (Prestamo prestamo : Prestamo.instanciasPrestamos) {
-                prestamo.actualizarInformacion();
-                usuario_actual.agregarFinanceItem(prestamo);
-            }
-
-            for (Stock stock : Stock.instancias_stocks) {
-                stock.actualizarInformacion();
-                usuario_actual.agregarFinanceItem(stock);
-            }
-
-            for (TarjetaCredito tarjeta_credito : TarjetaCredito.instanciasTarjetas) {
-                tarjeta_credito.actualizarInformacion();
-                usuario_actual.agregarFinanceItem(tarjeta_credito);
-            }
-
-            for (CuentaBancaria cuenta_bancaria : CuentaBancaria.intsancias_cuentas_bancarias) {
-                cuenta_bancaria.actualizarInformacion();
-                usuario_actual.agregarFinanceItem(cuenta_bancaria);
-            }
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
+    private void obtenerDatosBaseDatos(String id_usuario) {
+        //Se obtienen las cuentas bancarias primero porque de ellas dependen varios de los activos y pasivos dentro del sistema
+        try {
+            CuentaBancaria.obtenerCuentasBancariasBaseDatos(id_usuario);
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
         }
+        //Se obtiene y actualiza la información de cada uno de los activos y pasivos
+        try {
+            Gasto.obtenerGastoBaseDatos(id_usuario);
+            List<Gasto> gastos_actuales = new ArrayList<>(Gasto.instancias_gastos);
+            if(!Gasto.instancias_gastos.isEmpty()){
+                for(Gasto gasto: gastos_actuales){
+                    gasto.actualizarInformacion();
+                }
+            }
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        try {
+            Ingreso.obtenerIngresosBaseDatos(id_usuario);
+            List<Ingreso> ingresos_actuales = new ArrayList<>(Ingreso.instancias_ingresos);
+            if(!Ingreso.instancias_ingresos.isEmpty()){
+                for(Ingreso ingreso: ingresos_actuales){
+                    ingreso.actualizarInformacion();
+                }
+            }
+
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            PlazoFijo.obtenerPlazoFijosBaseDatos(id_usuario);
+            List<PlazoFijo> plazos_fijos_actuales = new ArrayList<>(PlazoFijo.instancias_plazos_fijos);
+            if(!plazos_fijos_actuales.isEmpty()){
+                for(PlazoFijo plazo_fijo: plazos_fijos_actuales){
+                    plazo_fijo.actualizarInformacion();
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
+
+        try{
+            Prestamo.obtenerPrestamosBaseDatos(id_usuario);
+            List<Prestamo> prestamos_actuales = new ArrayList<>(Prestamo.instanciasPrestamos);
+            if(!prestamos_actuales.isEmpty()){
+                for (Prestamo prestamo : prestamos_actuales) {
+                    prestamo.actualizarInformacion();
+                }
+            }
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
+
+        try{
+            Stock.obtenerStocksBaseDatos(id_usuario);
+            List<Stock> stocks_actuales = new ArrayList<>(Stock.instancias_stocks);
+            if(!stocks_actuales.isEmpty()){
+                for (Stock stock : stocks_actuales) {
+                    stock.actualizarInformacion();
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try{
+            TarjetaCredito.obtenerTarjetaCreditoBaseDatos(id_usuario);
+            List<TarjetaCredito> tarjetas_actuales = new ArrayList<>(TarjetaCredito.instanciasTarjetas);
+            if(!tarjetas_actuales.isEmpty()){
+                for(TarjetaCredito tarjeta_credito : tarjetas_actuales){
+                    tarjeta_credito.actualizarInformacion();
+                }
+            }
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
+
+        //Se actualiza la información de la cuenta bancaria al final ya que este proceso incluye el calculo de interes a partir de balances mensuales
+        try{
+            List<CuentaBancaria> cuentas_bancarias_actuales = new ArrayList<>(CuentaBancaria.intsancias_cuentas_bancarias);
+            if(!cuentas_bancarias_actuales.isEmpty()){
+                for(CuentaBancaria cuenta_bancaria: cuentas_bancarias_actuales){
+                    cuenta_bancaria.actualizarInformacion();
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        //Se agregan cada uno de los activos y pasivos actualizados a los arreglos del usuario
+        for(CuentaBancaria cuenta_bancaria : CuentaBancaria.intsancias_cuentas_bancarias){
+            usuario_actual.agregarFinanceItem(cuenta_bancaria);
+        }
+        for(Gasto gasto : Gasto.instancias_gastos){
+            usuario_actual.agregarFinanceItem(gasto);
+        }
+        for(Ingreso ingreso : Ingreso.instancias_ingresos){
+            usuario_actual.agregarFinanceItem(ingreso);
+        }
+        for(PlazoFijo plazo_fijo: PlazoFijo.instancias_plazos_fijos){
+            usuario_actual.agregarFinanceItem(plazo_fijo);
+        }
+        for(Stock stock : Stock.instancias_stocks){
+            usuario_actual.agregarFinanceItem(stock);
+        }
+        for(Prestamo prestamo : Prestamo.instanciasPrestamos){
+            usuario_actual.agregarFinanceItem(prestamo);
+        }
+        for(TarjetaCredito tarjeta_credito: TarjetaCredito.instanciasTarjetas){
+            usuario_actual.agregarFinanceItem(tarjeta_credito);
+        }
+        JOptionPane.showMessageDialog(this, "Información Obtenida Correctamente de la Base de Datos", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 
     }
 
-
     private boolean guardarDatos() {
         try {
-            correo = this.tfCorreo.getText();
-            String password = new String(this.pfContrasena.getPassword());
+            correo = tfCorreo.getText();
+            String password = new String(pfContrasena.getPassword());
 
             if (correo.isEmpty() || correo == null) {
                 throw new Exception("Debe ingresar el correo.");

@@ -206,13 +206,16 @@ public class TarjetaCredito extends FinanceItem {
         }
     }
 
-    public static void obtenerTarjetaCreditoBaseDatos(String id_usuario){
+    public static void obtenerTarjetaCreditoBaseDatos(String id_usuario) throws SQLException {
         TarjetaCredito tarjeta_credito = null;
         String consulta = "SELECT * FROM tarjetas_creditos WHERE idUsuario = ?";
         String[] parametro = {id_usuario};
         try {
             BaseDeDatos.establecerConexion();
             ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametro);
+            if(rs == null){
+                throw new SQLException("No se pudo encontrar ninguna tarjeta de crédito para este usuario");
+            }
             while (rs.next()) {
                 // Leer cada uno de los campos en el ResultSet para manejar la información
                 String id = rs.getString("id");
@@ -229,18 +232,15 @@ public class TarjetaCredito extends FinanceItem {
                 for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
                     if(cuenta.getId().equals(id_cuenta_bancaria)) {
                         cuenta_viculada = cuenta;
+                        //Se crea el objeto con los datos capturados
+                        tarjeta_credito = new TarjetaCredito(nombre, descripcion, monto_original, fecha_inicio, tipo_tarjeta, limite_credito, terminacion_tarjeta, cuenta_viculada);
+                        tarjeta_credito.setId(id);
+                        break;
                     }
                 }
-                if (cuenta_viculada == null) {
-                    System.out.println("No existe el cuenta  con ese ID");
-                }
-
-                //Se crea el objeto con los datos capturados
-                tarjeta_credito = new TarjetaCredito(nombre, descripcion, monto_original, fecha_inicio, tipo_tarjeta, limite_credito, terminacion_tarjeta, cuenta_viculada);
-                tarjeta_credito.setId(id);
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            throw ex;
         } finally {
             BaseDeDatos.cerrarConexion();
         }

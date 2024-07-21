@@ -43,16 +43,6 @@ public class Dashboard extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PlazoFijos newframe = new PlazoFijos();
-                PlazoFijo.obtenerPlazoFijosBaseDatos(usuario.getId());
-                for (PlazoFijo plazo_fijo : PlazoFijo.instancias_plazos_fijos) {
-                    try {
-                        plazo_fijo.actualizarInformacion();
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    usuario.agregarFinanceItem(plazo_fijo);
-                }
-
                 newframe.setVisible(true);
                 dispose();
             }
@@ -61,21 +51,6 @@ public class Dashboard extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 IngresoYGastos newframe = new IngresoYGastos();
-                Ingreso.obtenerIngresosBaseDatos(usuario.getId());
-                for (Ingreso ingreso : Ingreso.instancias_ingresos) {
-                    try {
-                        ingreso.actualizarInformacion();
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    usuario.agregarFinanceItem(ingreso);
-                }
-                Gasto.obtenerGastoBaseDatos(usuario.getId());
-                for (Gasto gasto : Gasto.instancias_gastos) {
-                    gasto.actualizarInformacion();
-                    usuario.agregarFinanceItem(gasto);
-                }
-
                 newframe.setVisible(true);
                 dispose();
             }
@@ -84,33 +59,15 @@ public class Dashboard extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Stocks newframe = new Stocks();
-                Stock.obtenerStocksBaseDatos(usuario.getId());
-                for (Stock stock : Stock.instancias_stocks) {
-                    try {
-                        stock.actualizarInformacion();
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    usuario.agregarFinanceItem(stock);
-                }
                 newframe.setVisible(true);
                 dispose();
             }
         });
+
         btnTarjetas.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Tarjetas newframe = new Tarjetas();
-                TarjetaCredito.obtenerTarjetaCreditoBaseDatos(usuario.getId());
-                for (TarjetaCredito tarjeta_credito : TarjetaCredito.instanciasTarjetas) {
-                    try {
-                        tarjeta_credito.actualizarInformacion();
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    usuario.agregarFinanceItem(tarjeta_credito);
-                }
-
                 newframe.setVisible(true);
                 dispose();
             }
@@ -119,15 +76,6 @@ public class Dashboard extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Prestamos newframe = new Prestamos();
-                Prestamo.obtenerPrestamosBaseDatos(usuario.getId());
-                for (Prestamo prestamo : Prestamo.instanciasPrestamos) {
-                    try {
-                        prestamo.actualizarInformacion();
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    usuario.agregarFinanceItem(prestamo);
-                }
                 newframe.setVisible(true);
                 dispose();
             }

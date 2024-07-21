@@ -13,10 +13,16 @@ public class Usuario {
     private ArrayList<FinanceItem> activos;
     private ArrayList<FinanceItem> pasivos;
 
-    // Lista estática para almacenar todos los clientes
-    public static ArrayList<Usuario> instancias_clientes = new ArrayList<>();
+    //Usuario estático que maneja el ususario de la sesión. El sistema solo maneja un objeto usuario a la vez
     public static Usuario usuario_actual;
 
+    public static String getIdUsuarioActual(){
+        if (usuario_actual != null) {
+            return usuario_actual.getId();
+        } else {
+            throw new IllegalStateException("Usuario actual no está inicializado");
+        }
+    }
     public static void setUsuarioActual(Usuario usuario) {usuario_actual = usuario;}
     public static Usuario getUsuarioActual() {return usuario_actual;}
 
@@ -59,7 +65,7 @@ public class Usuario {
     }
 
     public void setId(String nuevoId) {
-        this.id = Objects.requireNonNull(nuevoId, "ID no puede ser nulo");
+        this.id = nuevoId;
     }
 
     // Métodos relacionados con la gestión de activos y pasivos
@@ -84,50 +90,36 @@ public class Usuario {
     // Lógica para iniciar sesión del cliente
     public static boolean auntentificacionIniciarSesion(String email, String contrasena) {
         boolean es_usuario = false;
-        String consulta = "SELECT contrasena FROM usuarios WHERE email = ?";
+        String usuario_email = "";
+        String usuario_contrasena = "";
+        String consulta = "SELECT * FROM usuarios WHERE email = ? AND contrasena = ?";
 
-        String[] parametros = {email};
-        ResultSet rs = null;
-        try{
+        String[] parametros = {email, contrasena};
+        try {
             BaseDeDatos.establecerConexion();
-            rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
-            System.out.println("Consulta ejecutada: " + consulta);
-            System.out.println("Parámetro: " + email);
-            System.out.println(rs);
+            ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
             if (rs == null) {
-                System.out.println("ResultSet es null.");
-            } else if (!rs.next()) {
-                System.out.println("No se encontró ningún usuario con ese correo.");
-            } else {
-                String contrasenaGuardada = rs.getString("contrasena");
-                System.out.println("Contraseña guardada en la base de datos: " + contrasenaGuardada);
-
-                if (contrasenaGuardada.equals(contrasena)) {
-                    es_usuario = true;
-                    System.out.println("Contraseña coincide.");
-                } else {
-                    System.out.println("Contraseña no coincide.");
-                }
+                return false;
             }
-
+            while(rs.next()){
+                usuario_email = rs.getString("email");
+                usuario_contrasena = rs.getString("contrasena");
+            }
+            if (usuario_email.equals(email) && usuario_contrasena.equals(contrasena)) {
+                es_usuario = true;
+            } else {
+                es_usuario = false;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-
         } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
             BaseDeDatos.cerrarConexion();
         }
         return es_usuario;
     }
 
     // Método para obtener información general del cliente
-    protected StringBuilder obtenerInformacionGeneral() {
+    public StringBuilder obtenerInformacionGeneral() {
         StringBuilder sb = new StringBuilder();
         sb.append("Nombre: ").append(nombre).append("\n");
         sb.append("ID: ").append(id).append("\n");
@@ -164,42 +156,36 @@ public class Usuario {
     }
 
     // Método estático para cargar todos los clientes desde la base de datos
-    public static void cargarClientesDesdeBaseDeDatos() {
-        String consulta = "SELECT * FROM usuarios";
+    public static void cargarUsuariosDesdeBaseDeDatos(String email) throws SQLException {
+        String consulta = "SELECT * FROM usuarios WHERE email = ?";
+        String[] parametros = {email};
         try {
             BaseDeDatos.establecerConexion();
-            ResultSet rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
+            ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
+            if (rs == null) {
+                throw new SQLException("No se encontró el usuario de la sesión iniciada");
+            }
             while (rs.next()) {
                 // Leer cada uno de los campos del ResultSet
                 String id = rs.getString("id");
                 String nombre = rs.getString("nombre");
-                String email = rs.getString("email");
                 String password = rs.getString("contrasena");
 
                 // Crear el objeto Cliente con los datos capturados
                 Usuario usuario = new Usuario(nombre, email, password);
                 usuario.setId(id);
 
-                // Agregar el cliente a la lista estática
-                instancias_clientes.add(usuario);
+                //Se establece como el usuario actual
+                setUsuarioActual(usuario);
+
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            throw ex;
         } finally {
             BaseDeDatos.cerrarConexion();
         }
     }
 
-    // Método para buscar un cliente por ID
-    public static Usuario buscarClientePorId(String id_buscado) {
-        Objects.requireNonNull(id_buscado, "ID buscado no puede ser nulo");
-        for (Usuario cliente : instancias_clientes) {
-            if (cliente.getId().equals(id_buscado)) {
-                return cliente;
-            }
-        }
-        return null; // Si no se encuentra el cliente
-    }
 
     //Metodo para verificar si el email ingresado ya existe
     public static boolean correoExistente(String email){
