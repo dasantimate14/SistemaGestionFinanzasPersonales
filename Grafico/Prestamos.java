@@ -225,9 +225,6 @@ public class Prestamos extends JFrame{
         // Aquí deberías establecer el ID del usuario adecuado. Por ejemplo, puedes usar un valor fijo o dinámico
         String idUsuario = "1"; // Asegúrate de ajustar este valor según sea necesario
 
-        // Obtener los préstamos desde la base de datos
-        Prestamo.obtenerPrestamosBaseDatos(idUsuario);
-
         // Agregar cada préstamo a la tabla
         for (Prestamo prestamo : Prestamo.instanciasPrestamos) {
             Object[] rowData = {
@@ -239,7 +236,7 @@ public class Prestamos extends JFrame{
                     prestamo.getTipoPrestamo(),
                     prestamo.getPlazo(),
                     prestamo.getFechaVencimiento(), // Asegúrate de que este campo sea de tipo Date o similar
-                    prestamo.getCuotaMensual(),
+                    prestamo.calcularPagoMensual(),
                     prestamo.getCuentaBancaria(),
                     prestamo.getTasaInteres(),
                     prestamo.getEstatus()
