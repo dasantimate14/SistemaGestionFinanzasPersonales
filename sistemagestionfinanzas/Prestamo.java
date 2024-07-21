@@ -66,7 +66,7 @@ public class Prestamo extends FinanceItem {
     }
 
     @Override
-    protected float calcularPromedioMensual() throws IOException {
+    protected float calcularPromedioMensual() throws SQLException, IOException {
         return calcularPagoMensual();
     }
 
@@ -136,14 +136,6 @@ public class Prestamo extends FinanceItem {
         return cuenta_bancaria;
     }
 
-    public float getCuotaMensual() {
-        return cuotaMensual;
-    }
-
-    public void setCuotaMensual(float cuotaMensual) {
-        this.cuotaMensual = cuotaMensual;
-    }
-
     public float calcularPagoMensual() {
         float tasaInteresMensual = super.getTasaInteres() / 12 / 100;
         int numeroPagos = plazo * 12;
@@ -197,15 +189,20 @@ public class Prestamo extends FinanceItem {
         } finally {
             BaseDeDatos.cerrarConexion();
         }
+
+
     }
 
-    public static void obtenerPrestamosBaseDatos(String id_usuario) {
+    public static void obtenerPrestamosBaseDatos(String id_usuario) throws SQLException{
         Prestamo prestamo = null;
         String consulta = "SELECT * FROM prestamos WHERE idUsuario = ?";
         String[] parametro = {id_usuario};
         try {
             BaseDeDatos.establecerConexion();
             ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametro);
+            if(rs == null){
+                throw new SQLException("No se puede obtener ningun prestamo para este usuario");
+            }
             while (rs.next()) {
                 // Leer cada uno de los campos en el ResultSet para manejar la información
                 String id = rs.getString("id");
@@ -222,7 +219,6 @@ public class Prestamo extends FinanceItem {
                 float tasa_interes = rs.getFloat("tasaInteres");
 
                 CuentaBancaria cuenta_viculada = null;
-
                 for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
                     if(cuenta.getId().equals(id_cuenta_bancaria)) {
                         cuenta_viculada = cuenta;
@@ -234,28 +230,11 @@ public class Prestamo extends FinanceItem {
                     }
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            throw ex;
         } finally {
             BaseDeDatos.cerrarConexion();
         }
     }
 
-    public static void eliminarPrestamo(String id_prestamo){
-        //Consulta para eliminar el prestamo
-        String consulta_eliminar = "DELETE FROM prestamos WHERE id = ?";
-        String[] parametro = {id_prestamo};
-
-        try {
-            BaseDeDatos.establecerConexion();
-            boolean eliminacion_exitosa = BaseDeDatos.ejecutarActualizacion(consulta_eliminar, parametro);
-            if (eliminacion_exitosa){
-                System.out.println("Eliminacion exitosa del prestamo");
-            }
-        } catch (SQLException e){
-            e.printStackTrace();
-        } finally {
-            BaseDeDatos.cerrarConexion();
-        }
-    }
 }
