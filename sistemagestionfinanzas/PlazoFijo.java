@@ -53,7 +53,7 @@ public class PlazoFijo extends FinanceItem {
         LocalDate fecha_final = LocalDate.now();
         LocalDate fecha_inicio = getFechaInicio();
         ResultSet rs = null;
-        String consulta = "SELECT MAX(fechaInicio) AS fecha_mas_reciente FROM ingresos WHERE idUsuario = '" + cuenta.getIdUsuario() + "' AND idCuentaBancaria = '" + cuenta.getId() + "' AND nombre = 'Interes Plazo Fijo'";
+        String consulta = "SELECT MAX(fechaInicio) AS fecha_mas_reciente FROM ingresos WHERE idUsuario = '" + cuenta.getIdUsuario() + "' AND idCuentaBancaria = '" + cuenta.getId() + "' AND descripcion = 'Interes generado por el plazo fijo " + getNombre() +"'";
 
         //Se hace la consulta para obtener la fecha más reciente de registro del plazo fijo de la cuenta que se repite por meses según la frecuencia
         try{

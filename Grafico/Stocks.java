@@ -1,18 +1,28 @@
 package Grafico;
 
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 import sistemagestionfinanzas.Stock;
 import sistemagestionfinanzas.Usuario;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Properties;
+
+import static sistemagestionfinanzas.Usuario.usuario_actual;
 
 public class Stocks extends JFrame {
     private JPanel StocksPanel;
     private JButton menuPrincipalButton;
+    private JPanel datePanelContainer;
     private JButton cuentaBancariaButton;
     private JButton prestamosButton;
     private JButton tarjetasDeCreditoButton;
@@ -26,14 +36,14 @@ public class Stocks extends JFrame {
     private JTextField tfDividendoAccion;
     private JButton agregarNuevoStockButton;
     private JTable tablaStocks;
-    private JTextField tdDescripcion;
-    private JScrollBar scrollBar1;
+    private JTextField tfDescripcion;
     private JTextField tfSimbolo;
     private JTextField tfPrecioCompra;
-    private JTextField tfDividendoAccio;
-    private JTextField tfFrecuenciaDividendos;
-    private JTextField tfPrecioSctual;
+    private JComboBox comboBoxSector;
+    private JComboBox comboBoxFrecuencia;
+    private JTextField tfPrecioActual;
     private JComboBox<String> cbFrecuenciaIng;
+    private JDatePickerImpl date_picker_stock;
 
 
     public Stocks() {
@@ -46,6 +56,35 @@ public class Stocks extends JFrame {
         setContentPane(StocksPanel);
 
         configureNavigationButtons();
+
+        // Implementación del JDatePicker dentro del GUI
+        UtilDateModel model = new UtilDateModel();
+        Properties p = new Properties();
+        p.put("text.today", "Hoy");
+        p.put("text.month", "Mes");
+        p.put("text.year", "Año");
+        JDatePanelImpl datePanelImpl = new JDatePanelImpl(model, p);
+        date_picker_stock = new JDatePickerImpl(datePanelImpl, new DateLabelFormatter());
+
+        datePanelContainer.setLayout(new BorderLayout());
+        datePanelContainer.add(date_picker_stock, BorderLayout.CENTER);
+
+        // Agregar valores a comboBoxSector
+        comboBoxSector.addItem("Energía");
+        comboBoxSector.addItem("Material");
+        comboBoxSector.addItem("Industrial");
+        comboBoxSector.addItem("Utilidades");
+        comboBoxSector.addItem("Salud");
+        comboBoxSector.addItem("Consumo Discrecional");
+        comboBoxSector.addItem("Consumo Básico");
+        comboBoxSector.addItem("Tecnología de la Información");
+        comboBoxSector.addItem("Servicios de Comunicación");
+        comboBoxSector.addItem("Bienes Raíces");
+
+        //Agregar valores al comboBoxFrecuencia
+        for(int i = 0; i <= 12; i ++){
+            comboBoxFrecuencia.addItem(i);
+        }
 
         agregarNuevoStockButton.addActionListener(new ActionListener() {
             @Override
@@ -60,13 +99,6 @@ public class Stocks extends JFrame {
             }
         });
 
-        // Añadir un AdjustmentListener al JScrollBar
-        scrollBar1.addAdjustmentListener(new AdjustmentListener() {
-            @Override
-            public void adjustmentValueChanged(AdjustmentEvent e) {
-                System.out.println("El valor de la barra de desplazamiento es: " + scrollBar1.getValue());
-            }
-        });
     }
 
     private void configureNavigationButtons() {
@@ -127,11 +159,17 @@ public class Stocks extends JFrame {
 
     private void validarCampos() throws Exception {
         String nombreEmpresa = tfNombreEmpresa.getText();
+        String nombre = tfNombre.getText();
         String simbolo = tfSimbolo.getText();
         String cantidadStr = ftCantidad.getText();
         String precioCompraStr = tfPrecioCompra.getText();
         String dividendoAccionStr = tfDividendoAccion.getText();
-        String frecuenciaDividendos = tfFrecuenciaDividendos.getText();
+        String frecuenciaDividendos = comboBoxFrecuencia.getSelectedItem().toString();
+        String sector = comboBoxSector.getSelectedItem().toString();
+
+        if(nombre.trim().isEmpty()){
+            throw new Exception("El campo 'Nombre Acción' es obligatorio");
+        }
 
         if (nombreEmpresa.trim().isEmpty()) {
             throw new Exception("El campo 'Nombre Empresa' es obligatorio.");
@@ -143,6 +181,10 @@ public class Stocks extends JFrame {
 
         if (cantidadStr.trim().isEmpty()) {
             throw new Exception("El campo 'Cantidad' es obligatorio.");
+        }
+
+        if(sector.trim().isEmpty()) {
+            throw new Exception("El campo 'Sector' es obligatorio.");
         }
 
         int cantidad;
@@ -191,15 +233,37 @@ public class Stocks extends JFrame {
     private void agregarNuevoStock() {
         String nombre_empresa = tfNombreEmpresa.getText();
         String simbolo = tfSimbolo.getText();
+        String descripcion = tfDescripcion.getText();
         int cantidad = Integer.parseInt(ftCantidad.getText().trim());
         String nombre = tfNombre.getText();
         float precio_compra = Float.parseFloat(tfPrecioCompra.getText().trim());
         float dividendo = Float.parseFloat(tfDividendoAccion.getText().trim());
-        int frecuencia_dividendos = Integer.parseInt(tfFrecuenciaDividendos.getText());
-        LocalDate fecha_actual = LocalDate.now();
+        int frecuencia_dividendos = Integer.parseInt(comboBoxFrecuencia.getSelectedItem().toString());
+        String sector = comboBoxSector.getSelectedItem().toString();
 
-        Stock nuevoStock = new Stock(nombre, "Este es un stock de " + nombre_empresa, fecha_actual, nombre_empresa, simbolo, cantidad, precio_compra, "Sector? Falta en el form", dividendo, frecuencia_dividendos);
-        Usuario.getUsuarioActual().agregarFinanceItem(nuevoStock);
+        // Obtener la fecha del JDatePicker y convertirla a LocalDate
+        java.util.Date date_ingreso = (java.util.Date) date_picker_stock.getModel().getValue();
+
+        //Si no se da la fecha se asume que es la fecha actual
+        LocalDate fecha_inicio;
+        if(date_ingreso == null) {
+            fecha_inicio = LocalDate.now();
+        } else {
+            fecha_inicio = date_ingreso.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+        }
+
+        Stock nuevo_stock = new Stock(nombre, descripcion, fecha_inicio, nombre_empresa, simbolo, cantidad, precio_compra, sector, dividendo, frecuencia_dividendos);
+        nuevo_stock.guardarStockBaseDatos(Usuario.getIdUsuarioActual());
+        try {
+            nuevo_stock.actualizarInformacion();
+        } catch (IOException e) {
+            try {
+                throw new Exception("Problemas para actualizar el Stock." + e.getMessage());
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        usuario_actual.agregarFinanceItem(nuevo_stock);
         limpiarCampos();
     }
 
@@ -210,7 +274,7 @@ public class Stocks extends JFrame {
         ftCantidad.setText("");
         tfPrecioCompra.setText("");
         tfDividendoAccion.setText("");
-        tfFrecuenciaDividendos.setText("");
+        tfDescripcion.setText("");
     }
 
     @Override
@@ -227,4 +291,25 @@ public class Stocks extends JFrame {
             }
         });
     }
+
+    // Formatter para que la librería se extienda
+    public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
+        private String datePattern = "dd/MM/yyyy";
+        private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
+
+        @Override
+        public Object stringToValue(String text) throws ParseException {
+            return dateFormatter.parseObject(text);
+        }
+        @Override
+        public String valueToString(Object value) throws ParseException {
+            if (value != null) {
+                Calendar cal = (Calendar) value;
+                return dateFormatter.format(cal.getTime());
+            }
+            return"";
+        }
+
+    }
 }
+
