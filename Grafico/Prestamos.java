@@ -211,7 +211,6 @@ public class Prestamos extends JFrame{
     }
 
 
-
     private void actualizarComboBoxCuentas() {
         cb_cuentabancaria.removeAllItems();
         for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias){

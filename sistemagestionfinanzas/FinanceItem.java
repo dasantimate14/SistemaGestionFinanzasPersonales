@@ -66,7 +66,7 @@ public abstract class FinanceItem {
     //Metodos propios de la superclase
     protected abstract float calcularValorActual() throws IOException;
 
-    protected float calcularGanaciaPerdida() throws IOException {
+    public float calcularGanaciaPerdida() throws IOException {
         setGanaciaPerdida(redonderCantidad(calcularValorActual() - montoOriginal));
         return getGanaciaPerdida();
     }

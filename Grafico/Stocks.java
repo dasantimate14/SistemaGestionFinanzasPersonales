@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -42,6 +43,8 @@ public class Stocks extends JFrame {
     private JTextField tfPrecioCompra;
     private JComboBox comboBoxSector;
     private JComboBox comboBoxFrecuencia;
+    private JPanel tabla_panel;
+    private JScrollPane tabla_scroll_panel;
     private JTextField tfPrecioActual;
     private JComboBox<String> cbFrecuenciaIng;
     private JDatePickerImpl date_picker_stock;
@@ -78,8 +81,16 @@ public class Stocks extends JFrame {
         tableModel.addColumn("Cantidad de Ganancia/Perdida");
         tableModel.addColumn("Porcentaje de Ganancia");
         tableModel.addColumn("Valor Mensual Promedio");
+        tableModel.addColumn("Valor Anual Promedio");
         tableModel.addColumn("Fecha Inicio");
         tableModel.addColumn("Tipo");
+
+        // Crear el JScrollPane y agregar la tabla a él
+        //JScrollPane scroll_pane = new JScrollPane(tablaStocks);
+
+        // Configurar el layout del panel de Stocks para agregar el JScrollPane en lugar de la tabla directamente
+        tabla_panel.setLayout(new BorderLayout());
+        tabla_panel.add(tabla_scroll_panel, BorderLayout.CENTER);
 
         // Implementación del JDatePicker dentro del GUI
         UtilDateModel model = new UtilDateModel();
@@ -122,6 +133,8 @@ public class Stocks extends JFrame {
                 }
             }
         });
+
+        cargarStocksTabla();
 
     }
 
@@ -287,6 +300,18 @@ public class Stocks extends JFrame {
                 throw new RuntimeException(ex);
             }
         }
+
+        // Agregar datos al modelo de la tabla
+        tableModel.addRow(new Object[]{
+                nombre_empresa,
+                simbolo,
+                cantidad,
+                precio_compra,
+                dividendo,
+                frecuencia_dividendos,
+                sector
+        });
+
         usuario_actual.agregarFinanceItem(nuevo_stock);
         limpiarCampos();
     }
@@ -335,5 +360,40 @@ public class Stocks extends JFrame {
         }
 
     }
+    private void cargarStocksTabla() {
+        try {
+            Stock.obtenerStocksBaseDatos("abc123");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            for (Stock stock : Stock.instancias_stocks){
+                tableModel.addRow(new Object[]{
+                        stock.getNombre(),  // Nombre Acción
+                        stock.getId(),            // ID (asumiendo que tienes un método getId())
+                        stock.getDescripcion(),   // Descripción
+                        stock.getNombreEmpresa(), // Nombre Empresa
+                        stock.getSector(),        // Sector
+                        stock.getSimbolo(),       // Símbolo
+                        stock.getCantidad(),      // Cantidad
+                        stock.getDividendoPorAccion(), // Dividendo Por Acción
+                        stock.getFrecuenciaDividendos(), // Frecuencia de Pago de Dividendos
+                        stock.getPrecioCompra(),  // Precio Compra
+                        stock.getPrecioActual(),  // Precio Actual
+                        stock.getMontoOriginal(), // Monto Original
+                        stock.getMontoActual(),   // Monto Actual
+                        stock.calcularGanaciaPerdida(), // Cantidad de Ganancia/Perdida
+                        stock.getPorcentajeGanancia(), // Porcentaje de Ganancia
+                        stock.calcularPromedioMensual(), // Valor Mensual Promedio
+                        stock.calcularPromedioAnual(),
+                        stock.getFechaInicio(),   // Fecha Inicio
+                        stock.getTipo()           // Tipo
+                });
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
 
