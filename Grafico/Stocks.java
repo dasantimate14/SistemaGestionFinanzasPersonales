@@ -7,6 +7,7 @@ import sistemagestionfinanzas.Stock;
 import sistemagestionfinanzas.Usuario;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,6 +45,7 @@ public class Stocks extends JFrame {
     private JTextField tfPrecioActual;
     private JComboBox<String> cbFrecuenciaIng;
     private JDatePickerImpl date_picker_stock;
+    private DefaultTableModel tableModel;
 
 
     public Stocks() {
@@ -56,6 +58,28 @@ public class Stocks extends JFrame {
         setContentPane(StocksPanel);
 
         configureNavigationButtons();
+
+        //Configuración JTable
+        tableModel = new DefaultTableModel();
+        tablaStocks.setModel(tableModel);
+        tableModel.addColumn("Nombre Acción");
+        tableModel.addColumn("ID");
+        tableModel.addColumn("Descripción");
+        tableModel.addColumn("Nombre Empresa");
+        tableModel.addColumn("Sector");
+        tableModel.addColumn("Símbolo");
+        tableModel.addColumn("Cantidad");
+        tableModel.addColumn("Dividendo Por Acción");
+        tableModel.addColumn("Frecuencia de Pago de Dividendos");
+        tableModel.addColumn("Precio Compra");
+        tableModel.addColumn("Precio Actual");
+        tableModel.addColumn("Monto Original");
+        tableModel.addColumn("Monto Actual");
+        tableModel.addColumn("Cantidad de Ganancia/Perdida");
+        tableModel.addColumn("Porcentaje de Ganancia");
+        tableModel.addColumn("Valor Mensual Promedio");
+        tableModel.addColumn("Fecha Inicio");
+        tableModel.addColumn("Tipo");
 
         // Implementación del JDatePicker dentro del GUI
         UtilDateModel model = new UtilDateModel();
