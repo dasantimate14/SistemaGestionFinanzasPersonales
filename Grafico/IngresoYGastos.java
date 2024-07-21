@@ -42,7 +42,7 @@ public class IngresoYGastos extends JFrame {
     private JTextField tf_fuente_ingreso;
     private JTextField tf_monto_ingreso;
     private JComboBox<Integer> cb_frecuencia_ing;
-    private JComboBox<CuentaBancaria> cb_cuenta_banco;
+    private JComboBox<String> cb_cuenta_banco;
     private JDatePickerImpl date_picker_ingreso;
     private JPanel fecha_ingreso_panel;
     private JTextField tf_nombre_gasto;
@@ -86,6 +86,9 @@ public class IngresoYGastos extends JFrame {
         fecha_gastos_panel.setLayout(new BorderLayout());
         fecha_gastos_panel.add(date_picker_gastos, BorderLayout.CENTER);
 
+        // Actualizar el JComboBox de cuentas bancarias
+        actualizarComboBoxCuentas();
+
         btn_agregar_ingr.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -98,9 +101,24 @@ public class IngresoYGastos extends JFrame {
                     int frecuencia = (int) cb_frecuencia_ing.getSelectedItem();
                     String fuente = tf_fuente_ingreso.getText();
                     float montoOriginal = Float.parseFloat(tf_monto_ingreso.getText());
-                    CuentaBancaria cuenta_bancaria = (CuentaBancaria) cb_cuenta_banco.getSelectedItem();
+                    //CuentaBancaria cuenta_bancaria = (CuentaBancaria) cb_cuenta_banco.getSelectedItem();
+                    String cuentaSeleccionada = (String) cb_cuenta_banco.getSelectedItem();
 
-                    Ingreso ingreso = new Ingreso(nombre, descripcion, montoOriginal, fechaInicio, fuente, cuenta_bancaria, frecuencia);
+                    // Encontrar la cuenta bancaria seleccionada
+                    CuentaBancaria cuentaVinculada = null;
+                    for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
+                        String cuentaBuscada = cuenta.getNumeroCuenta()+" "+cuenta.getNombre();
+                        if (cuentaBuscada.equals(cuentaSeleccionada)) {
+                            cuentaVinculada = cuenta;
+                            break;
+                        }
+                    }
+
+                    if (cuentaVinculada == null) {
+                        JOptionPane.showMessageDialog(IngresoYGastos.this, "Cuenta bancaria seleccionada no encontrada.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    Ingreso ingreso = new Ingreso(nombre, descripcion, montoOriginal, fechaInicio, fuente, cuentaVinculada, frecuencia);
 
                     ingreso.actualizarInformacion();
                     //ingreso.guardarIngresoBaseDatos(); recuerda activar este comentario
@@ -140,6 +158,7 @@ public class IngresoYGastos extends JFrame {
                 }
             }
         });
+
         //Botones para navegar a traves del Menú
         btn_eliminar_ing.addActionListener(new ActionListener() {
             @Override
@@ -221,7 +240,12 @@ public class IngresoYGastos extends JFrame {
             return "";
         }
     }
-
+    private void actualizarComboBoxCuentas() {
+        cb_cuenta_banco.removeAllItems();
+        for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias){
+            cb_cuenta_banco.addItem(cuenta.getNumeroCuenta().toString()+" "+cuenta.getNombre().toString());
+        }
+    }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
