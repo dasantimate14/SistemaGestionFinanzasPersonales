@@ -5,7 +5,7 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
@@ -20,6 +20,20 @@ import sistemagestionfinanzas.Ingreso;
 
 public class IngresoYGastos extends JFrame {
     private JPanel IngresosYGastosPanel;
+    private JButton btn_menu_principal;
+    private JButton btn_cuentas_bancarias;
+    private JButton btn_plazo_fijo;
+    private JButton btn_prestamos;
+    private JButton btn_tarjeta_credito;
+    private JButton btn_stocks;
+    private JButton btn_ingresos_gastos;
+    private JComboBox cb_cuenta_banco_ingreso;
+    private JComboBox cb_frecuencia_gasto;
+    private JTextField tf_ingreso_id;
+    private JTextField tf_gasto_id;
+    private JButton btn_eliminar_gasto;
+    private JScrollPane sp_ingreso_gastos;
+    private JTable table_ingresos_gastos;
     private JButton btn_agregar_ingr;
     private JButton btn_agregar_gast;
     private JButton btn_eliminar_ing;
