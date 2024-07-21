@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Properties;
 
 import sistemagestionfinanzas.CuentaBancaria;
+import sistemagestionfinanzas.Gasto;
 import sistemagestionfinanzas.Ingreso;
 
 public class IngresoYGastos extends JFrame {
@@ -48,6 +49,8 @@ public class IngresoYGastos extends JFrame {
     private JScrollPane sp_ingreso_gastos;
     private JTextField tf_acreedor_gast;
     private JTextField tf_descripcion_ingr;
+    private JComboBox cb_Categoria;
+    private JComboBox cb_estatus;
     private JDatePickerImpl date_picker_ingreso;
     private JDatePickerImpl date_picker_gastos;
 
@@ -102,7 +105,7 @@ public class IngresoYGastos extends JFrame {
                     Ingreso ingreso = new Ingreso(nombre, descripcion, montoOriginal, fechaInicio, fuente, cuenta_bancaria, frecuencia);
 
                     ingreso.actualizarInformacion();
-                    //ingreso.guardarIngresoBaseDatos(); recuerda borrar
+                    //ingreso.guardarIngresoBaseDatos(); recuerda activar este comentario
 
                     JOptionPane.showMessageDialog(null, "Ingreso agregado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
@@ -121,14 +124,22 @@ public class IngresoYGastos extends JFrame {
                     java.util.Date date_gasto = (java.util.Date) date_picker_gastos.getModel().getValue();
                     LocalDate fechaInicio = date_gasto.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
                     String acreedor = tf_acreedor_gast
-                    int frecuencia= (int) cb_frecuencia_ing.getSelectedItem();
-                    String categoriaGasto=
-                    CuentaBancaria cuenta
+                    int frecuencia = (int) cb_frecuencia_ing.getSelectedItem();
+                    String categoriaGasto = (String) cb_Categoria.getSelectedItem();
+                    CuentaBancaria cuenta = (CuentaBancaria) cb_cuenta_banco.getSelectedItem();
+                    boolean estatus = (boolean) cb_estatus.getSelectedItem();
+
+                    Gasto gasto = new Gasto(nombre,descripcion,montoOriginal,fechaInicio, acreedor, frecuencia, categoriaGasto, cuenta, estatus);
+
+                    gasto.actualizarInformacion();
+                    //gasto.guardarGastoBaseDatos(); recuerda activar este comentario
+                    JOptionPane.showMessageDialog(null, "Gasto agregado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error, no se pudo ingresar el gasto", JOptionPane.ERROR_MESSAGE);
+
             }
         });
     }
-
-
 
         btn_eliminar_ing.addActionListener(new ActionListener() {
             @Override
