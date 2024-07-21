@@ -140,7 +140,7 @@ public class IngresoYGastos extends JFrame {
                 }
             }
         });
-
+        //Botones para navegar a traves del Menú
         btn_eliminar_ing.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -150,6 +150,54 @@ public class IngresoYGastos extends JFrame {
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            }
+        });
+        btn_menu_principal.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Dashboard newframe = new Dashboard();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        btn_cuentas_bancarias.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CuentaBancariaG newframe = new CuentaBancariaG();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        btn_plazo_fijo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PlazoFijos newframe = new PlazoFijos();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        btn_stocks.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Stocks newframe = new Stocks();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        btn_tarjeta_credito.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Tarjetas newframe = new Tarjetas();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
+        btn_prestamos.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Prestamos newframe = new Prestamos();
+                newframe.setVisible(true);
+                dispose();
             }
         });
     }
