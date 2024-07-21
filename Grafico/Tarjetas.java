@@ -13,11 +13,11 @@ public class Tarjetas extends JFrame {
     private JButton stocksButton;
     private JButton ingresosYGastosButton;
     private JPanel TarjetaPanel;
-    private JComboBox comboBox1;
+    private JComboBox<String> comboBox1;
     private JTextField tfLimiteCredito;
     private JTextField tfSaldoActual;
     private JTextField tfNumeroTarjeta;
-    private JComboBox cbCuentaBancaria;
+    private JComboBox<String> cbCuentaBancaria;
     private JButton agregarButton;
 
     public Tarjetas() {
@@ -27,6 +27,8 @@ public class Tarjetas extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setContentPane(TarjetaPanel);
+
+        cargarCuentasBancarias();
 
         agregarButton.addActionListener(new ActionListener() {
             @Override
@@ -92,13 +94,23 @@ public class Tarjetas extends JFrame {
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
+        if (visible) {
+            cargarCuentasBancarias();
+        }
+    }
+
+    private void cargarCuentasBancarias() {
+        cbCuentaBancaria.removeAllItems();
+        for (AgregarCuentaBanco.Cuenta cuenta : AgregarCuentaBanco.getCuentas()) {
+            cbCuentaBancaria.addItem(cuenta.getNombre() + " (" + cuenta.getNumero() + ")");
+        }
     }
 
     private void validarCampos() throws Exception {
         String tipoTarjeta = (String) comboBox1.getSelectedItem();
-        String limiteCredito = tfLimiteCredito.getText();
-        String saldoActual = tfSaldoActual.getText();
-        String numeroTarjeta = tfNumeroTarjeta.getText();
+        String limiteCredito = tfLimiteCredito.getText().trim();
+        String saldoActual = tfSaldoActual.getText().trim();
+        String numeroTarjeta = tfNumeroTarjeta.getText().trim();
         String cuentaBancaria = (String) cbCuentaBancaria.getSelectedItem();
 
         if (tipoTarjeta == null || tipoTarjeta.isEmpty() || tipoTarjeta.equals("Selecciona una opción")) {
@@ -109,8 +121,9 @@ public class Tarjetas extends JFrame {
             throw new Exception("Debe ingresar el límite de crédito.");
         }
         if (!limiteCredito.matches("\\d+(\\.\\d{1,2})?")) {
-            throw new Exception("No se pueden ingresar letras ni valores con más de dos decimales.");
+            throw new Exception("El límite de crédito solo debe contener números con hasta dos decimales.");
         }
+
         try {
             Double.parseDouble(limiteCredito);
         } catch (NumberFormatException e) {
@@ -121,8 +134,9 @@ public class Tarjetas extends JFrame {
             throw new Exception("Debe ingresar el saldo actual.");
         }
         if (!saldoActual.matches("\\d+(\\.\\d{1,2})?")) {
-            throw new Exception("No se pueden ingresar letras ni valores con más de dos decimales.");
+            throw new Exception("El saldo actual solo debe contener números con hasta dos decimales.");
         }
+
         try {
             Double.parseDouble(saldoActual);
         } catch (NumberFormatException e) {
@@ -133,7 +147,7 @@ public class Tarjetas extends JFrame {
             throw new Exception("Debe ingresar el número de tarjeta.");
         }
         if (!numeroTarjeta.matches("\\d{1,22}")) {
-            throw new Exception("El número de tarjeta puede contener hasta 22 dígitos.");
+            throw new Exception("El número de tarjeta solo puede contener números de hasta 22 dígitos.");
         }
 
         if (cuentaBancaria == null || cuentaBancaria.isEmpty() || cuentaBancaria.equals("Selecciona una opción")) {
