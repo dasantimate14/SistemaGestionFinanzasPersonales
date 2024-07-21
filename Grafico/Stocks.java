@@ -18,6 +18,10 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Properties;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+
 
 import static sistemagestionfinanzas.Usuario.usuario_actual;
 
@@ -62,6 +66,8 @@ public class Stocks extends JFrame {
 
         configureNavigationButtons();
 
+
+
         //Configuración JTable
         tableModel = new DefaultTableModel();
         tablaStocks.setModel(tableModel);
@@ -84,9 +90,6 @@ public class Stocks extends JFrame {
         tableModel.addColumn("Valor Anual Promedio");
         tableModel.addColumn("Fecha Inicio");
         tableModel.addColumn("Tipo");
-
-        // Crear el JScrollPane y agregar la tabla a él
-        //JScrollPane scroll_pane = new JScrollPane(tablaStocks);
 
         // Configurar el layout del panel de Stocks para agregar el JScrollPane en lugar de la tabla directamente
         tabla_panel.setLayout(new BorderLayout());
@@ -133,9 +136,7 @@ public class Stocks extends JFrame {
                 }
             }
         });
-
         cargarStocksTabla();
-
     }
 
     private void configureNavigationButtons() {
@@ -302,15 +303,31 @@ public class Stocks extends JFrame {
         }
 
         // Agregar datos al modelo de la tabla
-        tableModel.addRow(new Object[]{
-                nombre_empresa,
-                simbolo,
-                cantidad,
-                precio_compra,
-                dividendo,
-                frecuencia_dividendos,
-                sector
-        });
+        try {
+            tableModel.addRow(new Object[]{
+                    nombre_empresa,
+                    "ID",
+                    descripcion,
+                    nombre_empresa,
+                    sector,
+                    simbolo,
+                    cantidad,
+                    dividendo,
+                    frecuencia_dividendos,
+                    precio_compra,
+                    nuevo_stock.getMontoOriginal(),
+                    nuevo_stock.getMontoActual(),
+                    nuevo_stock.calcularGanaciaPerdida(),
+                    nuevo_stock.getPorcentajeGanancia(),
+                    nuevo_stock.calcularPromedioMensual(),
+                    nuevo_stock.calcularPromedioAnual(),
+                    fecha_inicio,
+                    nuevo_stock.getTipo()
+
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         usuario_actual.agregarFinanceItem(nuevo_stock);
         limpiarCampos();
@@ -390,8 +407,30 @@ public class Stocks extends JFrame {
                         stock.getTipo()           // Tipo
                 });
             }
+            adjustColumnWidths(tablaStocks);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+    private static void adjustColumnWidths(JTable table) {
+        TableColumnModel columnModel = table.getColumnModel();
+        TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+
+        for (int i = 0; i < columnModel.getColumnCount(); i++) {
+            TableColumn column = columnModel.getColumn(i);
+
+            int maxWidth = headerRenderer.getTableCellRendererComponent(table, column.getHeaderValue(), false, false, 0, i).getPreferredSize().width;
+
+            // Calculate the maximum width based on cell contents
+            for (int j = 0; j < table.getRowCount(); j++) {
+                Object value = table.getValueAt(j, i);
+                int cellWidth = table.getCellRenderer(j, i).getTableCellRendererComponent(table, value, false,
+                        false, j, i).getPreferredSize().width;
+                maxWidth = Math.max(maxWidth, cellWidth);
+            }
+
+            // Set the preferred width
+            column.setPreferredWidth(maxWidth + 5); // Add some padding
         }
     }
 

@@ -20,13 +20,12 @@ public class Prestamo extends FinanceItem {
     public static List<Prestamo> instanciasPrestamos = new ArrayList<>();
 
     public Prestamo(String nombre, String descripcion, float montoOriginal, float tasaInteres, LocalDate fechaInicio,
-                    String tipoPrestamo, int plazo, LocalDate fechaVencimiento, float cuotaMensual, CuentaBancaria cuenta_bancaria) {
+                    String tipoPrestamo, int plazo, LocalDate fechaVencimiento, CuentaBancaria cuenta_bancaria) {
         super(nombre, descripcion, montoOriginal, "Pasivo", tasaInteres, fechaInicio);
         this.tipoPrestamo = tipoPrestamo;
         this.plazo = plazo;
         this.fechaVencimiento = fechaVencimiento;
         this.estatus = 1;
-        this.cuotaMensual = cuotaMensual;
         this.cuenta_bancaria = cuenta_bancaria;
         instanciasPrestamos.add(this);
         cantidadInstancias ++;
@@ -96,6 +95,10 @@ public class Prestamo extends FinanceItem {
         this.saldoPendiente = nuevoSaldoPendiente;
     }
 
+    public void setCuotaMensual(float cuotaMensual) {this.cuotaMensual = cuotaMensual;}
+
+    public float getCuotaMensual() {return cuotaMensual;}
+
     public int getPlazo() {
         return plazo;
     }
@@ -137,9 +140,10 @@ public class Prestamo extends FinanceItem {
     }
 
     public float calcularPagoMensual() {
+        float saldo_pendiente = calcularSaldoPendiente();
         float tasaInteresMensual = super.getTasaInteres() / 12 / 100;
         int numeroPagos = plazo * 12;
-        return (saldoPendiente * tasaInteresMensual) / (1 - (float)Math.pow(1 + tasaInteresMensual, -numeroPagos));
+        return (saldo_pendiente * tasaInteresMensual) / (1 - (float)Math.pow(1 + tasaInteresMensual, -numeroPagos));
     }
 
     public float calcularTiempoRestante() {
@@ -223,9 +227,10 @@ public class Prestamo extends FinanceItem {
                     if(cuenta.getId().equals(id_cuenta_bancaria)) {
                         cuenta_viculada = cuenta;
                         //Se crea el objeto con los datos capturados
-                        prestamo = new Prestamo(nombre, descripcion, monto_original, tasa_interes,fecha_inicio, tipo_prestamo, plazo, fecha_vencimiento, cuota_mensual, cuenta_viculada);
+                        prestamo = new Prestamo(nombre, descripcion, monto_original, tasa_interes,fecha_inicio, tipo_prestamo, plazo, fecha_vencimiento, cuenta_viculada);
                         prestamo.setId(id);
                         prestamo.setEstatus(estatus);
+                        prestamo.setCuotaMensual(cuota_mensual);
                         break;
                     }
                 }
