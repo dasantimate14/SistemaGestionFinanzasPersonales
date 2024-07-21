@@ -1,10 +1,27 @@
 package Grafico;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Properties;
+
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
+import sistemagestionfinanzas.Prestamo;
 
 public class Prestamos extends JFrame{
+
+    public static List<Prestamo> instanciasPrestamos = new ArrayList<>();
+
     private JButton paginaPrincipalButton;
     private JButton cuentasBancariasButton;
     private JButton plazosFijosButton;
@@ -12,19 +29,21 @@ public class Prestamos extends JFrame{
     private JButton stocksButton;
     private JButton tarjetasDeCreditoButton;
     private JButton prestamosButton;
-    private JPanel FechaDeVencimientoPanel;
+    private JPanel fecha_de_vencimiento_panel;
     private JPanel PrestamosPanel;
-    private JTextField tfDescripcion;
-    private JTextField tfNombre;
-    private JComboBox cbTipo;
-    private JTextField tfMontoOriginal;
-    private JTextField tfPlazo;
-    private JTextField tfCuotaMensual;
-    private JPanel fechaInicioPanel;
-    private JPanel fechaFinalPanel;
-    private JTextField tfCutaMesual;
+    private JTextField tf_descripcion;
+    private JTextField tf_nombre;
+    private JComboBox cb_tipo;
+    private JTextField tf_monto_original;
+    private JTextField tf_plazo;
+    private JTextField tf_cuota_mensual;
+    private JPanel fecha_inicio_panel;
     private JComboBox cbEstatus;
     private JButton btnAgregarPrestamo;
+    private JTable table1;
+    private JComboBox cb_cuentabancaria;
+    private DefaultTableModel modelo;
+    private JDatePickerImpl datePicker;
 
 
     public Prestamos() {
@@ -34,6 +53,42 @@ public class Prestamos extends JFrame{
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setContentPane(PrestamosPanel);
+
+        // Implementación del JDatePicker para fecha de inicio
+        UtilDateModel modelInicio = new UtilDateModel();
+        Properties pInicio = new Properties();
+        pInicio.put("text.today", "Hoy");
+        pInicio.put("text.month", "Mes");
+        pInicio.put("text.year", "Año");
+        JDatePanelImpl datePanelImplInicio = new JDatePanelImpl(modelInicio, pInicio);
+        JDatePickerImpl datePickerInicio = new JDatePickerImpl(datePanelImplInicio, new DateLabelFormatter());
+
+        fecha_inicio_panel.setLayout(new BorderLayout());
+        fecha_inicio_panel.add(datePickerInicio, BorderLayout.CENTER);
+
+        // Implementación del JDatePicker para fecha de vencimiento
+        UtilDateModel modelVencimiento = new UtilDateModel();
+        Properties pVencimiento = new Properties();
+        pVencimiento.put("text.today", "Hoy");
+        pVencimiento.put("text.month", "Mes");
+        pVencimiento.put("text.year", "Año");
+        JDatePanelImpl datePanelImplVencimiento = new JDatePanelImpl(modelVencimiento, pVencimiento);
+        JDatePickerImpl datePickerVencimiento = new JDatePickerImpl(datePanelImplVencimiento, new DateLabelFormatter());
+
+        fecha_de_vencimiento_panel.setLayout(new BorderLayout());
+        fecha_de_vencimiento_panel.add(datePickerVencimiento, BorderLayout.CENTER);
+
+        // Actualizar el JComboBox de cuentas bancarias
+        actualizarComboBoxCuentas();
+
+        paginaPrincipalButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Dashboard newframe = new Dashboard();
+                newframe.setVisible(true);
+                dispose();
+            }
+        });
 
         paginaPrincipalButton.addActionListener(new ActionListener() {
             @Override
@@ -83,12 +138,24 @@ public class Prestamos extends JFrame{
                 dispose();
             }
         });
+
     }
 
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
     }
+
+    private void actualizarComboBoxCuentas() {
+        cb_cuentabancaria.removeAllItems();
+
+        List<AgregarCuentaBanco.Cuenta> cuentas = AgregarCuentaBanco.getCuentas();
+        for (AgregarCuentaBanco.Cuenta cuenta : cuentas) {
+            cb_cuentabancaria.addItem(cuenta.toString());
+        }
+    }
+
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -98,5 +165,23 @@ public class Prestamos extends JFrame{
                 frame.setVisible(true);
             }
         });
+    }
+}
+class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
+    private String datePattern = "dd/MM/yyyy";
+    private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
+
+    @Override
+    public Object stringToValue(String text) throws ParseException {
+        return dateFormatter.parseObject(text);
+    }
+
+    @Override
+    public String valueToString(Object value) throws ParseException {
+        if (value != null) {
+            Calendar cal = (Calendar) value;
+            return dateFormatter.format(cal.getTime());
+        }
+        return "";
     }
 }
