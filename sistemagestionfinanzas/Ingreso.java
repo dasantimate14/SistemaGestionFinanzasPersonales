@@ -287,7 +287,7 @@ public class Ingreso extends FinanceItem{
 
     public static void obtenerIngresosBaseDatos(String id_usuario) throws SQLException {
         Ingreso ingreso = null;
-        String consulta = "SELECT * FROM ingresos WHERE idUsuario = ?";
+        String consulta = "SELECT * FROM ingresos WHERE IdUsuario = ?";
         String[] parametros = {id_usuario};
         try{
             BaseDeDatos.establecerConexion();

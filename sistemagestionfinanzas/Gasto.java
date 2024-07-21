@@ -202,7 +202,7 @@ public class Gasto extends FinanceItem {
             BaseDeDatos.establecerConexion();
             ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametro);
             if(rs == null){
-                throw new SQLException("No se pudo obtener ningún ingresos para este usuario");
+                throw new SQLException("No se pudo obtener ningún gasto para este usuario");
             }
             while (rs.next()) {
                 //Se leen cada uno de los campos en el resultset para crear el objeto

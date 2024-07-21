@@ -31,26 +31,13 @@ public class BaseDeDatos {
             }
 
             rs = pst.executeQuery();
-            if(rs != null){
-                if (rs.next()) {
-                    return rs;
-                } else {
-                    System.out.println("Resultado no encontrado");
-                    return null;
-                }
-            }
+            return rs;
 
         } catch (SQLException e) {
-            // Manejar la excepción
-            if (rs.isClosed()) {
-                System.out.println("La consulta no devolvió ningún resultado");
-            } else if (rs == null) {
-                System.out.println("El objeto ResultSet se ha cerrado");
-            } else {
-                e.printStackTrace();
-                return null;
-            }
+            e.printStackTrace();
+            throw e; // Propagar la excepción para que el llamador pueda manejarla
         } finally {
+            // El PreparedStatement debe cerrarse, pero no el ResultSet
             if (pst != null) {
                 try {
                     pst.close();
@@ -59,7 +46,6 @@ public class BaseDeDatos {
                 }
             }
         }
-        return null;
     }
 
     // Método para ejecutar consultas SELECT usando una consulta creada por los desarrolladores
@@ -69,28 +55,23 @@ public class BaseDeDatos {
         try {
             //Se crea un objeto statement
             st = con.createStatement();
-
             //Se ejecuta la consulta y se obtienen los resultados
             rs = st.executeQuery(consulta);
-            if(rs != null){
-                if(rs.next()) {
-                    return rs;
-                } else{
-                    System.out.println("Resultado no encontrado");
-                }
-            }
+            return rs;
 
         } catch (SQLException e) {
-            // Manejar la excepción
-            if (rs.isClosed()) {
-                System.out.println("La consulta no devolvió ningún resultado");
-            } else if (rs == null) {
-                System.out.println("El objeto ResultSet se ha cerrado");
-            } else {
-                e.printStackTrace();
+            e.printStackTrace();
+            throw e; // Propagar la excepción para que el llamador pueda manejarla
+        } finally {
+            // El Statement debe cerrarse, pero no el ResultSet
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
-        return rs;
     }
 
     // Método estático para ejecutar consultas INSERT, UPDATE, DELETE
