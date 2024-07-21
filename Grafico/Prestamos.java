@@ -128,7 +128,7 @@ public class Prestamos extends JFrame{
                     }
 
                     // Crear el objeto Prestamo con los datos capturados
-                    Prestamo nuevoPrestamo = new Prestamo(nombre, descripcion, montoOriginal, tasaInteres, fechaInicio, tipoPrestamo, plazo, fechaVencimiento, cuotaMensual, cuentaVinculada);
+                    Prestamo nuevoPrestamo = new Prestamo(nombre, descripcion, montoOriginal, tasaInteres, fechaInicio, tipoPrestamo, plazo, fechaVencimiento, cuentaVinculada);
 
                     // Guardar el préstamo en la base de datos
                     nuevoPrestamo.guardarPrestamoBaseDatos();
@@ -209,7 +209,6 @@ public class Prestamos extends JFrame{
     public void setVisible(boolean visible) {
         super.setVisible(visible);
     }
-
 
 
     private void actualizarComboBoxCuentas() {

@@ -7,15 +7,21 @@ import sistemagestionfinanzas.Stock;
 import sistemagestionfinanzas.Usuario;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Properties;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+
 
 import static sistemagestionfinanzas.Usuario.usuario_actual;
 
@@ -41,9 +47,12 @@ public class Stocks extends JFrame {
     private JTextField tfPrecioCompra;
     private JComboBox comboBoxSector;
     private JComboBox comboBoxFrecuencia;
+    private JPanel tabla_panel;
+    private JScrollPane tabla_scroll_panel;
     private JTextField tfPrecioActual;
     private JComboBox<String> cbFrecuenciaIng;
     private JDatePickerImpl date_picker_stock;
+    private DefaultTableModel tableModel;
 
 
     public Stocks() {
@@ -56,6 +65,35 @@ public class Stocks extends JFrame {
         setContentPane(StocksPanel);
 
         configureNavigationButtons();
+
+
+
+        //Configuración JTable
+        tableModel = new DefaultTableModel();
+        tablaStocks.setModel(tableModel);
+        tableModel.addColumn("Nombre Acción");
+        tableModel.addColumn("ID");
+        tableModel.addColumn("Descripción");
+        tableModel.addColumn("Nombre Empresa");
+        tableModel.addColumn("Sector");
+        tableModel.addColumn("Símbolo");
+        tableModel.addColumn("Cantidad");
+        tableModel.addColumn("Dividendo Por Acción");
+        tableModel.addColumn("Frecuencia de Pago de Dividendos");
+        tableModel.addColumn("Precio Compra");
+        tableModel.addColumn("Precio Actual");
+        tableModel.addColumn("Monto Original");
+        tableModel.addColumn("Monto Actual");
+        tableModel.addColumn("Cantidad de Ganancia/Perdida");
+        tableModel.addColumn("Porcentaje de Ganancia");
+        tableModel.addColumn("Valor Mensual Promedio");
+        tableModel.addColumn("Valor Anual Promedio");
+        tableModel.addColumn("Fecha Inicio");
+        tableModel.addColumn("Tipo");
+
+        // Configurar el layout del panel de Stocks para agregar el JScrollPane en lugar de la tabla directamente
+        tabla_panel.setLayout(new BorderLayout());
+        tabla_panel.add(tabla_scroll_panel, BorderLayout.CENTER);
 
         // Implementación del JDatePicker dentro del GUI
         UtilDateModel model = new UtilDateModel();
@@ -98,7 +136,7 @@ public class Stocks extends JFrame {
                 }
             }
         });
-
+        cargarStocksTabla();
     }
 
     private void configureNavigationButtons() {
@@ -263,6 +301,34 @@ public class Stocks extends JFrame {
                 throw new RuntimeException(ex);
             }
         }
+
+        // Agregar datos al modelo de la tabla
+        try {
+            tableModel.addRow(new Object[]{
+                    nombre_empresa,
+                    "ID",
+                    descripcion,
+                    nombre_empresa,
+                    sector,
+                    simbolo,
+                    cantidad,
+                    dividendo,
+                    frecuencia_dividendos,
+                    precio_compra,
+                    nuevo_stock.getMontoOriginal(),
+                    nuevo_stock.getMontoActual(),
+                    nuevo_stock.calcularGanaciaPerdida(),
+                    nuevo_stock.getPorcentajeGanancia(),
+                    nuevo_stock.calcularPromedioMensual(),
+                    nuevo_stock.calcularPromedioAnual(),
+                    fecha_inicio,
+                    nuevo_stock.getTipo()
+
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         usuario_actual.agregarFinanceItem(nuevo_stock);
         limpiarCampos();
     }
@@ -311,5 +377,62 @@ public class Stocks extends JFrame {
         }
 
     }
+    private void cargarStocksTabla() {
+        try {
+            Stock.obtenerStocksBaseDatos("abc123");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            for (Stock stock : Stock.instancias_stocks){
+                tableModel.addRow(new Object[]{
+                        stock.getNombre(),  // Nombre Acción
+                        stock.getId(),            // ID (asumiendo que tienes un método getId())
+                        stock.getDescripcion(),   // Descripción
+                        stock.getNombreEmpresa(), // Nombre Empresa
+                        stock.getSector(),        // Sector
+                        stock.getSimbolo(),       // Símbolo
+                        stock.getCantidad(),      // Cantidad
+                        stock.getDividendoPorAccion(), // Dividendo Por Acción
+                        stock.getFrecuenciaDividendos(), // Frecuencia de Pago de Dividendos
+                        stock.getPrecioCompra(),  // Precio Compra
+                        stock.getPrecioActual(),  // Precio Actual
+                        stock.getMontoOriginal(), // Monto Original
+                        stock.getMontoActual(),   // Monto Actual
+                        stock.calcularGanaciaPerdida(), // Cantidad de Ganancia/Perdida
+                        stock.getPorcentajeGanancia(), // Porcentaje de Ganancia
+                        stock.calcularPromedioMensual(), // Valor Mensual Promedio
+                        stock.calcularPromedioAnual(),
+                        stock.getFechaInicio(),   // Fecha Inicio
+                        stock.getTipo()           // Tipo
+                });
+            }
+            adjustColumnWidths(tablaStocks);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private static void adjustColumnWidths(JTable table) {
+        TableColumnModel columnModel = table.getColumnModel();
+        TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+
+        for (int i = 0; i < columnModel.getColumnCount(); i++) {
+            TableColumn column = columnModel.getColumn(i);
+
+            int maxWidth = headerRenderer.getTableCellRendererComponent(table, column.getHeaderValue(), false, false, 0, i).getPreferredSize().width;
+
+            // Calculate the maximum width based on cell contents
+            for (int j = 0; j < table.getRowCount(); j++) {
+                Object value = table.getValueAt(j, i);
+                int cellWidth = table.getCellRenderer(j, i).getTableCellRendererComponent(table, value, false,
+                        false, j, i).getPreferredSize().width;
+                maxWidth = Math.max(maxWidth, cellWidth);
+            }
+
+            // Set the preferred width
+            column.setPreferredWidth(maxWidth + 5); // Add some padding
+        }
+    }
+
 }
 

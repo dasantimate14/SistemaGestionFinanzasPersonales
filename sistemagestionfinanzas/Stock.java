@@ -114,7 +114,7 @@ public class Stock extends FinanceItem{
     }
 
     @Override
-    protected float calcularPromedioMensual() throws IOException {
+    public float calcularPromedioMensual() throws IOException {
         List<Float> precios_mensuales = obtenerPreciosMensuales();
         if (precios_mensuales.isEmpty()) {
             return 0.0f;
@@ -130,7 +130,7 @@ public class Stock extends FinanceItem{
     }
 
     @Override
-    protected float calcularPromedioAnual() throws IOException {
+    public float calcularPromedioAnual() throws IOException {
         float suma_promedio = 0.0f;
         List<Float> precios_anuales = obtenerPreciosAnuales();
         if(precios_anuales.isEmpty()){

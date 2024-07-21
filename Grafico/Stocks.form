@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Grafico.Stocks">
-  <grid id="27dc6" binding="StocksPanel" layout-manager="GridLayoutManager" row-count="25" column-count="9" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="StocksPanel" layout-manager="GridLayoutManager" row-count="4" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="330" y="353" width="932" height="1013"/>
+      <xy x="425" y="173" width="932" height="853"/>
     </constraints>
     <properties>
       <focusTraversalPolicyProvider value="false"/>
@@ -14,7 +14,7 @@
       <grid id="84c71" layout-manager="GridLayoutManager" row-count="10" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="0" column="0" row-span="25" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="4" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <background color="-16757148"/>
@@ -132,7 +132,7 @@
       <grid id="5d25a" layout-manager="GridLayoutManager" row-count="14" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="0" column="1" row-span="1" col-span="8" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="1" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
@@ -162,16 +162,6 @@
             </constraints>
             <properties>
               <text value="Nombre Empresa"/>
-            </properties>
-          </component>
-          <component id="ba6ad" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                <preferred-size width="112" height="70"/>
-              </grid>
-            </constraints>
-            <properties>
-              <text value="Precio de Compra"/>
             </properties>
           </component>
           <component id="edd6a" class="javax.swing.JLabel">
@@ -338,36 +328,70 @@
             </constraints>
             <properties/>
           </component>
+          <component id="ba6ad" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <preferred-size width="112" height="70"/>
+              </grid>
+            </constraints>
+            <properties>
+              <text value="Precio de Compra"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <component id="69489" class="javax.swing.JButton" binding="agregarNuevoStockButton" default-binding="true">
         <constraints>
-          <grid row="2" column="1" row-span="1" col-span="6" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Agregar nuevo Stock "/>
         </properties>
       </component>
-      <scrollpane id="36d16">
-        <constraints>
-          <grid row="7" column="1" row-span="7" col-span="1" vsize-policy="7" hsize-policy="7" anchor="2" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties/>
-        <border type="none"/>
-        <children>
-          <component id="4276d" class="javax.swing.JTable" binding="tablaStocks">
-            <constraints/>
-            <properties/>
-          </component>
-        </children>
-      </scrollpane>
       <vspacer id="eea6b">
         <constraints>
-          <grid row="14" column="7" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
             <preferred-size width="-1" height="30"/>
           </grid>
         </constraints>
       </vspacer>
+      <grid id="b8aa0" binding="tabla_panel" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <scrollpane id="12f42" binding="tabla_scroll_panel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <autoscrolls value="true"/>
+              <doubleBuffered value="false"/>
+              <horizontalScrollBarPolicy value="32"/>
+              <verticalScrollBarPolicy value="22"/>
+              <wheelScrollingEnabled value="true"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="8de03" class="javax.swing.JTable" binding="tablaStocks">
+                <constraints/>
+                <properties>
+                  <autoResizeMode value="0"/>
+                  <autoscrolls value="false"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+          <vspacer id="14fb2">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </vspacer>
+        </children>
+      </grid>
     </children>
   </grid>
 </form>
