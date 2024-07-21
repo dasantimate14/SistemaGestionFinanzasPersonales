@@ -1,45 +1,46 @@
 package Grafico;
 
-import sistemagestionfinanzas.CuentaBancaria;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Properties;
+
+import sistemagestionfinanzas.CuentaBancaria;
+import sistemagestionfinanzas.Gasto;
+import sistemagestionfinanzas.Ingreso;
 
 public class IngresoYGastos extends JFrame {
-    private JButton menuPrincipalButton;
-    private JButton cuentasBancariasButton;
-    private JButton plazosFijosButton;
-    private JButton prestamosButton;
-    private JButton tarjetaDeCreditoButton;
-    private JButton stocksButton;
-    private JButton ingresosYGastosButton;
     private JPanel IngresosYGastosPanel;
-    private JTextField tfFuenteIngreso;
-    private JComboBox<String> cbCuentaBancoIng;
-    private JComboBox<String> cbFrecuenciaIng;
-    private JTextField tfMontoIngr;
-    private JTextField tfIngresoID;
-    private JTextField tfGastoID;
-    private JButton eliminarIngresoButton;
-    private JButton eliminarGastoButton;
-    private JButton btnAgregarGast;
-    private JButton btnAgregarIngr;
-    private JTextField tfFuenteGasto;
-    private JComboBox<String> cbFrecuenciaGast;
-    private JTextField tfMontoGastos;
-    private JPanel FechaIngresoPanel;
-    private JPanel FechaGastosPanel;
-    private JComboBox<String> cbCuentaBAncoGast;
-    private JTextField tfNombreGasto;
-    private JTextField tfNombreIngresos;
-    private JTable tableIngresosGastos;
-    private JScrollPane spIngresoGastos;
-    private JTextField tfAcreedor;
+    private JButton btn_agregar_ingr;
+    private JButton btn_agregar_gast;
+    private JButton btn_eliminar_ing;
+    private JTextField tf_nombre_ingresos;
+    private JTextField tf_descripcion_ingr;
+    private JTextField tf_fuente_ingreso;
+    private JTextField tf_monto_ingreso;
+    private JComboBox<Integer> cb_frecuencia_ing;
+    private JComboBox<CuentaBancaria> cb_cuenta_banco;
+    private JDatePickerImpl date_picker_ingreso;
+    private JPanel fecha_ingreso_panel;
+    private JTextField tf_nombre_gasto;
+    private JTextField tf_descripcion_gasto;
+    private JTextField tf_monto_gasto;
+    private JTextField tf_acreedor_gast;
+    private JComboBox<String> cb_Categoria;
+    private JComboBox<Boolean> cb_estatus;
+    private JDatePickerImpl date_picker_gastos;
+    private JPanel fecha_gastos_panel;
 
     public IngresoYGastos() {
-        actualizarComboBoxes();
         // Configuración de la ventana
         setSize(930, 920);
         setTitle("Ingresos Y Gastos");
@@ -47,37 +48,89 @@ public class IngresoYGastos extends JFrame {
         setLocationRelativeTo(null);
         setContentPane(IngresosYGastosPanel);
 
-        btnAgregarIngr.addActionListener(new ActionListener() {
+        // Implementación del JDatePicker para fecha de ingreso
+        UtilDateModel modelIngreso = new UtilDateModel();
+        Properties pIngreso = new Properties();
+        pIngreso.put("text.today", "Hoy");
+        pIngreso.put("text.month", "Mes");
+        pIngreso.put("text.year", "Año");
+        JDatePanelImpl date_panel_ingres = new JDatePanelImpl(modelIngreso, pIngreso);
+        date_picker_ingreso = new JDatePickerImpl(date_panel_ingres, new DateLabelFormatter());
+
+        fecha_ingreso_panel.setLayout(new BorderLayout());
+        fecha_ingreso_panel.add(date_picker_ingreso, BorderLayout.CENTER);
+
+        // Implementación del JDatePicker para fecha de gastos
+        UtilDateModel modelGastos = new UtilDateModel();
+        Properties pGastos = new Properties();
+        pGastos.put("text.today", "Hoy");
+        pGastos.put("text.month", "Mes");
+        pGastos.put("text.year", "Año");
+        JDatePanelImpl date_panel_gastos = new JDatePanelImpl(modelGastos, pGastos);
+        date_picker_gastos = new JDatePickerImpl(date_panel_gastos, new DateLabelFormatter());
+
+        fecha_gastos_panel.setLayout(new BorderLayout());
+        fecha_gastos_panel.add(date_picker_gastos, BorderLayout.CENTER);
+
+        btn_agregar_ingr.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    validarCamposIngreso();
-                    // Código para agregar ingreso aquí
+                    String nombre = tf_nombre_ingresos.getText();
+                    String descripcion = tf_descripcion_ingr.getText();
+                    // Obtener la fecha del JDatePicker y convertirla a LocalDate
+                    java.util.Date date_ingreso = (java.util.Date) date_picker_ingreso.getModel().getValue();
+                    LocalDate fechaInicio = date_ingreso.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+                    int frecuencia = (int) cb_frecuencia_ing.getSelectedItem();
+                    String fuente = tf_fuente_ingreso.getText();
+                    float montoOriginal = Float.parseFloat(tf_monto_ingreso.getText());
+                    CuentaBancaria cuenta_bancaria = (CuentaBancaria) cb_cuenta_banco.getSelectedItem();
+
+                    Ingreso ingreso = new Ingreso(nombre, descripcion, montoOriginal, fechaInicio, fuente, cuenta_bancaria, frecuencia);
+
+                    ingreso.actualizarInformacion();
+                    //ingreso.guardarIngresoBaseDatos(); recuerda activar este comentario
+
                     JOptionPane.showMessageDialog(null, "Ingreso agregado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
+                    // Mostrar mensaje de error en caso de excepción
                     JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
 
-        btnAgregarGast.addActionListener(new ActionListener() {
+        btn_agregar_gast.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    validarCamposGastos();
-                    // Código para agregar gastos aquí
+                    String nombre = tf_nombre_gasto.getText();
+                    String descripcion = tf_descripcion_gasto.getText();
+                    float montoOriginal = Float.parseFloat(tf_monto_gasto.getText());
+                    java.util.Date date_gasto = (java.util.Date) date_picker_gastos.getModel().getValue();
+                    LocalDate fechaInicio = date_gasto.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+                    String acreedor = tf_acreedor_gast.getText();
+                    int frecuencia = (int) cb_frecuencia_ing.getSelectedItem();
+                    String categoriaGasto = (String) cb_Categoria.getSelectedItem();
+                    CuentaBancaria cuenta = (CuentaBancaria) cb_cuenta_banco.getSelectedItem();
+                    boolean estatus = (boolean) cb_estatus.getSelectedItem();
+                    int estatus_gasto = estatus ? 1 : 0;
+
+                    Gasto gasto = new Gasto(nombre, descripcion, montoOriginal, fechaInicio, acreedor, frecuencia, categoriaGasto, cuenta);
+
+                    gasto.actualizarInformacion();
+                    //gasto.guardarGastoBaseDatos(); recuerda activar este comentario
+
                     JOptionPane.showMessageDialog(null, "Gasto agregado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error, no se pudo ingresar el gasto", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
 
-        eliminarIngresoButton.addActionListener(new ActionListener() {
+        btn_eliminar_ing.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    validarCampoIDIngresoGasto();
                     // Código para eliminar ingreso aquí
                     JOptionPane.showMessageDialog(null, "Ingreso eliminado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
@@ -85,174 +138,26 @@ public class IngresoYGastos extends JFrame {
                 }
             }
         });
-
-        eliminarGastoButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    validarCampoIDIngresoGasto();
-                    // Código para eliminar gasto aquí
-                    JOptionPane.showMessageDialog(null, "Gasto eliminado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
-        // Action listeners para navegar a través del dashboard
-        menuPrincipalButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Dashboard newframe = new Dashboard();
-                newframe.setVisible(true);
-                dispose();
-            }
-        });
-
-        cuentasBancariasButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CuentaBancariaG newframe = new CuentaBancariaG();
-                newframe.setVisible(true);
-                dispose();
-            }
-        });
-
-        plazosFijosButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                PlazoFijos newframe = new PlazoFijos();
-                newframe.setVisible(true);
-                dispose();
-            }
-        });
-
-        stocksButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Stocks newframe = new Stocks();
-                newframe.setVisible(true);
-                dispose();
-            }
-        });
-
-        tarjetaDeCreditoButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Tarjetas newframe = new Tarjetas();
-                newframe.setVisible(true);
-                dispose();
-            }
-        });
-
-        prestamosButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Prestamos newframe = new Prestamos();
-                newframe.setVisible(true);
-                dispose();
-            }
-        });
     }
 
-    @Override
-    public void setVisible(boolean b) {
-        super.setVisible(b);
-        actualizarComboBoxes();
-    }
+    // Formatter para que la librería se extienda
+    public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
+        private String datePattern = "dd/MM/yyyy";
+        private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
 
-    private void actualizarComboBoxes() {
-        cbCuentaBancoIng.removeAllItems();
-        cbCuentaBAncoGast.removeAllItems();
-
-        for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias){
-            cbCuentaBancoIng.addItem(cuenta.toString());
-            cbCuentaBAncoGast.addItem(cuenta.toString());
+        @Override
+        public Object stringToValue(String text) throws ParseException {
+            return dateFormatter.parseObject(text);
         }
 
-        cbFrecuenciaIng.addItem("Selecciona una opción");
-        cbFrecuenciaIng.addItem("Diario");
-        cbFrecuenciaIng.addItem("Semanal");
-        cbFrecuenciaIng.addItem("Mensual");
-        cbFrecuenciaIng.addItem("Anual");
-
-        cbFrecuenciaGast.addItem("Selecciona una opción");
-        cbFrecuenciaGast.addItem("Diario");
-        cbFrecuenciaGast.addItem("Semanal");
-        cbFrecuenciaGast.addItem("Mensual");
-        cbFrecuenciaGast.addItem("Anual");
-    }
-
-    private void validarCamposIngreso() throws Exception {
-        String fuenteIngreso = tfFuenteIngreso.getText();
-        String montoIngreso = tfMontoIngr.getText();
-        String cuentaBancaria = (String) cbCuentaBancoIng.getSelectedItem();
-        String frecuencia = (String) cbFrecuenciaIng.getSelectedItem();
-
-        if (fuenteIngreso.isEmpty()) {
-            throw new Exception("Debe ingresar la fuente del ingreso.");
+        @Override
+        public String valueToString(Object value) throws ParseException {
+            if (value != null) {
+                Calendar cal = (Calendar) value;
+                return dateFormatter.format(cal.getTime());
+            }
+            return "";
         }
-
-        if (montoIngreso.isEmpty()) {
-            throw new Exception("Debe ingresar el monto del ingreso.");
-        }
-
-        if (cuentaBancaria == null || cuentaBancaria.isEmpty() || cuentaBancaria.equals("Selecciona una opción")) {
-            throw new Exception("Debe seleccionar una cuenta bancaria.");
-        }
-
-        if (frecuencia == null || frecuencia.isEmpty() || frecuencia.equals("Selecciona una opción")) {
-            throw new Exception("Debe seleccionar una frecuencia.");
-        }
-
-        try {
-            Double.parseDouble(montoIngreso);
-        } catch (NumberFormatException e) {
-            throw new Exception("El monto del ingreso debe ser un número válido.");
-        }
-    }
-
-    private void validarCamposGastos() throws Exception {
-        String fuenteGasto = tfFuenteGasto.getText();
-        String montoGasto = tfMontoGastos.getText();
-        String cuentaBancaria = (String) cbCuentaBAncoGast.getSelectedItem();
-        String frecuencia = (String) cbFrecuenciaGast.getSelectedItem();
-
-        if (fuenteGasto.isEmpty()) {
-            throw new Exception("Debe ingresar la fuente del gasto.");
-        }
-
-        if (montoGasto.isEmpty()) {
-            throw new Exception("Debe ingresar el monto del gasto.");
-        }
-
-        if (cuentaBancaria == null || cuentaBancaria.isEmpty() || cuentaBancaria.equals("Selecciona una opción")) {
-            throw new Exception("Debe seleccionar una cuenta bancaria.");
-        }
-
-        if (frecuencia == null || frecuencia.isEmpty() || frecuencia.equals("Selecciona una opción")) {
-            throw new Exception("Debe seleccionar una frecuencia.");
-        }
-
-        try {
-            Double.parseDouble(montoGasto);
-        } catch (NumberFormatException e) {
-            throw new Exception("El monto del gasto debe ser un número válido.");
-        }
-    }
-
-    private void validarCampoIDIngresoGasto() throws Exception {
-        String ingresoID = tfIngresoID.getText();
-        String gastoID = tfGastoID.getText();
-
-        if (ingresoID.isEmpty()) {
-            throw new Exception("Debe ingresar el ID del ingreso.");
-        }
-
-        if (gastoID.isEmpty()) {
-            throw new Exception("Debe ingresar el ID del gasto.");
-        }
-
     }
 
     public static void main(String[] args) {
