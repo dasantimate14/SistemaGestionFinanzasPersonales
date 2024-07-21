@@ -239,7 +239,21 @@ public class PlazoFijo extends FinanceItem {
             BaseDeDatos.cerrarConexion();
         }
     }
-
+    public void eliminarPlazoFijoEnBaseDatos() {
+        String consulta_eliminacion = "DELETE FROM plazos_fijos WHERE id = ?";
+        String[] parametros = {getId()};
+        try {
+            BaseDeDatos.establecerConexion();
+            boolean eliminacionExitosa = BaseDeDatos.ejecutarActualizacion(consulta_eliminacion, parametros);
+            if (eliminacionExitosa) {
+                System.out.println("Eliminación exitosa del plazo fijo.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+    }
 
 }
 

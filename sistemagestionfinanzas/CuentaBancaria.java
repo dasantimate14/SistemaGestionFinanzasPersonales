@@ -503,5 +503,4 @@ public class CuentaBancaria extends FinanceItem{
 
     }
 
-
 }
