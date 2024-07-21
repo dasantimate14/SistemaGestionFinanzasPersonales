@@ -132,6 +132,10 @@ public class Prestamo extends FinanceItem {
     public void setFrecuenciaPago(int nuevaFrecuenciaPago) {
     }
 
+    public CuentaBancaria getCuentaBancaria(){
+        return cuenta_bancaria;
+    }
+
     public float calcularPagoMensual() {
         float tasaInteresMensual = super.getTasaInteres() / 12 / 100;
         int numeroPagos = plazo * 12;
