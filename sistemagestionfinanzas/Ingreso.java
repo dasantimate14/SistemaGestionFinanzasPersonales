@@ -313,7 +313,6 @@ public class Ingreso extends FinanceItem{
                         //Se crea el objeto con los datos capturados
                         ingreso = new Ingreso(nombre, descripcion, monto_original, fecha_inicio, fuente, cuenta_viculada, frecuencia);
                         ingreso.setId(id);
-                        System.out.println("Ingreso obtenido Correctamente");
                         break;
                     }
                 }

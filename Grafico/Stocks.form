@@ -214,7 +214,7 @@
             </constraints>
             <properties/>
           </component>
-          <component id="88f19" class="javax.swing.JTextField" default-binding="true">
+          <component id="88f19" class="javax.swing.JTextField" binding="tfSimbolo">
             <constraints>
               <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -254,17 +254,9 @@
             </constraints>
             <properties/>
           </component>
-          <component id="e9c74" class="javax.swing.JTextField" binding="tfDividendoAccio">
+          <component id="e9c74" class="javax.swing.JTextField" binding="tfDividendoAccion">
             <constraints>
               <grid row="11" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="b8e52" class="javax.swing.JTextField" binding="tfFrecuenciaDividendos">
-            <constraints>
-              <grid row="12" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
@@ -286,7 +278,7 @@
               <text value="Descripción"/>
             </properties>
           </component>
-          <component id="84feb" class="javax.swing.JTextField" binding="tdDescripcion">
+          <component id="84feb" class="javax.swing.JTextField" binding="tfDescripcion">
             <constraints>
               <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -326,6 +318,26 @@
             <border type="none"/>
             <children/>
           </grid>
+          <component id="4b42d" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Sector"/>
+            </properties>
+          </component>
+          <component id="80ef9" class="javax.swing.JComboBox" binding="comboBoxSector">
+            <constraints>
+              <grid row="4" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="ebf7e" class="javax.swing.JComboBox" binding="comboBoxFrecuencia">
+            <constraints>
+              <grid row="12" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+          </component>
         </children>
       </grid>
       <component id="69489" class="javax.swing.JButton" binding="agregarNuevoStockButton" default-binding="true">
