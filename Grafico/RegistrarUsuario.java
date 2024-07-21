@@ -9,7 +9,7 @@ import sistemagestionfinanzas.Usuario;
 import sistemagestionfinanzas.BaseDeDatos;
 
 public class RegistrarUsuario extends JFrame {
-    // Declaración de variables estáticas
+
     public static ArrayList<Usuario> instancias_clientes = new ArrayList<>();
     public static Usuario usuario_actual;
 
@@ -21,7 +21,7 @@ public class RegistrarUsuario extends JFrame {
     private JButton btn_enviar;
     private JButton btn_login;
 
-    // Métodos estáticos
+
     public static String getIdUsuarioActual() {
         return String.valueOf(usuario_actual != null ? usuario_actual.getId() : null);
     }
@@ -64,22 +64,22 @@ public class RegistrarUsuario extends JFrame {
                 }
 
                 try {
-                    // Validar el nombre
+
                     if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
-                        throw new Exception("El nombre solo puede contener letras y espacios.");
+                        throw new Exception("El nombre solo puede contener letras.");
                     }
 
-                    // Validar el apellido
-                    if (!apellido.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ]+")) {
+
+                    if (!apellido.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
                         throw new Exception("El apellido solo puede contener letras.");
                     }
 
-                    // Validar el correo
+
                     if (!correo.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
                         throw new Exception("El correo solo puede contener puntos, arrobas, letras y números.");
                     }
 
-                    // Validar si el correo ya existe
+
                     BaseDeDatos.establecerConexion();
 
                     if (Usuario.correoExistente(correo)) {
