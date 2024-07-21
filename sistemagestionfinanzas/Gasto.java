@@ -94,7 +94,7 @@ public class Gasto extends FinanceItem {
         info.append("Frecuencia: ").append(frecuencia).append("\n");
         info.append("Categoría de Gasto: ").append(categoria_gasto).append("\n");
         info.append("Estatus: ").append(estatus ? "Activo" : "Inactivo").append("\n");
-        info.append("Cuenta Bancaria: ").append(cuenta != null ? cuenta.toString() : "N/A").append("\n");
+        info.append("Cuenta Bancaria: ").append(cuenta.getId()).append("\n");
         return info;
     }
 
@@ -225,7 +225,6 @@ public class Gasto extends FinanceItem {
                         gasto = new Gasto(nombre, descripcion, monto_original, fecha_inicio, acreedor, frecuencia, categoria_gasto, cuenta_viculada);
                         gasto.setId(id);
                         gasto.setEstatus(estatus);
-                        System.out.println("Gasto obtenido Correctamente");
                         break;
                     }
                 }

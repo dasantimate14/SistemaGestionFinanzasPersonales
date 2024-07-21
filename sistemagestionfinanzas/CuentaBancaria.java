@@ -477,13 +477,7 @@ public class CuentaBancaria extends FinanceItem{
             if (rs == null){
                 throw new SQLException("No se puede obtener una cuenta Bancaria.");
             }
-            boolean isFirst = true;
             while (rs.next()) {
-                if (isFirst) {
-                    System.out.println("Primera fila capturada correctamente.");
-                    isFirst = false;
-                }
-
                 //Se leen cada uno de los campos en el resultset para crear el objeto
                 String id = rs.getString("id");
                 String nombre = rs.getString("nombre");

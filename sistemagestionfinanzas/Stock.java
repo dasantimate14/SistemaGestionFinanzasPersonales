@@ -149,6 +149,7 @@ public class Stock extends FinanceItem{
         setDividendoAcumulado(calcularDividendoAcumulado());
         setPorcentajeGanancia(calcularPorcentajeGananciaPerdida());
         setPromedioMensual(calcularPromedioMensual());
+        setPrecioActual(obtenerPrecioActual());
     }
 
     //Metodo para obtener el porcentaje de representacion de una instancia de stock
@@ -411,36 +412,37 @@ public class Stock extends FinanceItem{
         }
     }
 
-    public static void obtenerStocksBaseDatos(String id_usuario){
+    public static void obtenerStocksBaseDatos(String id_usuario) throws SQLException {
         Stock stocks = null;
         String consulta = "SELECT * FROM stocks WHERE idUsuario = ?";
         String[] parametros = {id_usuario};
         try {
             BaseDeDatos.establecerConexion();
             ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
-            if(rs != null){
-                while (rs.next()) {
-                    // Se leen cada uno de los campos en el resultset para crear el objeto
-                    String id = rs.getString("id");
-                    String nombre = rs.getString("nombre");
-                    String descripcion = rs.getString("descripcion");
-                    LocalDate fecha_inicio = rs.getDate("fechaInicio").toLocalDate();
-                    String nombre_empresa = rs.getString("nombreEmpresa");
-                    String simbolo = rs.getString("simbolo"); // Cambiado de 'numeroCuenta' a 'simbolo'
-                    int cantidad = rs.getInt("cantidad");
-                    float precio_compra = rs.getFloat("precioCompra");
-                    String sector = rs.getString("sector");
-                    float dividendo_por_accion = rs.getFloat("dividendoPorAccion");
-                    int frecuencia_dividendos = rs.getInt("frecuenciaDividendos");
-
-                    // Se crea el objeto con los datos capturados
-                    stocks = new Stock(nombre, descripcion, fecha_inicio, nombre_empresa, simbolo, cantidad, precio_compra, sector, dividendo_por_accion, frecuencia_dividendos);
-                    stocks.setId(id);
-
-                }
+            if(rs == null){
+                throw new SQLException("No se pudo encontrar ningún Stock para este usuario");
             }
+            while (rs.next()) {
+                // Se leen cada uno de los campos en el resultset para crear el objeto
+                String id = rs.getString("id");
+                String nombre = rs.getString("nombre");
+                String descripcion = rs.getString("descripcion");
+                LocalDate fecha_inicio = rs.getDate("fechaInicio").toLocalDate();
+                String nombre_empresa = rs.getString("nombreEmpresa");
+                String simbolo = rs.getString("simbolo"); // Cambiado de 'numeroCuenta' a 'simbolo'
+                int cantidad = rs.getInt("cantidad");
+                float precio_compra = rs.getFloat("precioCompra");
+                String sector = rs.getString("sector");
+                float dividendo_por_accion = rs.getFloat("dividendoPorAccion");
+                int frecuencia_dividendos = rs.getInt("frecuenciaDividendos");
+
+                // Se crea el objeto con los datos capturados
+                stocks = new Stock(nombre, descripcion, fecha_inicio, nombre_empresa, simbolo, cantidad, precio_compra, sector, dividendo_por_accion, frecuencia_dividendos);
+                stocks.setId(id);
+                }
+
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            throw ex;
         } finally {
             BaseDeDatos.cerrarConexion();
         }

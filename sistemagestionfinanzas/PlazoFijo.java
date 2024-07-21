@@ -199,13 +199,16 @@ public class PlazoFijo extends FinanceItem {
         System.out.println("El porcentaje representacion es " + redonderCantidad(porcentaje_representacion) + "% con un valor de " + getMontoActual());
     }
 
-    public static void obtenerPlazoFijosBaseDatos(String id_usuario) {
+    public static void obtenerPlazoFijosBaseDatos(String id_usuario) throws SQLException {
         PlazoFijo plazo_fijo = null;
         String consulta = "SELECT * FROM plazos_fijos WHERE idUsuario = ?";
         String[] parametro = {id_usuario};
         try {
             BaseDeDatos.establecerConexion();
             ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametro);
+            if(rs == null){
+                throw new SQLException("No se puede obtener ningún plazo fijo para este usuario");
+            }
             while (rs.next()) {
                 // Leer cada uno de los campos en el ResultSet para manejar la información
                 String id = rs.getString("id");
@@ -222,18 +225,16 @@ public class PlazoFijo extends FinanceItem {
                 for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
                     if(cuenta.getId().equals(id_cuenta_bancaria)) {
                         cuenta_viculada = cuenta;
+                        //Se crea el objeto con los datos capturados
+                        plazo_fijo = new PlazoFijo(nombre, descripcion, monto_original, tasa_interes,fecha_inicio, plazo, cuenta_viculada);
+                        plazo_fijo.setId(id);
                     }
                 }
-                if (cuenta_viculada == null) {
-                    System.out.println("No existe el cuenta  con ese ID");
-                }
 
-                //Se crea el objeto con los datos capturados
-                plazo_fijo = new PlazoFijo(nombre, descripcion, monto_original, tasa_interes,fecha_inicio, plazo, cuenta_viculada);
-                plazo_fijo.setId(id);
+
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            throw ex;
         } finally {
             BaseDeDatos.cerrarConexion();
         }
