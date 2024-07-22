@@ -66,8 +66,6 @@ public class Stocks extends JFrame {
 
         configureNavigationButtons();
 
-
-
         //Configuración JTable
         tableModel = new DefaultTableModel();
         tablaStocks.setModel(tableModel);
@@ -378,11 +376,6 @@ public class Stocks extends JFrame {
 
     }
     private void cargarStocksTabla() {
-        try {
-            Stock.obtenerStocksBaseDatos("abc123");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
         try {
             for (Stock stock : Stock.instancias_stocks){
                 tableModel.addRow(new Object[]{
