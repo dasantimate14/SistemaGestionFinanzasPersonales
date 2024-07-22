@@ -59,8 +59,7 @@ public class CuentaBancaria extends FinanceItem{
         return sb;
     }
 
-    @Override
-    protected void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
+    public static float calcularPorcentajeRepresentacionSubclase(List<FinanceItem> activosPasivos) {
         float valor_total_cuentas_bancarias = 0;
         float valor_total_activos = 0;
         float porcentaje_representacion = 0;
@@ -72,7 +71,7 @@ public class CuentaBancaria extends FinanceItem{
             }
         }
         porcentaje_representacion = (valor_total_cuentas_bancarias / valor_total_activos)*100;
-        System.out.println("El porcentaje de Representación de todaas las Cuentas Bancarias es " + porcentaje_representacion + " con un valor de " + valor_total_cuentas_bancarias);
+        return porcentaje_representacion;
     }
 
     //Calcula el promedio de los balances mensuales

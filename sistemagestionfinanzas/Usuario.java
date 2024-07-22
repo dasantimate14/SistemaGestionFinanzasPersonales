@@ -3,6 +3,7 @@ package sistemagestionfinanzas;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Usuario {
@@ -67,6 +68,9 @@ public class Usuario {
     public void setId(String nuevoId) {
         this.id = nuevoId;
     }
+
+    public List<FinanceItem> getActivos() {return this.activos;}
+    public ArrayList<FinanceItem> getPasivos() {return this.pasivos;}
 
     // Métodos relacionados con la gestión de activos y pasivos
     public void agregarFinanceItem(FinanceItem item) {

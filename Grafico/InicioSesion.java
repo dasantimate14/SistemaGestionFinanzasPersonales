@@ -177,12 +177,6 @@ public class InicioSesion extends JFrame {
         for(CuentaBancaria cuenta_bancaria : CuentaBancaria.intsancias_cuentas_bancarias){
             usuario_actual.agregarFinanceItem(cuenta_bancaria);
         }
-        for(Gasto gasto : Gasto.instancias_gastos){
-            usuario_actual.agregarFinanceItem(gasto);
-        }
-        for(Ingreso ingreso : Ingreso.instancias_ingresos){
-            usuario_actual.agregarFinanceItem(ingreso);
-        }
         for(PlazoFijo plazo_fijo: PlazoFijo.instancias_plazos_fijos){
             usuario_actual.agregarFinanceItem(plazo_fijo);
         }

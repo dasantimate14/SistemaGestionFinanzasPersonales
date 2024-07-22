@@ -127,9 +127,9 @@ public class TarjetaCredito extends FinanceItem {
         return sb;
     }
 
-    @Override
-    protected void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
+    public static float calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
         // Implementación específica no necesaria para esta prueba
+        return 0;
     }
 
     @Override

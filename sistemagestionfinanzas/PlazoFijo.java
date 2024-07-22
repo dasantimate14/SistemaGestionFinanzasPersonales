@@ -139,8 +139,7 @@ public class PlazoFijo extends FinanceItem {
         return sb;
     }
 
-    @Override
-    protected void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
+    public static float calcularPorcentajeRepresentacionSubclase(List<FinanceItem> activosPasivos) {
         float valor_total_plazos_fijos = 0;
         float valor_total_activos = 0;
         float porcentaje_representacion = 0;
@@ -151,9 +150,8 @@ public class PlazoFijo extends FinanceItem {
                 valor_total_plazos_fijos += cuenta.getMontoActual();
             }
         }
-        porcentaje_representacion = redonderCantidad((valor_total_plazos_fijos / valor_total_activos)*100);
-        System.out.println("El porcentaje de Representación de todos los plazos fijos es " + porcentaje_representacion + " con un valor de " + valor_total_plazos_fijos);
-
+        porcentaje_representacion = (valor_total_plazos_fijos / valor_total_activos)*100;
+        return porcentaje_representacion;
     }
 
     @Override

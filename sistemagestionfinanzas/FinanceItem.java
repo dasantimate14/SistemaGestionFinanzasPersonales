@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 public abstract class FinanceItem {
     //Atributos de la superclase
@@ -106,7 +107,9 @@ public abstract class FinanceItem {
     }
 
     //Metodo para obtener el porcentaje que representa este elemento del total - El arreglo activosPasivos representa que se le pasa un arreglo de activos o de pasivos al método dependiendo de la clase
-    protected abstract void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos);
+    protected static float calcularPorcentajeRepresentacionSubclase(List<FinanceItem> activosPasivos) {
+        return 0;
+    }
 
     protected abstract float calcularPromedioMensual() throws SQLException, IOException;
 

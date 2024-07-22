@@ -1,15 +1,13 @@
 package Grafico;
 
-import sistemagestionfinanzas.*;
-import sistemagestionfinanzas.Stock;
+import sistemagestionfinanzas.Usuario;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 public class Dashboard extends JFrame {
-    private Usuario usuario;
     private JPanel DashboardPanel;
     private JButton btnMenu1;
     private JButton btnCuentaBancaria;
@@ -18,16 +16,26 @@ public class Dashboard extends JFrame {
     private JButton btnStocks;
     private JButton btnTarjetas;
     private JButton prestamosButton;
-    private JTextField tfNombreUsuario;  //Se utilizara para asignar el nombre del usuario en hola nombre
+    private JPanel ingresos_gastos_anuales_paneles;
+    private JPanel pastel_subclase_panel;
+    private JPanel ingresos_gastos_mensuales;
+    private JLabel label_nombre_usuario;
 
     public Dashboard() {
-        this.usuario = Usuario.getUsuarioActual();
         // Configuración de la ventana de inicio de sesión
-        setSize(930, 920);
+        setSize(1100, 920);
         setTitle("Menu Principal");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setContentPane(DashboardPanel);
+
+        BarrasIngresosGastosAnuales panel_graficos_anuales = new BarrasIngresosGastosAnuales();
+        ingresos_gastos_anuales_paneles.setLayout(new BorderLayout());
+        ingresos_gastos_anuales_paneles.add(panel_graficos_anuales, BorderLayout.CENTER);
+
+        BarrasIngresosGastos grafico_barras_mensual = new BarrasIngresosGastos();
+        ingresos_gastos_mensuales.setLayout(new BorderLayout());
+        ingresos_gastos_mensuales.add(grafico_barras_mensual, BorderLayout.CENTER);
 
         btnCuentaBancaria.addActionListener(new ActionListener() {
             @Override
