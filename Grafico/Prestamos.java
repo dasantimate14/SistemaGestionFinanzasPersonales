@@ -66,10 +66,10 @@ public class Prestamos extends JFrame {
         pInicio.put("text.month", "Mes");
         pInicio.put("text.year", "Año");
         JDatePanelImpl datePanelImplInicio = new JDatePanelImpl(modelInicio, pInicio);
-        JDatePickerImpl datePickerInicio = new JDatePickerImpl(datePanelImplInicio, new DateLabelFormatter());
+        datePicker = new JDatePickerImpl(datePanelImplInicio, new DateLabelFormatter());
 
         fecha_inicio_panel.setLayout(new BorderLayout());
-        fecha_inicio_panel.add(datePickerInicio, BorderLayout.CENTER);
+        fecha_inicio_panel.add(datePicker, BorderLayout.CENTER);
 
         // Actualizar el JComboBox de cuentas bancarias
         actualizarComboBoxCuentas();
@@ -89,20 +89,57 @@ public class Prestamos extends JFrame {
                 try {
                     // Obtener datos del formulario
                     String nombre = tf_nombre.getText();
-                    String descripcion = tf_descripcion.getText();
-                    String tipoPrestamo = (String) cb_tipo.getSelectedItem();
-                    float montoOriginal = Float.parseFloat(tf_monto_original.getText());
-                    float tasaInteres = Float.parseFloat(tf_taza_interes.getText());
+                    if (nombre.isEmpty()) {
+                        throw new IllegalArgumentException("El nombre no puede estar vacío.");
+                    }
 
-                    // Convertir fechas
-                    java.util.Date date_inicio = (java.util.Date) datePickerInicio.getModel().getValue();
+                    String descripcion = tf_descripcion.getText();
+                    if (descripcion.isEmpty()) {
+                        throw new IllegalArgumentException("La descripción no puede estar vacía.");
+                    }
+
+                    String tipoPrestamo = (String) cb_tipo.getSelectedItem();
+                    if (tipoPrestamo == null) {
+                        throw new NullPointerException("Debe seleccionar un tipo de préstamo.");
+                    }
+
+                    float montoOriginal;
+                    try {
+                        montoOriginal = Float.parseFloat(tf_monto_original.getText());
+                    } catch (NumberFormatException ex) {
+                        throw new NumberFormatException("Monto original debe ser un número válido.");
+                    }
+
+                    float tasaInteres;
+                    try {
+                        tasaInteres = Float.parseFloat(tf_taza_interes.getText());
+                    } catch (NumberFormatException ex) {
+                        throw new NumberFormatException("Tasa de interés debe ser un número válido.");
+                    }
+
+                    java.util.Date date_inicio = (java.util.Date) datePicker.getModel().getValue();
+                    if (date_inicio == null) {
+                        throw new NullPointerException("Debe seleccionar una fecha de inicio.");
+                    }
                     LocalDate fechaInicio = date_inicio.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
 
-                    int plazo = Integer.parseInt(tf_plazo.getText());
+                    int plazo;
+                    try {
+                        plazo = Integer.parseInt(tf_plazo.getText());
+                    } catch (NumberFormatException ex) {
+                        throw new NumberFormatException("Plazo debe ser un número entero válido.");
+                    }
+
                     String cuentaSeleccionada = (String) cb_cuentabancaria.getSelectedItem();
+                    if (cuentaSeleccionada == null) {
+                        throw new NullPointerException("Debe seleccionar una cuenta bancaria.");
+                    }
 
                     // Obtener estatus seleccionado y mapear a entero
                     String estatus = (String) cb_estatus.getSelectedItem();
+                    if (estatus == null) {
+                        throw new NullPointerException("Debe seleccionar un estatus.");
+                    }
                     int estatusInt = estatus.equals("Activo") ? 1 : 0;
 
                     // Encontrar la cuenta bancaria seleccionada
@@ -116,8 +153,7 @@ public class Prestamos extends JFrame {
                     }
 
                     if (cuentaVinculada == null) {
-                        JOptionPane.showMessageDialog(Prestamos.this, "Cuenta bancaria seleccionada no encontrada.", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
+                        throw new IllegalArgumentException("Cuenta bancaria seleccionada no encontrada.");
                     }
 
                     // Crear el objeto Prestamo con los datos capturados
@@ -134,11 +170,21 @@ public class Prestamos extends JFrame {
 
                     // Mostrar mensaje de éxito
                     JOptionPane.showMessageDialog(Prestamos.this, "Préstamo creado exitosamente.");
+
+                    // Limpiar campos del formulario
+                    limpiarCamposFormulario();
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(Prestamos.this, "Error de formato: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (NullPointerException ex) {
+                    JOptionPane.showMessageDialog(Prestamos.this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(Prestamos.this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(Prestamos.this, "Error al crear el préstamo: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
+
 
         // Otros botones
         paginaPrincipalButton.addActionListener(new ActionListener() {
@@ -209,30 +255,42 @@ public class Prestamos extends JFrame {
     }
 
     private void cargarPrestamos() {
-        modelo_tabla_prestamos.setRowCount(0); // Limpiar la tabla antes de cargar nuevos datos
+        // Limpiar la tabla antes de cargar nuevos datos
+        modelo_tabla_prestamos.setRowCount(0);
 
-        // Agregar cada préstamo a la tabla
+        // Recorrer la lista de préstamos e insertar cada uno en la tabla
         for (Prestamo prestamo : Prestamo.instanciasPrestamos) {
-            String estatus = prestamo.getEstatus() == 1 ? "Activo" : "Inactivo"; // Convertir el estatus a cadena
-
-            Object[] rowData = {
-                    prestamo.getId(),
-                    prestamo.getNombre(),
-                    prestamo.getDescripcion(),
-                    prestamo.getMontoOriginal(),
-                    prestamo.getFechaInicio(), // Asegúrate de que este campo sea de tipo Date o similar
-                    prestamo.getTipoPrestamo(),
-                    prestamo.getPlazo(),
-                    prestamo.getFechaVencimiento(),
-                    prestamo.calcularPagoMensual(), // Calcula la cuota mensual usando el método de la clase Prestamo
-                    prestamo.getCuentaBancaria().getNumeroCuenta() + " " + prestamo.getCuentaBancaria().getNombre(),
-                    prestamo.getTasaInteres(),
-                    estatus // Asignar el estatus como cadena
-            };
-            modelo_tabla_prestamos.addRow(rowData);
+            Object[] fila = new Object[12];
+            fila[0] = prestamo.getId();
+            fila[1] = prestamo.getNombre();
+            fila[2] = prestamo.getDescripcion();
+            fila[3] = prestamo.getMontoOriginal();
+            fila[4] = prestamo.getFechaInicio();
+            fila[5] = prestamo.getTipoPrestamo();
+            fila[6] = prestamo.getPlazo();
+            fila[7] = prestamo.getFechaVencimiento();
+            fila[8] = prestamo.calcularPagoMensual();
+            fila[9] = prestamo.getCuentaBancaria().getNumeroCuenta() + " " + prestamo.getCuentaBancaria().getNombre();
+            fila[10] = prestamo.getTasaInteres();
+            fila[11] = prestamo.getEstatus();
+            modelo_tabla_prestamos.addRow(fila);
             adjustColumnWidths(tabla_prestamos);
         }
     }
+
+    private void limpiarCamposFormulario() {
+        tf_nombre.setText("");
+        tf_descripcion.setText("");
+        cb_tipo.setSelectedIndex(-1);
+        tf_monto_original.setText("");
+        tf_plazo.setText("");
+        cb_estatus.setSelectedIndex(-1);
+        cb_cuentabancaria.setSelectedIndex(-1);
+        tf_taza_interes.setText("");
+        datePicker.getModel().setValue(null);
+    }
+
+
 
     private class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
         private String datePattern = "yyyy-MM-dd";
