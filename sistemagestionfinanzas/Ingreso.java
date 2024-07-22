@@ -57,7 +57,8 @@ public class Ingreso extends FinanceItem{
 
     //No se calcula el porcentaje de representación de los ingresos porque se reflejan en la cuenta bancaria
     @Override
-    protected void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
+    protected float calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
+        return 0;
     }
 
     @Override

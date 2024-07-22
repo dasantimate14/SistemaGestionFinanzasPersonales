@@ -49,8 +49,7 @@ public class Prestamo extends FinanceItem {
         return info;
     }
 
-    @Override
-    protected void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
+    public static float calcularPorcentajeRepresentacionSubclase(List<FinanceItem> activosPasivos) {
         float totalPasivos = 0;
         float totalPrestamos = 0;
         for (FinanceItem item : activosPasivos) {
@@ -61,7 +60,7 @@ public class Prestamo extends FinanceItem {
             }
         }
         float porcentaje = (totalPrestamos / totalPasivos) * 100;
-        System.out.println("Porcentaje de Representación de los Prestamos: " + porcentaje + "%");
+        return porcentaje;
     }
 
     @Override

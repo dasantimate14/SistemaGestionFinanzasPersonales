@@ -95,8 +95,7 @@ public class Stock extends FinanceItem{
         return sb;
     }
 
-    @Override
-    public void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
+    public static float calcularPorcentajeRepresentacionSubclase(List<FinanceItem> activosPasivos) {
         float valor_total_activos = 0;
         float valorTotalStocks = 0;
         float porcentajeRepresentacion = 0;
@@ -110,7 +109,7 @@ public class Stock extends FinanceItem{
         }
         //Calculo de porcentaje
         porcentajeRepresentacion = (valorTotalStocks/valor_total_activos)*100;
-        System.out.println("El porcentaje de representación de todos los Stocks es " + porcentajeRepresentacion + "% con un valor de " + valorTotalStocks);
+        return porcentajeRepresentacion;
     }
 
     @Override
