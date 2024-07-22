@@ -8,6 +8,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class PlazoFijo extends FinanceItem {
     private int plazo;
@@ -16,22 +17,22 @@ public class PlazoFijo extends FinanceItem {
     static int cantidad_instancias_plazo_fijo;
     public static List<PlazoFijo> instancias_plazos_fijos = new ArrayList<>();
 
-    public PlazoFijo(String nombre,String descripcion,float montoOriginal, float tasa_interes, LocalDate fecha_inicio, int plazo, CuentaBancaria cuenta) {
+    public PlazoFijo(String nombre, String descripcion, float montoOriginal, float tasa_interes, LocalDate fecha_inicio, int plazo, CuentaBancaria cuenta) {
         super(nombre, descripcion, montoOriginal, "Activo", tasa_interes, fecha_inicio);
         this.plazo = plazo;
         this.cuenta = cuenta;
         this.fecha_final = fecha_inicio.plusYears(plazo);
         instancias_plazos_fijos.add(this);
-        cantidad_instancias_plazo_fijo ++;
+        cantidad_instancias_plazo_fijo++;
     }
 
-    //Metodos get y set de la clase
+    // Métodos get y set de la clase
     public int getPlazo() {
         return plazo;
     }
     public void setPlazo(int nuevo_plazo) {
         this.plazo = nuevo_plazo;
-        this.fecha_final = LocalDate.now().plusMonths(nuevo_plazo);
+        this.fecha_final = getFechaInicio().plusYears(nuevo_plazo);
     }
 
     public LocalDate getFechaFinal() {
@@ -48,43 +49,34 @@ public class PlazoFijo extends FinanceItem {
         this.cuenta = Objects.requireNonNull(cuenta, "La cuenta bancaria no puede ser nula");
     }
 
-    //Metodo para depositar los intereses del plazo fijo mensualmente
+    // Método para depositar los intereses del plazo fijo mensualmente
     private void depositarInteres() throws SQLException, IOException {
-        LocalDate fecha_final = LocalDate.now();
         LocalDate fecha_inicio = getFechaInicio();
         ResultSet rs = null;
-        String consulta = "SELECT MAX(fechaInicio) AS fecha_mas_reciente FROM ingresos WHERE idUsuario = '" + cuenta.getIdUsuario() + "' AND idCuentaBancaria = '" + cuenta.getId() + "' AND descripcion = 'Interes generado por el plazo fijo " + getNombre() +"'";
+        String consulta = "SELECT MAX(fechaInicio) AS fecha_mas_reciente FROM ingresos WHERE idUsuario = '" + cuenta.getIdUsuario() + "' AND idCuentaBancaria = '" + cuenta.getId() + "' AND descripcion = 'Interes generado por el plazo fijo " + getNombre() + "'";
 
-        //Se hace la consulta para obtener la fecha más reciente de registro del plazo fijo de la cuenta que se repite por meses según la frecuencia
-        try{
+        try {
             BaseDeDatos.establecerConexion();
             rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
-            if(rs.next()){
+            if (rs.next()) {
                 String fecha_mas_reciente = rs.getString("fecha_mas_reciente");
                 if (fecha_mas_reciente != null) {
                     fecha_inicio = LocalDate.parse(fecha_mas_reciente);
                 }
             }
-            rs.close();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             BaseDeDatos.cerrarConexion();
         }
 
-        //Si la fecha inicio es igual al getFechaInicio quiere decir que la consulta no encontró una fecha más reciente de deposito y empezará a hacer depositos desde el primer registro del ingreso hasta la fecha actual por mes.
-        while(fecha_inicio.isBefore(fecha_final)){
-
+        while (fecha_inicio.isBefore(getFechaFinal())) {
             fecha_inicio = fecha_inicio.plusMonths(1);
-            //Si despues de sumarle un mes la fecha se pasa de la fecha actual entonces sale del ciclo
-            if(fecha_inicio.isAfter(fecha_final)){
+            if (fecha_inicio.isAfter(getFechaFinal())) {
                 break;
             }
-            //Se crea el objeto que registra el ingreso automaticamente por el programa
             Ingreso ingreso = new Ingreso("Interes del plazo fijo ", "Interes generado por el plazo fijo " + getNombre(), calcularPromedioMensual(), fecha_inicio, cuenta.getBanco(), cuenta);
-            cuenta.depositarMonto(ingreso.montoOriginal);
-
-            //Se guarda el ingreso repetido en la base de datos
+            cuenta.depositarMonto(ingreso.getMontoOriginal());
             ingreso.guardarIngresoBaseDatos();
         }
     }
@@ -92,14 +84,14 @@ public class PlazoFijo extends FinanceItem {
     public float calcularInteresAcumulado() {
         LocalDate fecha_actual = LocalDate.now();
         long dias_transcurridos = ChronoUnit.DAYS.between(getFechaInicio(), getFechaFinal());
-        return redonderCantidad((float) (getMontoOriginal() * (getTasaInteres()/100) * (dias_transcurridos / 365.0)));
+        return redonderCantidad((float) (getMontoOriginal() * (getTasaInteres() / 100) * (dias_transcurridos / 365.0)));
     }
 
     public float calcularMontoFinal() {
-        float monto_original = cuenta.getMontoOriginal();
+        float monto_original = getMontoOriginal();
         float interes_final = 0;
         try {
-            interes_final = calcularPromedioAnual()*getPlazo();
+            interes_final = calcularPromedioAnual() * getPlazo();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,7 +101,17 @@ public class PlazoFijo extends FinanceItem {
     // Método para guardar el plazo fijo en la base de datos
     public void guardarPlazoFijoEnBaseDatos() {
         String consulta_registro = "INSERT INTO plazos_fijos (id, nombre, descripcion, montoOriginal, tasaInteres, fechaInicio, plazo, fechaFinal, idUsuario, idCuentaBancaria) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String[] parametros = {getNombre(), getDescripcion(), String.valueOf(getMontoOriginal()), String.valueOf(getTasaInteres()), String.valueOf(getFechaInicio()), String.valueOf(getPlazo()), String.valueOf(getFechaFinal()), cuenta.getIdUsuario(), cuenta.getId()};
+        String[] parametros = {
+                getNombre(),
+                getDescripcion(),
+                String.valueOf(getMontoOriginal()),
+                String.valueOf(getTasaInteres()),
+                String.valueOf(getFechaInicio()),
+                String.valueOf(getPlazo()),
+                String.valueOf(getFechaFinal()),
+                cuenta.getIdUsuario(),
+                cuenta.getId()
+        };
         try {
             BaseDeDatos.establecerConexion();
             boolean registroExitoso = BaseDeDatos.ejecutarActualizacion(consulta_registro, parametros);
@@ -123,9 +125,8 @@ public class PlazoFijo extends FinanceItem {
         }
     }
 
-
     @Override
-    protected float calcularValorActual() throws IOException {
+    public float calcularValorActual() throws IOException {
         setMontoActual(getMontoOriginal() + calcularInteresAcumulado());
         return getMontoActual();
     }
@@ -143,7 +144,6 @@ public class PlazoFijo extends FinanceItem {
     protected void calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
         float valor_total_plazos_fijos = 0;
         float valor_total_activos = 0;
-        float porcentaje_representacion = 0;
         for (FinanceItem activo : activosPasivos) {
             valor_total_activos += activo.getMontoActual();
             if (activo instanceof PlazoFijo) {
@@ -151,20 +151,19 @@ public class PlazoFijo extends FinanceItem {
                 valor_total_plazos_fijos += cuenta.getMontoActual();
             }
         }
-        porcentaje_representacion = redonderCantidad((valor_total_plazos_fijos / valor_total_activos)*100);
+        float porcentaje_representacion = redonderCantidad((valor_total_plazos_fijos / valor_total_activos) * 100);
         System.out.println("El porcentaje de Representación de todos los plazos fijos es " + porcentaje_representacion + " con un valor de " + valor_total_plazos_fijos);
-
     }
 
     @Override
     protected float calcularPromedioMensual() throws SQLException, IOException {
-        setPromedioMensual(redonderCantidad(getMontoOriginal()*((getTasaInteres()/100)/12)));
+        setPromedioMensual(redonderCantidad(getMontoOriginal() * ((getTasaInteres() / 100) / 12)));
         return getPromedioMensual();
     }
 
     @Override
-    protected float calcularPromedioAnual() throws IOException {
-        return redonderCantidad(getMontoOriginal()*(getTasaInteres()/100));
+    public float calcularPromedioAnual() throws IOException {
+        return redonderCantidad(getMontoOriginal() * (getTasaInteres() / 100));
     }
 
     @Override
@@ -188,29 +187,26 @@ public class PlazoFijo extends FinanceItem {
         return null;
     }
 
-    //Metodo para encontrar el valor de esta cuenta bancaria dentro de todas las cuentas bancarias
-    public void calcularPorcentajeRepresentacionPlazoFijo(){
+    // Método para encontrar el valor de esta cuenta bancaria dentro de todas las cuentas bancarias
+    public void calcularPorcentajeRepresentacionPlazoFijo() {
         float total_plazos_fijos = 0;
-        float porcentaje_representacion = 0;
-        for(PlazoFijo plazo_fijo : instancias_plazos_fijos){
+        for (PlazoFijo plazo_fijo : instancias_plazos_fijos) {
             total_plazos_fijos += plazo_fijo.getMontoActual();
         }
-        porcentaje_representacion = (getMontoActual() / total_plazos_fijos) * 100;
+        float porcentaje_representacion = (getMontoActual() / total_plazos_fijos) * 100;
         System.out.println("El porcentaje representacion es " + redonderCantidad(porcentaje_representacion) + "% con un valor de " + getMontoActual());
     }
 
     public static void obtenerPlazoFijosBaseDatos(String id_usuario) throws SQLException {
-        PlazoFijo plazo_fijo = null;
         String consulta = "SELECT * FROM plazos_fijos WHERE idUsuario = ?";
         String[] parametro = {id_usuario};
         try {
             BaseDeDatos.establecerConexion();
             ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametro);
-            if(rs == null){
+            if (rs == null) {
                 throw new SQLException("No se puede obtener ningún plazo fijo para este usuario");
             }
             while (rs.next()) {
-                // Leer cada uno de los campos en el ResultSet para manejar la información
                 String id = rs.getString("id");
                 String nombre = rs.getString("nombre");
                 String descripcion = rs.getString("descripcion");
@@ -222,16 +218,13 @@ public class PlazoFijo extends FinanceItem {
                 String id_cuenta_bancaria = rs.getString("idCuentaBancaria");
 
                 CuentaBancaria cuenta_viculada = null;
-                for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
-                    if(cuenta.getId().equals(id_cuenta_bancaria)) {
+                for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
+                    if (cuenta.getId().equals(id_cuenta_bancaria)) {
                         cuenta_viculada = cuenta;
-                        //Se crea el objeto con los datos capturados
-                        plazo_fijo = new PlazoFijo(nombre, descripcion, monto_original, tasa_interes,fecha_inicio, plazo, cuenta_viculada);
+                        PlazoFijo plazo_fijo = new PlazoFijo(nombre, descripcion, monto_original, tasa_interes, fecha_inicio, plazo, cuenta_viculada);
                         plazo_fijo.setId(id);
                     }
                 }
-
-
             }
         } catch (SQLException ex) {
             throw ex;
@@ -239,6 +232,7 @@ public class PlazoFijo extends FinanceItem {
             BaseDeDatos.cerrarConexion();
         }
     }
+
     public void eliminarPlazoFijoEnBaseDatos() {
         String consulta_eliminacion = "DELETE FROM plazos_fijos WHERE id = ?";
         String[] parametros = {getId()};
@@ -254,7 +248,4 @@ public class PlazoFijo extends FinanceItem {
             BaseDeDatos.cerrarConexion();
         }
     }
-
 }
-
-

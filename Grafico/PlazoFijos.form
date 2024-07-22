@@ -166,79 +166,15 @@
           <text value=""/>
         </properties>
       </component>
-      <component id="1b02" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Interes Mensual"/>
-        </properties>
-      </component>
-      <component id="2418f" class="javax.swing.JTextField" binding="tf_interes_anual">
-        <constraints>
-          <grid row="6" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties/>
-      </component>
-      <component id="384bb" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="6" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Interes Anual"/>
-        </properties>
-      </component>
-      <component id="a1d9" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="7" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Interes Acumulado"/>
-        </properties>
-      </component>
-      <component id="8baf6" class="javax.swing.JTextField" binding="tf_interes_acumulado">
-        <constraints>
-          <grid row="7" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties/>
-      </component>
-      <component id="4444d" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Interes Actual"/>
-        </properties>
-      </component>
-      <component id="31e52" class="javax.swing.JTextField" binding="tf_interes_mensual">
-        <constraints>
-          <grid row="5" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties/>
-      </component>
-      <component id="9f7df" class="javax.swing.JTextField" binding="tf_interes_actual">
-        <constraints>
-          <grid row="4" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties/>
-      </component>
       <component id="94052" class="javax.swing.JLabel">
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Ingresas ID Plazo fijo"/>
+          <text value="Ingresar ID Plazo fijo"/>
         </properties>
       </component>
-      <component id="f6d05" class="javax.swing.JTextField" binding="tfId_plazo">
+      <component id="f6d05" class="javax.swing.JTextField" binding="tf_id_plazo">
         <constraints>
           <grid row="3" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -414,14 +350,19 @@
       </component>
       <scrollpane id="2137d" binding="sp_plazo_fijo">
         <constraints>
-          <grid row="16" column="3" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="16" column="3" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <horizontalScrollBarPolicy value="32"/>
+          <verticalScrollBarPolicy value="22"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="6c838" class="javax.swing.JTable" binding="plazofijo_table">
             <constraints/>
-            <properties/>
+            <properties>
+              <autoResizeMode value="0"/>
+            </properties>
           </component>
         </children>
       </scrollpane>
