@@ -83,7 +83,7 @@ public class RegistrarUsuario extends JFrame {
                     BaseDeDatos.establecerConexion();
 
                     if (Usuario.correoExistente(correo)) {
-                        JOptionPane.showMessageDialog(null, "El correo ya está registrado.");
+                        JOptionPane.showMessageDialog(null, "El correo ya está registrado.","Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
 
