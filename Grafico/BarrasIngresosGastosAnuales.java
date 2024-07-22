@@ -8,6 +8,7 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import sistemagestionfinanzas.Gasto;
 import sistemagestionfinanzas.Ingreso;
+import sistemagestionfinanzas.Usuario;
 
 import javax.swing.*;
 import java.time.LocalDate;
@@ -48,8 +49,8 @@ public class BarrasIngresosGastosAnuales extends JPanel{
         int anio_actual = fecha_actual.getYear();
 
         // Se obtienen las sumatorias de gastos e ingresos para los últimos cinco años
-        List<Float> ingresos_ultimos_cinco_anos = Ingreso.obtenerIngresosAnualesRecientes("abc123");
-        List<Float> gastos_ultimos_cinco_anos = Gasto.obtenerGastosAnualesRecientes("abc123");
+        List<Float> ingresos_ultimos_cinco_anos = Ingreso.obtenerIngresosAnualesRecientes(Usuario.getIdUsuarioActual());
+        List<Float> gastos_ultimos_cinco_anos = Gasto.obtenerGastosAnualesRecientes(Usuario.getIdUsuarioActual());
 
         // Agregar datos para cada serie
         for (int i = 0; i < ingresos_ultimos_cinco_anos.size(); i++) {

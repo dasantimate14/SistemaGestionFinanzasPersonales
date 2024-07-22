@@ -125,7 +125,7 @@ public class PlazoFijo extends FinanceItem {
 
 
     @Override
-    protected float calcularValorActual() throws IOException {
+    public float calcularValorActual() throws IOException {
         setMontoActual(getMontoOriginal() + calcularInteresAcumulado());
         return getMontoActual();
     }
@@ -155,13 +155,13 @@ public class PlazoFijo extends FinanceItem {
     }
 
     @Override
-    protected float calcularPromedioMensual() throws SQLException, IOException {
+    public float calcularPromedioMensual() throws SQLException, IOException {
         setPromedioMensual(redonderCantidad(getMontoOriginal()*((getTasaInteres()/100)/12)));
         return getPromedioMensual();
     }
 
     @Override
-    protected float calcularPromedioAnual() throws IOException {
+    public float calcularPromedioAnual() throws IOException {
         return redonderCantidad(getMontoOriginal()*(getTasaInteres()/100));
     }
 
