@@ -28,7 +28,8 @@ public class TarjetaCredito extends FinanceItem {
         this.cuentaBancaria = cuentaBancaria;
         this.creditoUsado = calcularCreditoUsado();
         instanciasTarjetas.add(this);
-        cantidad_instancias ++;
+        cantidad_instancias++;
+        System.out.println("Tarjeta creada: " + this.getNumero());
     }
 
     // Métodos para calcular el crédito usado

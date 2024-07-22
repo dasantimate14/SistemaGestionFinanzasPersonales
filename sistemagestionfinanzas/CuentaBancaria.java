@@ -76,7 +76,7 @@ public class CuentaBancaria extends FinanceItem{
 
     //Calcula el promedio de los balances mensuales
     @Override
-    protected float calcularPromedioMensual() throws SQLException, IOException {
+    public float calcularPromedioMensual() throws SQLException, IOException {
         //Arreglo para guardar todos los balances mensuales
         List<Float> balances_mensuales = new ArrayList<>();
         float sumatoria_balances = 0;
@@ -93,7 +93,7 @@ public class CuentaBancaria extends FinanceItem{
 
     //Calcula el promedio de los balances anuales
     @Override
-    protected float calcularPromedioAnual() throws IOException {
+    public float calcularPromedioAnual() throws IOException {
         float sumatoria_balances = 0;
         float promedio_anual;
         //Arreglo para guardar todos los balances mensuales

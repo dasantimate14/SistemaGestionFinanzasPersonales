@@ -3,6 +3,9 @@ package Grafico;
 import sistemagestionfinanzas.CuentaBancaria;
 import sistemagestionfinanzas.PlazoFijo;
 
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -29,11 +32,6 @@ public class PlazoFijos extends JFrame {
     private JButton stocks_button;
     private JButton tarjetas_de_creditos_button;
     private JButton prestamos_button;
-    private JTextField tf_interes_mensual;
-    private JTextField tf_interes_anual;
-    private JTextField tf_interes_actual;
-    private JTextField tf_interes_acumulado;
-    private JTextField tfId_plazo;
     private JButton btn_eliminar_plazo;
     private JButton btn_agregar_plazo;
     private JTextField tf_nombre;
@@ -44,7 +42,6 @@ public class PlazoFijos extends JFrame {
     private JPanel fecha_final_panel;
     private JTextField tf_plazo;
     private JComboBox<String> cb_cuenta_banco;
-    private JTable plazofijoTable;
     private JScrollPane sp_plazo_fijo;
     private JTextField tf_tipo;
     private JDatePickerImpl datePickerInicio;
@@ -57,6 +54,23 @@ public class PlazoFijos extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setContentPane(polazo_fijos_panel);
+
+        // Configurar el modelo de la tabla
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("ID");
+        model.addColumn("Nombre");
+        model.addColumn("Monto Original");
+        model.addColumn("Tasa de Interés");
+        model.addColumn("Fecha de Inicio");
+        model.addColumn("Plazo");
+        model.addColumn("Fecha de Vencimiento");
+        model.addColumn("Cuenta Bancaria");
+        model.addColumn("Interés Acumulado");
+        model.addColumn("Monto Final");
+        model.addColumn("Valor Actual");
+        model.addColumn("Promedio Mensual");
+        model.addColumn("Promedio Anual");
+        plazofijo_table.setModel(model);
 
         cargarCuentasBancarias();
         cargarDatosPlazoFijos();
@@ -126,17 +140,6 @@ public class PlazoFijos extends JFrame {
                 }
             }
         });
-
-        btn_eliminar_plazo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    eliminarPlazoFijo();
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error al eliminar plazo fijo: " + ex.getMessage());
-                }
-            }
-        });
     }
 
     private void inicializarDatePickers() {
@@ -151,7 +154,6 @@ public class PlazoFijos extends JFrame {
         fecha_inicio_panel.setLayout(new BorderLayout());
         fecha_inicio_panel.add(datePickerInicio, BorderLayout.CENTER);
 
-        // Implementación del JDatePicker para fecha de vencimiento
         UtilDateModel modelVencimiento = new UtilDateModel();
         Properties pVencimiento = new Properties();
         pVencimiento.put("text.today", "Hoy");
@@ -204,18 +206,18 @@ public class PlazoFijos extends JFrame {
             throw new Exception("El plazo solo debe contener números.");
         }
 
-        Date fechaInicio = (Date) datePickerInicio.getModel().getValue();
-        if (fechaInicio == null) {
+        Date fecha_inicio = (Date) datePickerInicio.getModel().getValue();
+        if (fecha_inicio == null) {
             throw new Exception("Debe seleccionar una fecha de inicio.");
         }
 
-        Date fechaFinal = (Date) datePickerFinal.getModel().getValue();
-        if (fechaFinal == null) {
+        Date fecha_final = (Date) datePickerFinal.getModel().getValue();
+        if (fecha_final == null) {
             throw new Exception("Debe seleccionar una fecha de vencimiento.");
         }
 
         // Nueva validación: fecha de inicio no puede ser más reciente que la fecha de vencimiento
-        if (fechaInicio.after(fechaFinal)) {
+        if (fecha_inicio.after(fecha_final)) {
             throw new Exception("La fecha de inicio no puede ser más reciente que la fecha de vencimiento.");
         }
 
@@ -225,11 +227,9 @@ public class PlazoFijos extends JFrame {
         }
     }
 
-
-
     private void cargarCuentasBancarias() {
         cb_cuenta_banco.removeAllItems();
-        for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias){
+        for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
             cb_cuenta_banco.addItem(cuenta.getNombre() + " " + cuenta.getNombre());
         }
     }
@@ -237,7 +237,7 @@ public class PlazoFijos extends JFrame {
     private void cargarDatosPlazoFijos() {
         try {
             DefaultTableModel model = (DefaultTableModel) plazofijo_table.getModel();
-            model.setRowCount(0);
+            model.setRowCount(0); // Limpiar la tabla antes de cargar los nuevos datos
             for (PlazoFijo plazo : PlazoFijo.instancias_plazos_fijos) {
                 model.addRow(new Object[]{
                         plazo.getId(),
@@ -247,9 +247,17 @@ public class PlazoFijos extends JFrame {
                         plazo.getFechaInicio(),
                         plazo.getPlazo(),
                         plazo.getFechaFinal(),
-                        plazo.getCuenta().getId()
+                        plazo.getCuenta().getNumeroCuenta(),
+                        plazo.calcularInteresAcumulado(),
+                        plazo.calcularMontoFinal(),
+                        plazo.calcularValorActual(),
+                        plazo.calcularPromedioMensual(),
+                        plazo.calcularPromedioAnual()
                 });
             }
+            adjustColumnWidths(plazofijo_table);
+
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al cargar datos de plazos fijos: " + e.getMessage());
         }
@@ -257,7 +265,9 @@ public class PlazoFijos extends JFrame {
 
     private void agregarPlazoFijo() throws SQLException {
         try {
+            System.out.println("Iniciando la validación de datos...");
             validarDatos();
+            System.out.println("Validación de datos exitosa.");
 
             String nombre = tf_nombre.getText();
             String descripcion = tf_descripcion.getText();
@@ -269,10 +279,12 @@ public class PlazoFijos extends JFrame {
             int plazo = Integer.parseInt(tf_plazo.getText());
             String cuenta_selecinada = (String) cb_cuenta_banco.getSelectedItem();
 
+            System.out.println("Datos obtenidos: " + nombre + ", " + descripcion + ", " + tipo + ", " + monto_original + ", " + tasa_interes + ", " + fecha_inicio + ", " + fecha_final + ", " + plazo + ", " + cuenta_selecinada);
+
             CuentaBancaria cuenta_vinculada = null;
-            for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias){
+            for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
                 String cuenta_buscada = cuenta.getNombre() + " " + cuenta.getNombre();
-                if(cuenta_buscada.equals(cuenta_selecinada)){
+                if (cuenta_buscada.equals(cuenta_selecinada)) {
                     cuenta_vinculada = cuenta;
                     break;
                 }
@@ -282,37 +294,31 @@ public class PlazoFijos extends JFrame {
                 return;
             }
 
+            System.out.println("Cuenta vinculada encontrada: " + cuenta_vinculada.getNombre());
+
             PlazoFijo nuevoPlazo = new PlazoFijo(nombre, descripcion, monto_original, tasa_interes, fecha_inicio, plazo, cuenta_vinculada);
-            //nuevoPlazo.guardarPlazoFijoEnBaseDatos();
-            cargarDatosPlazoFijos();
+            // Descomentar la línea de guardar en base de datos si es necesario
+            // nuevoPlazo.guardarPlazoFijoEnBaseDatos();
+            PlazoFijo.instancias_plazos_fijos.add(nuevoPlazo);
+            System.out.println("Nuevo plazo fijo agregado a las instancias.");
+
+            cargarDatosPlazoFijos(); // Recargar los datos de la tabla después de agregar un nuevo plazo fijo
+            System.out.println("Datos de plazos fijos recargados.");
+
+            JOptionPane.showMessageDialog(this, "Plazo fijo agregado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Error en el formato de los datos: " + e.getMessage());
+            System.out.println("Error en el formato de los datos: " + e.getMessage());
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al guardar el plazo fijo en la base de datos: " + e.getMessage());
+            System.out.println("Error al guardar el plazo fijo en la base de datos: " + e.getMessage());
             throw e;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error en la validación de datos: " + e.getMessage());
+            System.out.println("Error en la validación de datos: " + e.getMessage());
         }
     }
 
-    private void eliminarPlazoFijo() throws SQLException {
-        int selectedRow = plazofijo_table.getSelectedRow();
-        if (selectedRow >= 0) {
-            try {
-                String idPlazo = plazofijo_table.getValueAt(selectedRow, 0).toString();
-                PlazoFijo plazoFijo = PlazoFijo.encontrarPlazoFijoPorId(idPlazo);
-                if (plazoFijo != null) {
-                    plazoFijo.eliminarPlazoFijoEnBaseDatos();
-                    PlazoFijo.instancias_plazos_fijos.remove(plazoFijo);
-                    cargarDatosPlazoFijos();
-                }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error al eliminar el plazo fijo: " + e.getMessage());
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Por favor, seleccione un plazo fijo para eliminar.");
-        }
-    }
 
     @Override
     public void setVisible(boolean visible) {
@@ -349,5 +355,28 @@ public class PlazoFijos extends JFrame {
             }
             return "";
         }
+    }
+
+    private static void adjustColumnWidths(JTable table) {
+        TableColumnModel columnModel = table.getColumnModel();
+        TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+
+        for (int i = 0; i < columnModel.getColumnCount(); i++) {
+            TableColumn column = columnModel.getColumn(i);
+
+            int maxWidth = headerRenderer.getTableCellRendererComponent(table, column.getHeaderValue(), false, false, 0, i).getPreferredSize().width;
+
+            // Calculate the maximum width based on cell contents
+            for (int j = 0; j < table.getRowCount(); j++) {
+                Object value = table.getValueAt(j, i);
+                int cellWidth = table.getCellRenderer(j, i).getTableCellRendererComponent(table, value, false,
+                        false, j, i).getPreferredSize().width;
+                maxWidth = Math.max(maxWidth, cellWidth);
+            }
+
+            // Set the preferred width
+            column.setPreferredWidth(maxWidth + 5); // Add some padding
+        }
+
     }
 }
