@@ -2,6 +2,7 @@ package Grafico;
 
 import sistemagestionfinanzas.CuentaBancaria;
 import sistemagestionfinanzas.PlazoFijo;
+import sistemagestionfinanzas.Usuario;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -136,35 +137,4 @@ public class CuentaBancariaG extends JFrame {
         });
     }
 
-    private void validarDatosAgregarCuenta() throws Exception {
-        String nombreCuenta = "nombreCuentaEjemplo";
-        String numeroCuenta = "numeroCuentaEjemplo";
-
-        if (nombreCuenta.isEmpty() || nombreCuenta == null) {
-            throw new Exception("Debe ingresar el nombre de la cuenta.");
-        }
-
-        if (numeroCuenta.isEmpty() || numeroCuenta == null) {
-            throw new Exception("Debe ingresar el número de la cuenta.");
-        }
-        if (!numeroCuenta.matches("[0-9-]+")) {
-            throw new Exception("El número de cuenta solo puede contener números y guiones.");
-        }
-        if (numeroCuenta.length() > 20) {
-            throw new Exception("El número de cuenta no puede tener más de 20 caracteres.");
-        }
-    }
-
-    private void validarDatosConsultarMovimientos() throws Exception {
-        String numeroCuenta = "numeroCuentaEjemplo";
-        if (numeroCuenta.isEmpty() || numeroCuenta == null) {
-            throw new Exception("Debe ingresar el número de la cuenta.");
-        }
-        if (!numeroCuenta.matches("[0-9-]+")) {
-            throw new Exception("El número de cuenta solo puede contener números y guiones.");
-        }
-        if (numeroCuenta.length() > 20) {
-            throw new Exception("El número de cuenta no puede tener más de 20 caracteres.");
-        }
-    }
 }

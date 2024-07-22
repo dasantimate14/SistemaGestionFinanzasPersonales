@@ -173,8 +173,9 @@ public class Tarjetas extends JFrame {
             return;
         }
 
-        TarjetaCredito nuevaTarjeta = new TarjetaCredito(nombre, descripcion, monto_original, fecha_inicio, tipo_tarjeta, limite_credito, numero_tarjeta, cuenta_vinculada);
-        //nuevaTarjeta.guardarTarjetaBaseDatos();
+        TarjetaCredito nueva_tarjeta = new TarjetaCredito(nombre, descripcion, monto_original, fecha_inicio, tipo_tarjeta, limite_credito, numero_tarjeta, cuenta_vinculada);
+        nueva_tarjeta.guardarTarjetaBaseDatos();
+        nueva_tarjeta.actualizarInformacion();
         cargarDatosTarjetas(); // Recargar los datos de la tabla después de agregar una nueva tarjeta
     }
 

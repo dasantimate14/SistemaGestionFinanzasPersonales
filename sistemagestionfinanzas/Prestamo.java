@@ -79,6 +79,9 @@ public class Prestamo extends FinanceItem {
         this.cuota_mensual = calcularPagoMensual();
         setInteres(calcularInteresAcumulado());
         descontarCuota();
+        if(fechaInicio.equals(LocalDate.now())) {
+            setEstatus(0);
+        }
     }
 
     public String getTipoPrestamo() {

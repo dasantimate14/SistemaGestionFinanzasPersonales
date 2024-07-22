@@ -157,14 +157,11 @@ public class Prestamos extends JFrame {
                     }
 
                     // Crear el objeto Prestamo con los datos capturados
-                    Prestamo nuevoPrestamo = new Prestamo(nombre, descripcion, montoOriginal, tasaInteres, fechaInicio, tipoPrestamo, plazo, cuentaVinculada);
-
-                    // Asignar estatus al préstamo
-                    nuevoPrestamo.setEstatus(estatusInt);
+                    Prestamo nuevo_prestamo = new Prestamo(nombre, descripcion, montoOriginal, tasaInteres, fechaInicio, tipoPrestamo, plazo, cuentaVinculada);
 
                     // Guardar el préstamo en la base de datos
-                    nuevoPrestamo.guardarPrestamoBaseDatos();
-                    nuevoPrestamo.actualizarInformacion();
+                    nuevo_prestamo.guardarPrestamoBaseDatos();
+                    nuevo_prestamo.actualizarInformacion();
 
                     // Cargar los préstamos en la tabla
                     cargarPrestamos();

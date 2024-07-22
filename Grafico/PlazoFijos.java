@@ -296,11 +296,9 @@ public class PlazoFijos extends JFrame {
 
             System.out.println("Cuenta vinculada encontrada: " + cuenta_vinculada.getNombre());
 
-            PlazoFijo nuevoPlazo = new PlazoFijo(nombre, descripcion, monto_original, tasa_interes, fecha_inicio, plazo, cuenta_vinculada);
-            // Descomentar la línea de guardar en base de datos si es necesario
-            // nuevoPlazo.guardarPlazoFijoEnBaseDatos();
-            PlazoFijo.instancias_plazos_fijos.add(nuevoPlazo);
-            System.out.println("Nuevo plazo fijo agregado a las instancias.");
+            PlazoFijo nuevo_plazo = new PlazoFijo(nombre, descripcion, monto_original, tasa_interes, fecha_inicio, plazo, cuenta_vinculada);
+            nuevo_plazo.guardarPlazoFijoEnBaseDatos();
+            nuevo_plazo.actualizarInformacion();
 
             cargarDatosPlazoFijos(); // Recargar los datos de la tabla después de agregar un nuevo plazo fijo
             System.out.println("Datos de plazos fijos recargados.");

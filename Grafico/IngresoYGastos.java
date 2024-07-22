@@ -161,9 +161,10 @@ public class IngresoYGastos extends JFrame {
                         JOptionPane.showMessageDialog(IngresoYGastos.this, "Cuenta bancaria seleccionada no encontrada.", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
-                    Ingreso ingreso = new Ingreso(nombre, descripcion, montoOriginal, fechaInicio, fuente, cuentaVinculada, frecuencia);
 
+                    Ingreso ingreso = new Ingreso(nombre, descripcion, montoOriginal, fechaInicio, fuente, cuentaVinculada, frecuencia);
                     ingreso.guardarIngresoBaseDatos();
+                    ingreso.actualizarInformacion();
 
                     Object[] fila_ingreso = {ingreso.getId(), ingreso.getNombre(), ingreso.getDescripcion(), ingreso.getFuente(), ingreso.getCuentaBancaria().getNombre() +" "+ ingreso.getCuentaBancaria().getNumeroCuenta(), ingreso.getFrecuencia(), ingreso.getFechaInicio(), ingreso.getMontoOriginal(), };
 
@@ -208,8 +209,9 @@ public class IngresoYGastos extends JFrame {
                     }
 
                     Gasto gasto = new Gasto(nombre, descripcion, montoOriginal, fechaInicio, acreedor, frecuencia, categoriaGasto, cuentaVinculada);
-
                     gasto.guardarGastoBaseDatos();
+                    gasto.actualizarInformacion();
+
                     Object[] fila_gasto = {gasto.getId(), gasto.getNombre(), gasto.getAcreedor(), gasto.getDescripcion(), gasto.getCuenta().getNumeroCuenta()+ " " + gasto.getCuenta().getNombre(), gasto.getFrecuencia(), gasto.getFechaInicio(), gasto.getMontoOriginal(), gasto.getCategoriaGasto(), gasto.getEstatus()};
 
                     gasto_modelo.addRow(fila_gasto);
