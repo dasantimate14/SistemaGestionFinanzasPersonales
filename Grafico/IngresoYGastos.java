@@ -99,7 +99,7 @@ public class IngresoYGastos extends JFrame {
 
         //Configuración de la tabla ingreso
         ingreso_modelo = new DefaultTableModel();
-        ingreso_modelo.setColumnIdentifiers(new String[] {"ID","Nombre", "Descripción", "Fuente", "Cuenta de banco", "Frecuencia", "Fecha", "monto"});
+        ingreso_modelo.setColumnIdentifiers(new String[]{"ID", "Nombre", "Descripción", "Fuente", "Cuenta de banco", "Frecuencia", "Fecha", "monto"});
         table_ingreso.setModel(ingreso_modelo);
         table_ingreso.getTableHeader().setReorderingAllowed(false);
         table_ingreso.getColumnModel().getColumn(0).setPreferredWidth(50);
@@ -114,7 +114,7 @@ public class IngresoYGastos extends JFrame {
 
         //Configuración de la tabla Gasto
         gasto_modelo = new DefaultTableModel();
-        gasto_modelo.setColumnIdentifiers(new String[] {"ID","Nombre", "Acreedor", "Descripción", "Cuenta de banco", "Frecuencia", "Fecha", "monto","Categoría","Estatus"});
+        gasto_modelo.setColumnIdentifiers(new String[]{"ID", "Nombre", "Acreedor", "Descripción", "Cuenta de banco", "Frecuencia", "Fecha", "monto", "Categoría", "Estatus"});
         table_gasto.setModel(gasto_modelo);
         table_ingreso.getTableHeader().setReorderingAllowed(false);
         table_gasto.getColumnModel().getColumn(0).setPreferredWidth(50);
@@ -135,22 +135,51 @@ public class IngresoYGastos extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 try {
-                    String nombre = tf_nombre_ingresos.getText();
-                    String descripcion = tf_descripcion_ingr.getText();
-                    // Obtener la fecha del JDatePicker y convertirla a LocalDate
-                    Date date_ingreso = (Date) date_picker_ingreso.getModel().getValue();
-                    LocalDate fechaInicio = date_ingreso.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    String fuente = tf_fuente_ingreso.getText();
-                    float montoOriginal = Float.parseFloat(tf_monto_ingreso.getText());
-                    //CuentaBancaria cuenta_bancaria = (CuentaBancaria) cb_cuenta_gasto.getSelectedItem();
-                    String cuentaSeleccionada = (String) cb_cuenta_gasto.getSelectedItem();
-                    int frecuencia = Integer.parseInt(cb_frecuencia_ing.getSelectedItem().toString());
 
+                    String nombre = tf_nombre_ingresos.getText();
+                        if (nombre.isEmpty()) throw new IllegalArgumentException("El campo 'Nombre' no puede estar vacío.");
+
+                    String descripcion = tf_descripcion_ingr.getText();
+
+                    // Obtener la fecha del JDatePicker y convertirla a LocalDate
+
+                    Date date_ingreso = (Date) date_picker_ingreso.getModel().getValue();
+                    if (date_ingreso == null) {
+                        throw new IllegalArgumentException("Por favor, seleccione una fecha de ingreso.");
+                    }
+                    LocalDate fechaInicio = date_ingreso.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                    float montoOriginal;
+                    try {
+                        montoOriginal = Float.parseFloat(tf_monto_ingreso.getText());
+                        if (montoOriginal <= 0) {
+                            throw new IllegalArgumentException("El monto debe ser mayor a cero.");
+                        }
+                        if (montoOriginal * 100 != Math.floor(montoOriginal * 100)) {
+                            throw new IllegalArgumentException("El monto solo puede tener hasta 2 decimales.");
+                        }
+                    } catch (NumberFormatException ex) {
+                        throw new IllegalArgumentException("Monto inválido. Por favor ingrese un número válido.");
+                    }
+                    String cuentaSeleccionada = (String) cb_cuenta_gasto.getSelectedItem();
+                    if (cuentaSeleccionada == null || cuentaSeleccionada.isEmpty()) {
+                        throw new IllegalArgumentException("Por favor, seleccione una cuenta bancaria.");
+                    }
+
+                    String fuente = tf_fuente_ingreso.getText();
+                    if (fuente.isEmpty()) {
+                        throw new IllegalArgumentException("El campo 'Fuente' no puede estar vacío.");
+                    }
+
+                    String frecuencia_ing = (String) cb_frecuencia_ing.getSelectedItem();
+                    if (frecuencia_ing == null || frecuencia_ing.isEmpty())
+                        throw new IllegalArgumentException("El campo 'Frecuencia' no puede estar vacío.");
+                    int frecuencia = Integer.parseInt(frecuencia_ing);
 
                     // Encontrar la cuenta bancaria seleccionada
                     CuentaBancaria cuentaVinculada = null;
                     for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
-                        String cuentaBuscada = cuenta.getNumeroCuenta().toString()+" "+cuenta.getNombre().toString();
+                        String cuentaBuscada = cuenta.getNumeroCuenta().toString() + " " + cuenta.getNombre().toString();
                         if (cuentaBuscada.equals(cuentaSeleccionada)) {
                             cuentaVinculada = cuenta;
                             break;
@@ -165,7 +194,7 @@ public class IngresoYGastos extends JFrame {
 
                     ingreso.guardarIngresoBaseDatos();
 
-                    Object[] fila_ingreso = {ingreso.getId(), ingreso.getNombre(), ingreso.getDescripcion(), ingreso.getFuente(), ingreso.getCuentaBancaria().getNombre() +" "+ ingreso.getCuentaBancaria().getNumeroCuenta(), ingreso.getFrecuencia(), ingreso.getFechaInicio(), ingreso.getMontoOriginal(), };
+                    Object[] fila_ingreso = {ingreso.getId(), ingreso.getNombre(), ingreso.getDescripcion(), ingreso.getFuente(), ingreso.getCuentaBancaria().getNombre() + " " + ingreso.getCuentaBancaria().getNumeroCuenta(), ingreso.getFrecuencia(), ingreso.getFechaInicio(), ingreso.getMontoOriginal(),};
 
                     ingreso_modelo.addRow(fila_ingreso);
 
@@ -183,19 +212,52 @@ public class IngresoYGastos extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     String nombre = tf_nombre_gasto.getText();
-                    String descripcion = tf_descripcion_gasto.getText();
-                    float montoOriginal = Float.parseFloat(tf_monto_gasto.getText());
-                    Date date_gasto = (Date) date_picker_gastos.getModel().getValue();
-                    LocalDate fechaInicio = date_gasto.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    String acreedor = tf_acreedor_gast.getText();
-                    String categoriaGasto = (String) cb_Categoria.getSelectedItem().toString();
-                    String cuentaSeleccionada = (String) cb_cuenta_gasto.getSelectedItem();
-                    int frecuencia = Integer.parseInt(cb_frecuencia_gasto.getSelectedItem().toString());
+                    if (nombre.isEmpty()) throw new IllegalArgumentException("El campo 'Nombre' no puede estar vacío.");
 
-                    // Encontrar la cuenta bancaria seleccionada
+
+                    String acreedor = tf_acreedor_gast.getText();
+                    if (acreedor.isEmpty())
+                        throw new IllegalArgumentException("El campo 'Acreedor' no puede estar vacío.");
+                    if (!acreedor.matches("[a-zA-Z\\s]+"))
+                        throw new IllegalArgumentException("El campo 'Acreedor' solo puede contener letras y espacios.");
+
+                    String descripcion = tf_descripcion_gasto.getText();
+
+                    String cuentaSeleccionada = (String) cb_cuenta_gasto.getSelectedItem();
+                    if (cuentaSeleccionada == null || cuentaSeleccionada.isEmpty())
+                        throw new IllegalArgumentException("El campo 'Cuenta de Banco' no puede estar vacío.");
+
+
+                    String frecuencia_texto = (String) cb_frecuencia_gasto.getSelectedItem();
+                    if (frecuencia_texto == null || frecuencia_texto.isEmpty())
+                        throw new IllegalArgumentException("El campo 'Frecuencia' no puede estar vacío.");
+                    int frecuencia = Integer.parseInt(frecuencia_texto);
+
+
+                    Date date_gasto = (Date) date_picker_gastos.getModel().getValue();
+                    if (date_gasto == null)
+                        throw new IllegalArgumentException("El campo 'Fecha' no puede estar vacío.");
+                    LocalDate fechaInicio = date_gasto.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+
+                    String montoTexto = tf_monto_gasto.getText();
+                    if (montoTexto.isEmpty())
+                        throw new IllegalArgumentException("El campo 'Monto' no puede estar vacío.");
+                    if (!montoTexto.matches("\\d+(\\.\\d{1,2})?"))
+                        throw new IllegalArgumentException("El campo 'Monto' solo puede contener números y con un máximo de dos decimales.");
+                    float monto_original = Float.parseFloat(montoTexto);
+                    if (monto_original <= 0) {
+                        throw new IllegalArgumentException("El monto debe ser mayor a cero.");
+                    }
+
+
+                    String categoriaGasto = (String) cb_Categoria.getSelectedItem();
+                    if (categoriaGasto == null || categoriaGasto.isEmpty())
+                        throw new IllegalArgumentException("El campo 'Categoría' no puede estar vacío.");
+
                     CuentaBancaria cuentaVinculada = null;
                     for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
-                        String cuentaBuscada = cuenta.getNumeroCuenta()+" "+cuenta.getNombre();
+                        String cuentaBuscada = cuenta.getNumeroCuenta() + " " + cuenta.getNombre();
                         if (cuentaBuscada.equals(cuentaSeleccionada)) {
                             cuentaVinculada = cuenta;
                             break;
@@ -207,32 +269,26 @@ public class IngresoYGastos extends JFrame {
                         return;
                     }
 
-                    Gasto gasto = new Gasto(nombre, descripcion, montoOriginal, fechaInicio, acreedor, frecuencia, categoriaGasto, cuentaVinculada);
+                    Gasto gasto = new Gasto(nombre, descripcion, monto_original, fechaInicio, acreedor, frecuencia, categoriaGasto, cuentaVinculada);
 
                     gasto.guardarGastoBaseDatos();
-                    Object[] fila_gasto = {gasto.getId(), gasto.getNombre(), gasto.getAcreedor(), gasto.getDescripcion(), gasto.getCuenta().getNumeroCuenta()+ " " + gasto.getCuenta().getNombre(), gasto.getFrecuencia(), gasto.getFechaInicio(), gasto.getMontoOriginal(), gasto.getCategoriaGasto(), gasto.getEstatus()};
+                    Object[] fila_gasto = {gasto.getId(), gasto.getNombre(), gasto.getAcreedor(), gasto.getDescripcion(), gasto.getCuenta().getNumeroCuenta() + " " + gasto.getCuenta().getNombre(), gasto.getFrecuencia(), gasto.getFechaInicio(), gasto.getMontoOriginal(), gasto.getCategoriaGasto(), gasto.getEstatus()};
 
                     gasto_modelo.addRow(fila_gasto);
 
                     JOptionPane.showMessageDialog(null, "Gasto agregado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error, no se pudo ingresar el gasto", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error, no se pudo ingresar el gasto: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
 
+
+
         //Botones para navegar atraves del Menú
-        btn_eliminar_ing.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // Código para eliminar ingreso aquí
-                    JOptionPane.showMessageDialog(null, "Ingreso eliminado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
+
         btn_menu_principal.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

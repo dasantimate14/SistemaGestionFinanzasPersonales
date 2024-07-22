@@ -196,11 +196,9 @@ public class Tarjetas extends JFrame {
         if (!limite_credito.matches("\\d+(\\.\\d{1,2})?")) {
             throw new Exception("El límite de crédito solo debe contener números y con hasta dos decimales.");
         }
-
-        try {
-            Double.parseDouble(limite_credito);
-        } catch (NumberFormatException e) {
-            throw new Exception("El límite de crédito debe ser un número válido.");
+        double limiteCredito = Double.parseDouble(limite_credito);
+        if (limiteCredito < 0) {
+            throw new Exception("El límite de crédito no puede ser menor a 0.");
         }
 
         if (saldo_actual.isEmpty()) {
@@ -209,11 +207,9 @@ public class Tarjetas extends JFrame {
         if (!saldo_actual.matches("\\d+(\\.\\d{1,2})?")) {
             throw new Exception("El saldo actual solo debe contener números y con hasta dos decimales.");
         }
-
-        try {
-            Double.parseDouble(saldo_actual);
-        } catch (NumberFormatException e) {
-            throw new Exception("El saldo actual debe ser un número válido.");
+        double saldoActual = Double.parseDouble(saldo_actual);
+        if (saldoActual < 0) {
+            throw new Exception("El saldo actual no puede ser menor a 0.");
         }
 
         if (numero_tarjeta.isEmpty()) {
@@ -226,11 +222,11 @@ public class Tarjetas extends JFrame {
             throw new Exception("La terminación del número de tarjeta debe tener exactamente 4 dígitos.");
         }
 
-
         if (cuenta_bancaria == null || cuenta_bancaria.isEmpty() || cuenta_bancaria.equals("Selecciona una opción")) {
             throw new Exception("Debe seleccionar una cuenta bancaria.");
         }
     }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

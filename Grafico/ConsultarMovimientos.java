@@ -99,7 +99,7 @@ public class ConsultarMovimientos extends JFrame {
     }
 
     private void validarDatos() throws Exception {
-        // Validar número de cuenta
+
         String numeroCuenta = tfNumeroCuenta.getText();
         if (numeroCuenta == null || numeroCuenta.isEmpty()) {
             throw new Exception("Debe introducir un número de cuenta.");
@@ -108,41 +108,21 @@ public class ConsultarMovimientos extends JFrame {
             throw new Exception("El número de cuenta solo puede contener números y guiones.");
         }
 
-        // Validar nombre de cuenta
+
         String nombreCuenta = (String) cbNombreCuenta.getSelectedItem();
         if (nombreCuenta == null || nombreCuenta.isEmpty()) {
             throw new Exception("Debe seleccionar un nombre de cuenta.");
         }
 
-        // Validar fecha
+
         Calendar selectedDate = (Calendar) datePicker.getModel().getValue();
         if (selectedDate == null) {
             throw new Exception("Debe seleccionar una fecha.");
         }
 
-        // Validar tipo de cuenta
-        String tipoCuenta = (String) cbNumeroCuenta.getSelectedItem();
-        if (tipoCuenta == null || tipoCuenta.equals("Selecciona una opción")) {
-            throw new Exception("Debe seleccionar un tipo de cuenta.");
-        }
-
-        // Validar banco de origen
-        String bancoOrigen = (String) cbNombreCuenta.getSelectedItem();
-        if (bancoOrigen == null || bancoOrigen.equals("Selecciona una opción")) {
-            throw new Exception("Debe seleccionar un banco de origen.");
-        }
-
-        // Validar saldo inicial
-        String saldoInicial = tfNumeroCuenta.getText();
-        if (saldoInicial.isEmpty() || saldoInicial == null) {
-            throw new Exception("Debe ingresar el saldo inicial.");
-        }
-        if (!saldoInicial.matches("\\d+(\\.\\d{1,2})?")) {
-            throw new Exception("El saldo inicial solo puede contener números y un máximo de dos decimales.");
-        }
     }
 
-    // Formatter para que la librería se extienda
+
     public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
         private String datePattern = "dd/MM/yyyy";
         private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
