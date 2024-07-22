@@ -502,4 +502,27 @@ public class CuentaBancaria extends FinanceItem{
 
     }
 
+    //Metodo para verificar si un numero de cuenta ya existe
+    public static boolean cuentaExiste(String numero_cuenta){
+        boolean existe_cuenta = false;
+        String consulta  = "SELECT * FROM cuentas_bancarias WHERE numeroCuenta = ?";
+        String[] parametros = {numero_cuenta};
+        try{
+            BaseDeDatos.establecerConexion();
+            ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametros);
+            if(rs.next()){
+                existe_cuenta = true;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+
+        return existe_cuenta;
+    }
+
+
+
+
 }
