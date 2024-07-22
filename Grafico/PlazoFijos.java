@@ -189,6 +189,10 @@ public class PlazoFijos extends JFrame {
         if (!monto_original_str.matches("\\d+(\\.\\d{1,2})?")) {
             throw new Exception("El monto original solo puede contener números y un máximo de dos decimales.");
         }
+        float monto_original = Float.parseFloat(monto_original_str);
+        if (monto_original < 0) {
+            throw new Exception("El monto original no puede ser menor a 0.");
+        }
 
         String tasa_interes_str = tf_tasaint.getText();
         if (tasa_interes_str == null || tasa_interes_str.isEmpty()) {
@@ -197,6 +201,10 @@ public class PlazoFijos extends JFrame {
         if (!tasa_interes_str.matches("\\d+(\\.\\d{1,2})?")) {
             throw new Exception("La tasa de interés solo puede contener números y un máximo de dos decimales.");
         }
+        float tasa_interes = Float.parseFloat(tasa_interes_str);
+        if (tasa_interes < 0) {
+            throw new Exception("La tasa de interés no puede ser menor a 0.");
+        }
 
         String plazo_str = tf_plazo.getText();
         if (plazo_str == null || plazo_str.isEmpty()) {
@@ -204,6 +212,10 @@ public class PlazoFijos extends JFrame {
         }
         if (!plazo_str.matches("\\d+")) {
             throw new Exception("El plazo solo debe contener números.");
+        }
+        int plazo = Integer.parseInt(plazo_str);
+        if (plazo < 0) {
+            throw new Exception("El plazo no puede ser menor a 0.");
         }
 
         Date fecha_inicio = (Date) datePickerInicio.getModel().getValue();
@@ -226,6 +238,7 @@ public class PlazoFijos extends JFrame {
             throw new Exception("Debe seleccionar una cuenta de banco.");
         }
     }
+
 
     private void cargarCuentasBancarias() {
         cb_cuenta_banco.removeAllItems();

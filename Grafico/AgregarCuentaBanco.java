@@ -149,6 +149,13 @@ public class AgregarCuentaBanco extends JFrame {
         if (numero.length() > 20) {
             throw new Exception("El número de cuenta no puede tener más de 20 caracteres.");
         }
+        if (numero.matches("\\d+")) {
+            long numeroCuenta = Long.parseLong(numero.replace("-", ""));
+            if (numeroCuenta < 0) {
+                throw new Exception("El número de cuenta no puede ser menor a 0.");
+            }
+        }
+
 
         if (banco_origen == null || banco_origen.isEmpty()) {
             throw new Exception("Debe ingresar el banco de origen de la cuenta.");
@@ -163,6 +170,10 @@ public class AgregarCuentaBanco extends JFrame {
         if (!saldo_inicial.matches("\\d+(\\.\\d{1,2})?")) {
             throw new Exception("El saldo inicial solo debe contener números y con hasta dos decimales.");
         }
+        float saldoInicial = Float.parseFloat(saldo_inicial);
+        if (saldoInicial < 0) {
+            throw new Exception("El saldo inicial no puede ser menor a 0.");
+        }
 
         if (tasa_interes == null || tasa_interes.isEmpty()) {
             throw new Exception("Debe ingresar la tasa de interés.");
@@ -170,13 +181,17 @@ public class AgregarCuentaBanco extends JFrame {
         if (!tasa_interes.matches("\\d+(\\.\\d{1,2})?")) {
             throw new Exception("La tasa de interés solo debe contener números y con hasta dos decimales.");
         }
+        float tasaInteres = Float.parseFloat(tasa_interes);
+        if (tasaInteres < 0) {
+            throw new Exception("La tasa de interés no puede ser menor a 0.");
+        }
 
         if (fecha_inicio == null) {
             throw new Exception("Debe seleccionar una fecha de inicio.");
         }
     }
 
-    public static void main(String[] args) {
+        public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
