@@ -272,7 +272,7 @@ public class Prestamos extends JFrame {
             fila[8] = prestamo.calcularPagoMensual();
             fila[9] = prestamo.getCuentaBancaria().getNumeroCuenta() + " " + prestamo.getCuentaBancaria().getNombre();
             fila[10] = prestamo.getTasaInteres();
-            fila[11] = prestamo.getEstatus();
+            fila[11] = prestamo.getEstatus() == 1 ? "Activo" : "Inactivo";
             modelo_tabla_prestamos.addRow(fila);
             adjustColumnWidths(tabla_prestamos);
         }
