@@ -1,5 +1,7 @@
 package Grafico;
 
+import sistemagestionfinanzas.Usuario;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -26,7 +28,6 @@ public class Dashboard extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setContentPane(DashboardPanel);
-
 
         BarrasIngresosGastosAnuales panel_graficos_anuales = new BarrasIngresosGastosAnuales();
         ingresos_gastos_anuales_paneles.setLayout(new BorderLayout());
