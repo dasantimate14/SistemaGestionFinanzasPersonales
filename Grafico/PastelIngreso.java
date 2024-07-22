@@ -6,10 +6,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
-import sistemagestionfinanzas.FinanceItem;
-import sistemagestionfinanzas.Ingreso;
-import sistemagestionfinanzas.PlazoFijo;
-import sistemagestionfinanzas.Prestamo;
+import sistemagestionfinanzas.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,8 +36,9 @@ public class PastelIngreso extends JPanel {
 
         // Personalizar la gráfica
         PiePlot plot = (PiePlot) chart.getPlot();
-        plot.setSectionPaint("Ingresos", new Color(0, 255, 0));
-        plot.setSectionPaint("Gastos", new Color(255, 0, 0));
+        plot.setSectionPaint("Cuenta Bancaria", new Color(0, 255, 0));
+        plot.setSectionPaint("Plazo Fijo", new Color(255, 0, 0));
+        plot.setSectionPaint("Ingreso", new Color(0, 0, 255));
 
         return chart;
     }
@@ -48,10 +46,13 @@ public class PastelIngreso extends JPanel {
     private PieDataset crearDataset() {
         DefaultPieDataset dataset = new DefaultPieDataset();
 
-        float porcentaje_prestamo = Prestamo.calcularPorcentajeRepresentacionSubclase(usuario_actual.getActivos());
+        float porcentaje_cuenta_bancaria = CuentaBancaria.calcularPorcentajeRepresentacionSubclase(usuario_actual.getActivos());
+        float porcentaje_plazo_fijo = PlazoFijo.calcularPorcentajeRepresentacionSubclase(usuario_actual.getActivos());
+        float porcentaje_stock = Stock.calcularPorcentajeRepresentacionSubclase(usuario_actual.getActivos());
 
-
-        dataset.setValue("Ingresos", porcentaje_prestamo);;
+        dataset.setValue("Cuenta Bancaria", porcentaje_cuenta_bancaria);
+        dataset.setValue("Plazo Fijo", porcentaje_plazo_fijo);
+        dataset.setValue("Stock", porcentaje_stock);
 
         return dataset;
     }

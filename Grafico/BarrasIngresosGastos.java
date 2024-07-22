@@ -8,6 +8,7 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import sistemagestionfinanzas.Gasto;
 import sistemagestionfinanzas.Ingreso;
+import sistemagestionfinanzas.Usuario;
 
 import javax.swing.*;
 import java.time.LocalDate;
@@ -47,8 +48,8 @@ public class BarrasIngresosGastos extends JPanel {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         LocalDate fecha_actual = LocalDate.now();
         int mes_actual = fecha_actual.getMonthValue();
-        List<Float> ingresos_ultimos_meses = Ingreso.obtenerIngresosUltimosMeses("abc123");
-        List<Float> gastos_ultimos_meses = Gasto.obtenerGastosUltimosMeses("abc123");
+        List<Float> ingresos_ultimos_meses = Ingreso.obtenerIngresosUltimosMeses(Usuario.getIdUsuarioActual());
+        List<Float> gastos_ultimos_meses = Gasto.obtenerGastosUltimosMeses(Usuario.getIdUsuarioActual());
 
         // Asumiendo que las listas contienen los datos de los últimos 12 meses en orden cronológico
         int num_meses = ingresos_ultimos_meses.size();

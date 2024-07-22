@@ -99,11 +99,6 @@ public class Gasto extends FinanceItem {
     }
 
     @Override
-    protected float calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
-        return 0;
-    }
-
-    @Override
     protected float calcularPromedioMensual() {
         return 0;
     }

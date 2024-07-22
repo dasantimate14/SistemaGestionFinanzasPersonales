@@ -55,12 +55,6 @@ public class Ingreso extends FinanceItem{
         return sb;
     }
 
-    //No se calcula el porcentaje de representación de los ingresos porque se reflejan en la cuenta bancaria
-    @Override
-    protected float calcularPorcentajeRepresentacionSubclase(FinanceItem[] activosPasivos) {
-        return 0;
-    }
-
     @Override
     protected float calcularPromedioMensual() throws SQLException, IOException {
         return 0;

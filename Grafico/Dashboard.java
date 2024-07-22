@@ -27,14 +27,13 @@ public class Dashboard extends JFrame {
         setLocationRelativeTo(null);
         setContentPane(DashboardPanel);
 
-        // Crear y añadir el panel del gráfico al Dashboard
+
         BarrasIngresosGastosAnuales panel_graficos_anuales = new BarrasIngresosGastosAnuales();
-        ingresos_gastos_anuales_paneles.setLayout(new BorderLayout());  // Usar BorderLayout para posicionar el gráfico
+        ingresos_gastos_anuales_paneles.setLayout(new BorderLayout());
         ingresos_gastos_anuales_paneles.add(panel_graficos_anuales, BorderLayout.CENTER);
 
-        // Crear y añadir el panel del gráfico al Dashboard
         BarrasIngresosGastos grafico_barras_mensual = new BarrasIngresosGastos();
-        ingresos_gastos_mensuales.setLayout(new BorderLayout());  // Usar BorderLayout para posicionar el gráfico
+        ingresos_gastos_mensuales.setLayout(new BorderLayout());
         ingresos_gastos_mensuales.add(grafico_barras_mensual, BorderLayout.CENTER);
 
         btnCuentaBancaria.addActionListener(new ActionListener() {

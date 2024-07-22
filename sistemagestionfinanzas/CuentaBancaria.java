@@ -59,7 +59,7 @@ public class CuentaBancaria extends FinanceItem{
         return sb;
     }
 
-    protected static float calcularPorcentajeRepresentacionSubclase(List<FinanceItem> activosPasivos) {
+    public static float calcularPorcentajeRepresentacionSubclase(List<FinanceItem> activosPasivos) {
         float valor_total_cuentas_bancarias = 0;
         float valor_total_activos = 0;
         float porcentaje_representacion = 0;
