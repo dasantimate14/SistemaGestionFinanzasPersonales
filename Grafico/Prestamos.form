@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Grafico.Prestamos">
-  <grid id="27dc6" binding="PrestamosPanel" layout-manager="GridLayoutManager" row-count="12" column-count="9" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="prestamos_panel" layout-manager="GridLayoutManager" row-count="12" column-count="9" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
       <xy x="20" y="20" width="1146" height="1094"/>
@@ -20,7 +20,7 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="3b84f" class="javax.swing.JButton" binding="paginaPrincipalButton">
+          <component id="3b84f" class="javax.swing.JButton" binding="pagina_principal_button">
             <constraints>
               <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -31,7 +31,7 @@
               <text value="Página Principal"/>
             </properties>
           </component>
-          <component id="a072a" class="javax.swing.JButton" binding="cuentasBancariasButton" default-binding="true">
+          <component id="a072a" class="javax.swing.JButton" binding="cuenta_bancaria_button" default-binding="true">
             <constraints>
               <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -41,7 +41,7 @@
               <text value="Cuentas Bancarias"/>
             </properties>
           </component>
-          <component id="3f698" class="javax.swing.JButton" binding="plazosFijosButton" default-binding="true">
+          <component id="3f698" class="javax.swing.JButton" binding="plazos_fijos_button" default-binding="true">
             <constraints>
               <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -51,7 +51,7 @@
               <text value="Plazos Fijos"/>
             </properties>
           </component>
-          <component id="460e7" class="javax.swing.JButton" binding="ingresosYGastosButton" default-binding="true">
+          <component id="460e7" class="javax.swing.JButton" binding="ingresos_y_gastos_button" default-binding="true">
             <constraints>
               <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -61,7 +61,7 @@
               <text value="Ingresos y Gastos"/>
             </properties>
           </component>
-          <component id="2579b" class="javax.swing.JButton" binding="stocksButton" default-binding="true">
+          <component id="2579b" class="javax.swing.JButton" binding="stocks_button" default-binding="true">
             <constraints>
               <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -71,7 +71,7 @@
               <text value="Stocks"/>
             </properties>
           </component>
-          <component id="c4d3b" class="javax.swing.JButton" binding="tarjetasDeCreditoButton">
+          <component id="c4d3b" class="javax.swing.JButton" binding="tarjetas_creditos_button">
             <constraints>
               <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -81,7 +81,7 @@
               <text value="Tarjetas de Crédito"/>
             </properties>
           </component>
-          <component id="8daaa" class="javax.swing.JButton" binding="prestamosButton">
+          <component id="8daaa" class="javax.swing.JButton" binding="prestamos_button">
             <constraints>
               <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>

@@ -17,11 +17,11 @@ import static sistemagestionfinanzas.Usuario.usuario_actual;
 
 public class InicioSesion extends JFrame {
     BufferedReader entrada = new BufferedReader(new InputStreamReader(System.in));
-    private JPanel LoginPanel;
-    private JTextField tfCorreo;
-    private JPasswordField pfContrasena;
-    private JButton btnIniciarSesion;
-    private JButton btnRegistrarse;
+    private JPanel login_panel;
+    private JTextField tf_correo;
+    private JPasswordField pf_contrasena;
+    private JButton btn_iniciar_sesion;
+    private JButton btn_registrar_sesion;
     private JLabel lbBienvenido;
     private JLabel lbIniciarSesion;
     private JLabel lbCorreo;
@@ -35,10 +35,10 @@ public class InicioSesion extends JFrame {
         setTitle("Inicio de Sesión");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setContentPane(LoginPanel); // Asignamos el panel principal
+        setContentPane(login_panel); // Asignamos el panel principal
 
         // Acción para el botón "Iniciar Sesión"
-        btnIniciarSesion.addActionListener(new ActionListener() {
+        btn_iniciar_sesion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (guardarDatos()) {
@@ -59,7 +59,7 @@ public class InicioSesion extends JFrame {
         });
 
         // Acción para que se abra "Registrar Usuarios" al tocar el botón registrarse
-        btnRegistrarse.addActionListener(new ActionListener() {
+        btn_registrar_sesion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 RegistrarUsuario newframe = new RegistrarUsuario();
@@ -195,8 +195,8 @@ public class InicioSesion extends JFrame {
 
     private boolean guardarDatos() {
         try {
-            correo = tfCorreo.getText();
-            String password = new String(pfContrasena.getPassword());
+            correo = tf_correo.getText();
+            String password = new String(pf_contrasena.getPassword());
 
             if (correo.isEmpty() || correo == null) {
                 throw new Exception("Debe ingresar el correo.");
@@ -219,8 +219,8 @@ public class InicioSesion extends JFrame {
             System.out.println("Contraseña: " + password);
 
             JOptionPane.showMessageDialog(this, "Credenciales correctas. Iniciando Sesión", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            this.tfCorreo.setText("");
-            this.pfContrasena.setText("");
+            this.tf_correo.setText("");
+            this.pf_contrasena.setText("");
 
             return true;
             } catch (NumberFormatException e) {

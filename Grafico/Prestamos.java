@@ -30,14 +30,14 @@ public class Prestamos extends JFrame {
 
     public static List<Prestamo> instanciasPrestamos = new ArrayList<>();
 
-    private JButton paginaPrincipalButton;
-    private JButton cuentasBancariasButton;
-    private JButton plazosFijosButton;
-    private JButton ingresosYGastosButton;
-    private JButton stocksButton;
-    private JButton tarjetasDeCreditoButton;
-    private JButton prestamosButton;
-    private JPanel PrestamosPanel;
+    private JButton pagina_principal_button;
+    private JButton cuenta_bancaria_button;
+    private JButton plazos_fijos_button;
+    private JButton ingresos_y_gastos_button;
+    private JButton stocks_button;
+    private JButton tarjetas_creditos_button;
+    private JButton prestamos_button;
+    private JPanel prestamos_panel;
     private JTextField tf_descripcion;
     private JTextField tf_nombre;
     private JComboBox<String> cb_tipo;
@@ -59,7 +59,7 @@ public class Prestamos extends JFrame {
         setTitle("Prestamos");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setContentPane(PrestamosPanel);
+        setContentPane(prestamos_panel);
 
         // Implementación del JDatePicker para fecha de inicio
         UtilDateModel modelInicio = new UtilDateModel();
@@ -189,7 +189,7 @@ public class Prestamos extends JFrame {
 
 
         // Otros botones
-        paginaPrincipalButton.addActionListener(new ActionListener() {
+        pagina_principal_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Dashboard newframe = new Dashboard();
@@ -198,7 +198,7 @@ public class Prestamos extends JFrame {
             }
         });
 
-        cuentasBancariasButton.addActionListener(new ActionListener() {
+        cuenta_bancaria_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 CuentaBancariaG newframe = new CuentaBancariaG();
@@ -207,7 +207,7 @@ public class Prestamos extends JFrame {
             }
         });
 
-        plazosFijosButton.addActionListener(new ActionListener() {
+        plazos_fijos_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PlazoFijos newframe = new PlazoFijos();
@@ -216,7 +216,7 @@ public class Prestamos extends JFrame {
             }
         });
 
-        ingresosYGastosButton.addActionListener(new ActionListener() {
+        ingresos_y_gastos_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 IngresoYGastos newframe = new IngresoYGastos();
@@ -225,7 +225,7 @@ public class Prestamos extends JFrame {
             }
         });
 
-        stocksButton.addActionListener(new ActionListener() {
+        stocks_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Stocks newframe = new Stocks();
@@ -234,7 +234,7 @@ public class Prestamos extends JFrame {
             }
         });
 
-        tarjetasDeCreditoButton.addActionListener(new ActionListener() {
+        tarjetas_creditos_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Tarjetas newframe = new Tarjetas();

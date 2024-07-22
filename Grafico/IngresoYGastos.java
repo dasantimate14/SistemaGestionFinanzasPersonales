@@ -22,7 +22,7 @@ import sistemagestionfinanzas.Gasto;
 import sistemagestionfinanzas.Ingreso;
 
 public class IngresoYGastos extends JFrame {
-    private JPanel IngresosYGastosPanel;
+    private JPanel ingresos_y_gastos_panel;
     private JButton btn_menu_principal;
     private JButton btn_cuentas_bancarias;
     private JButton btn_plazo_fijo;
@@ -65,7 +65,7 @@ public class IngresoYGastos extends JFrame {
         setTitle("Ingresos Y Gastos");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setContentPane(IngresosYGastosPanel);
+        setContentPane(ingresos_y_gastos_panel);
 
         // Implementación del JDatePicker para fecha de ingreso
         UtilDateModel modelIngreso = new UtilDateModel();

@@ -13,7 +13,7 @@ public class RegistrarUsuario extends JFrame {
     public static ArrayList<Usuario> instancias_clientes = new ArrayList<>();
     public static Usuario usuario_actual;
 
-    private JPanel RegistrarPanel;
+    private JPanel registrar_panel;
     private JTextField tf_nombre;
     private JTextField tf_apellido;
     private JTextField tf_correo;
@@ -35,7 +35,7 @@ public class RegistrarUsuario extends JFrame {
     }
 
     public RegistrarUsuario() {
-        setContentPane(RegistrarPanel);
+        setContentPane(registrar_panel);
         setTitle("Registrar Usuario");
         setSize(930, 920);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
