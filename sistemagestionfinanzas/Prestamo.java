@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,8 +75,10 @@ public class Prestamo extends FinanceItem {
     }
 
     @Override
-    public void actualizarInformacion() throws IOException {
+    public void actualizarInformacion() throws IOException, SQLException {
         this.cuota_mensual = calcularPagoMensual();
+        setInteres(calcularInteresAcumulado());
+        descontarCuota();
     }
 
     public String getTipoPrestamo() {
@@ -133,15 +136,75 @@ public class Prestamo extends FinanceItem {
         return cuenta_bancaria;
     }
 
+    private void descontarCuota() throws SQLException{
+        LocalDate fecha_final = LocalDate.now();
+        LocalDate fecha_inicio = getFechaInicio();
+        ResultSet rs = null;
+        String consulta = "SELECT MAX(fechaInicio) AS fecha_mas_reciente FROM gastos WHERE idUsuario = '" + cuenta_bancaria.getIdUsuario() + "' AND idCuentaBancaria = '" + cuenta_bancaria.getId() + "' AND descripcion = 'Pago de Cuota Mensual del Prestamo " + getNombre() +"'";
+
+        //Se hace la consulta para obtener la fecha más reciente de un descuento de cuota mensual del prestamo que se repite una vez al mes
+        try{
+            BaseDeDatos.establecerConexion();
+            rs = BaseDeDatos.realizarConsultaSelectInterna(consulta);
+            if(rs.next()){
+                String fecha_mas_reciente = rs.getString("fecha_mas_reciente");
+                if (fecha_mas_reciente != null) {
+                    fecha_inicio = LocalDate.parse(fecha_mas_reciente);
+                }
+            }
+            rs.close();
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            BaseDeDatos.cerrarConexion();
+        }
+
+        //Si la fecha inicio es igual al getFechaInicio quiere decir que la consulta no encontró una fecha más reciente de retiro y empezará a hacer retiros desde el primer registro del gasto hasta la fecha actual por mes. Se puede detener si la fecha de inicio es mayor que la fecha limite del pago del plazo
+        while(fecha_inicio.isBefore(fecha_final) || fecha_inicio.isEqual(fecha_vencimiento)){
+
+            fecha_inicio = fecha_inicio.plusMonths(1);
+            //Si despues de sumarle un mes la fecha se pasa de la fecha actual entonces sale del ciclo
+            if(fecha_inicio.isAfter(fecha_final)){
+                break;
+            }
+            //Se crea el objeto que registra el ingreso automaticamente por el programa
+            Gasto gasto = new Gasto("Pago Mensual de Prestamo", "Pago de Cuota Mensual del Prestamo " + getNombre(), getCuotaMensual(), fecha_inicio, cuenta_bancaria.getBanco(), 0, "Pago Prestamo", getCuentaBancaria());
+            cuenta_bancaria.retirarMonto(gasto.montoOriginal);
+
+            //Se guarda el ingreso repetido en la base de datos
+            gasto.guardarGastoBaseDatos();
+        }
+
+    }
+
+    public float calcularMontoPendiente(){
+        float tasa_interes_mensual = getTasaInteres() / 12 / 100;
+        int numeros_pagos = plazo * 12;
+        LocalDate fecha_actual = LocalDate.now();
+
+        // Calcular el número de pagos realizados
+        long mesesTranscurridos = ChronoUnit.MONTHS.between(fechaInicio, fecha_actual);
+        int pagosRealizados = (int) Math.min(mesesTranscurridos, numeros_pagos);
+
+        // Calcular el saldo pendiente usando la fórmula
+        float saldo_pendiente = getMontoOriginal() * (float) (
+                (Math.pow(1 + tasa_interes_mensual, numeros_pagos) - Math.pow(1 + tasa_interes_mensual, pagosRealizados)) /
+                        (Math.pow(1 + tasa_interes_mensual, numeros_pagos) - 1)
+        );
+
+        return saldo_pendiente;
+    }
+
     public float calcularPagoMensual() {
         float saldo_pendiente = calcularSaldoPendiente();
         float tasa_interes_mensual = super.getTasaInteres() / 12 / 100;
         int numeros_pagos = plazo * 12;
-        return (saldo_pendiente * tasa_interes_mensual) / (1 - (float)Math.pow(1 + tasa_interes_mensual, -numeros_pagos));
+        return (saldo_pendiente * tasa_interes_mensual) / (1 - (float)Math.pow(1 + tasa_interes_mensual, - numeros_pagos));
     }
 
-    public float calcularTiempoRestante() {
-        return saldo_pendiente * (super.getTasaInteres() / 100);
+    public Period calcularTiempoRestante() {
+        Period diferencia = Period.between(fechaInicio, fecha_vencimiento);
+        return diferencia;
     }
 
     public float calcularSaldoPendiente() {
@@ -149,14 +212,19 @@ public class Prestamo extends FinanceItem {
     }
 
     public float calcularInteresAcumulado() {
-        float interes_mensual = super.getTasaInteres() / 12 / 100;
-        int numeros_pagos = plazo * 12;
-        return numeros_pagos * cuota_mensual * interes_mensual;
+        LocalDate fecha_actual = LocalDate.now();
+        long dias_transcurridos = ChronoUnit.DAYS.between(getFechaInicio(), getFechaVencimiento());
+        return redonderCantidad((float) (getMontoOriginal() * (getTasaInteres()/100) * (dias_transcurridos / 365.0)));
+    }
+
+    public float calcularInteresTotal(){
+        return redonderCantidad(getMontoOriginal()*(getTasaInteres()/100)* (getPlazo()/12));
     }
 
     public float calcularInteresPendiente() {
-        float interes_mensual = super.getTasaInteres() / 12 / 100;
-        return saldo_pendiente * interes_mensual * (plazo - (LocalDate.now().until(fecha_vencimiento, ChronoUnit.MONTHS)));
+        float interes_acumulado = calcularInteresAcumulado();
+        float interes_total = calcularInteresTotal();
+        return redonderCantidad(interes_total - interes_acumulado);
     }
 
     public void calcularPorcentajeRepresentacionPrestamo() {
