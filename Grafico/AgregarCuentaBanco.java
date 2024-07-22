@@ -91,7 +91,7 @@ public class AgregarCuentaBanco extends JFrame {
                             tipoCuenta,
                             "1"
                     );
-                    nuevaCuenta.actualizarInformacion();
+                    //nuevaCuenta.actualizarInformacion();
                     parentFrame.getTableModel().addRow(new Object[]{nombreCuenta, descripcion, tipoCuenta, numeroCuenta, bancoOrigen, saldoInicial, tasaInteres, fechaInicio,   nuevaCuenta.calcularPromedioMensual(), nuevaCuenta.calcularPromedioAnual(), nuevaCuenta.calcularBalanceActual(), nuevaCuenta.getInteres()});
 
                     JOptionPane.showMessageDialog(AgregarCuentaBanco.this, "Cuenta bancaria creada exitosamente.");

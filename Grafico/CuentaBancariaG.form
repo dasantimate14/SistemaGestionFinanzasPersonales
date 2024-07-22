@@ -203,7 +203,9 @@
         <children>
           <component id="1ce67" class="javax.swing.JTable" binding="table_cuentas_banco">
             <constraints/>
-            <properties/>
+            <properties>
+              <autoResizeMode value="0"/>
+            </properties>
           </component>
         </children>
       </scrollpane>
