@@ -88,7 +88,7 @@ public class RegistrarUsuario extends JFrame {
                     }
 
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                    JOptionPane.showMessageDialog(null, ex.getMessage(),"Error", JOptionPane.ERROR_MESSAGE);
                     ex.printStackTrace();
                     return;
                 } finally {
@@ -99,9 +99,6 @@ public class RegistrarUsuario extends JFrame {
                     Usuario usuario = new Usuario(nombre + " " + apellido, correo, contrasena);
                     usuario.guardarClienteEnBaseDatos();
                     JOptionPane.showMessageDialog(null, "Usuario registrado exitosamente.");
-
-                    // Agregar usuario a la lista de instancias y establecer usuario actual
-                    instancias_clientes.add(usuario);
                     setUsuarioActual(usuario);
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -109,6 +106,9 @@ public class RegistrarUsuario extends JFrame {
                 } finally {
                     BaseDeDatos.cerrarConexion();
                 }
+                InicioSesion newframe = new InicioSesion();
+                newframe.setVisible(true);
+                RegistrarUsuario.this.dispose();
             }
         });
     }

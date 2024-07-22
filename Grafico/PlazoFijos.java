@@ -43,7 +43,6 @@ public class PlazoFijos extends JFrame {
     private JTextField tf_plazo;
     private JComboBox<String> cb_cuenta_banco;
     private JScrollPane sp_plazo_fijo;
-    private JTextField tf_tipo;
     private JDatePickerImpl datePickerInicio;
     private JDatePickerImpl datePickerFinal;
     private JTable plazofijo_table;
@@ -154,16 +153,6 @@ public class PlazoFijos extends JFrame {
         fecha_inicio_panel.setLayout(new BorderLayout());
         fecha_inicio_panel.add(datePickerInicio, BorderLayout.CENTER);
 
-        UtilDateModel modelVencimiento = new UtilDateModel();
-        Properties pVencimiento = new Properties();
-        pVencimiento.put("text.today", "Hoy");
-        pVencimiento.put("text.month", "Mes");
-        pVencimiento.put("text.year", "Año");
-        JDatePanelImpl datePanelVencimiento = new JDatePanelImpl(modelVencimiento, pVencimiento);
-        datePickerFinal = new JDatePickerImpl(datePanelVencimiento, new DateLabelFormatter());
-
-        fecha_final_panel.setLayout(new BorderLayout());
-        fecha_final_panel.add(datePickerFinal, BorderLayout.CENTER);
     }
 
     private void validarDatos() throws Exception {
@@ -175,11 +164,6 @@ public class PlazoFijos extends JFrame {
         String descripcion = tf_descripcion.getText();
         if (descripcion == null || descripcion.isEmpty()) {
             throw new Exception("Debe introducir una descripción.");
-        }
-
-        String tipo = tf_tipo.getText();
-        if (tipo == null || tipo.isEmpty()) {
-            throw new Exception("Debe introducir un tipo.");
         }
 
         String monto_original_str = tf_monto_original.getText();
@@ -211,15 +195,6 @@ public class PlazoFijos extends JFrame {
             throw new Exception("Debe seleccionar una fecha de inicio.");
         }
 
-        Date fecha_final = (Date) datePickerFinal.getModel().getValue();
-        if (fecha_final == null) {
-            throw new Exception("Debe seleccionar una fecha de vencimiento.");
-        }
-
-        // Nueva validación: fecha de inicio no puede ser más reciente que la fecha de vencimiento
-        if (fecha_inicio.after(fecha_final)) {
-            throw new Exception("La fecha de inicio no puede ser más reciente que la fecha de vencimiento.");
-        }
 
         Object cuenta_bancaria = cb_cuenta_banco.getSelectedItem();
         if (cuenta_bancaria == null) {
@@ -271,15 +246,13 @@ public class PlazoFijos extends JFrame {
 
             String nombre = tf_nombre.getText();
             String descripcion = tf_descripcion.getText();
-            String tipo = tf_tipo.getText();
             float monto_original = Float.parseFloat(tf_monto_original.getText());
             float tasa_interes = Float.parseFloat(tf_tasaint.getText());
             LocalDate fecha_inicio = LocalDate.ofInstant(((Date) datePickerInicio.getModel().getValue()).toInstant(), ZoneId.systemDefault());
-            LocalDate fecha_final = LocalDate.ofInstant(((Date) datePickerFinal.getModel().getValue()).toInstant(), ZoneId.systemDefault());
             int plazo = Integer.parseInt(tf_plazo.getText());
             String cuenta_selecinada = (String) cb_cuenta_banco.getSelectedItem();
 
-            System.out.println("Datos obtenidos: " + nombre + ", " + descripcion + ", " + tipo + ", " + monto_original + ", " + tasa_interes + ", " + fecha_inicio + ", " + fecha_final + ", " + plazo + ", " + cuenta_selecinada);
+            System.out.println("Datos obtenidos: " + nombre + ", " + descripcion + ", Activo, " + monto_original + ", " + tasa_interes + ", " + fecha_inicio + ", " + plazo + ", " + cuenta_selecinada);
 
             CuentaBancaria cuenta_vinculada = null;
             for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
