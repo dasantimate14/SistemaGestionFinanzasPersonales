@@ -163,7 +163,7 @@ public class Prestamo extends FinanceItem {
         }
 
         //Si la fecha inicio es igual al getFechaInicio quiere decir que la consulta no encontró una fecha más reciente de retiro y empezará a hacer retiros desde el primer registro del gasto hasta la fecha actual por mes. Se puede detener si la fecha de inicio es mayor que la fecha limite del pago del plazo
-        while(fecha_inicio.isBefore(fecha_final) || fecha_inicio.isEqual(fecha_vencimiento)){
+        while(fecha_inicio.isBefore(fecha_final) && fecha_inicio.isBefore(fecha_vencimiento)){
 
             fecha_inicio = fecha_inicio.plusMonths(1);
             //Si despues de sumarle un mes la fecha se pasa de la fecha actual entonces sale del ciclo
