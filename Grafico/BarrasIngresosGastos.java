@@ -20,9 +20,9 @@ public class BarrasIngresosGastos extends JPanel {
 
     public BarrasIngresosGastos() {
         // Crear el panel del gráfico
-        ChartPanel chartPanel = new ChartPanel(crearGrafico());
-        chartPanel.setPreferredSize(new java.awt.Dimension(600, 600));
-        add(chartPanel);
+        ChartPanel chart_panel = new ChartPanel(crearGrafico());
+        chart_panel.setPreferredSize(new java.awt.Dimension(600, 600));
+        add(chart_panel);
     }
 
     private JFreeChart crearGrafico() {

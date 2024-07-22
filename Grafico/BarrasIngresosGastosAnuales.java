@@ -12,16 +12,14 @@ import sistemagestionfinanzas.Usuario;
 
 import javax.swing.*;
 import java.time.LocalDate;
-import java.time.format.TextStyle;
 import java.util.List;
-import java.util.Locale;
 
 public class BarrasIngresosGastosAnuales extends JPanel{
     public BarrasIngresosGastosAnuales(){
         //Crear el panel grafico
-        ChartPanel chartPanel = new ChartPanel(crearGrafico());
-        chartPanel.setPreferredSize(new java.awt.Dimension(400, 600));
-        add(chartPanel);
+        ChartPanel chart_panel = new ChartPanel(crearGrafico());
+        chart_panel.setPreferredSize(new java.awt.Dimension(400, 600));
+        add(chart_panel);
     }
 
     private JFreeChart crearGrafico() {

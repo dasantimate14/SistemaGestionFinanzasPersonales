@@ -1,8 +1,6 @@
 package Grafico;
 
 import sistemagestionfinanzas.CuentaBancaria;
-import sistemagestionfinanzas.PlazoFijo;
-import sistemagestionfinanzas.Usuario;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -12,16 +10,16 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class CuentaBancariaG extends JFrame {
-    private JPanel CuentaBancoPanel;
+    private JPanel cuenta_banco_panel;
     private JButton btn_menu2;
-    private JButton prestamosButton;
-    private JButton tarjetasDeCreditoButton;
-    private JButton stocksButton;
-    private JButton ingresosYGastosButton;
+    private JButton prestamos_button;
+    private JButton tarjetas_creditos_button;
+    private JButton stocks_button;
+    private JButton ingresos_y_gastos_button;
     private JButton plazos_fijos_button;
     private JButton cuentas_bancarias_button;
-    private JButton btnAgregarCuenta;
-    private JButton consultarMovimientosButton;
+    private JButton btn_agregar_cuenta;
+    private JButton consulta_movimiento_button;
     private JTable table_cuentas_banco;
     private JScrollPane spCuentaBanco;
     private DefaultTableModel tableModel;
@@ -32,7 +30,7 @@ public class CuentaBancariaG extends JFrame {
         setTitle("Cuentas de Banco");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setContentPane(CuentaBancoPanel);
+        setContentPane(cuenta_banco_panel);
 
         // Configurar el modelo de la tabla
         tableModel = new DefaultTableModel();
@@ -51,14 +49,14 @@ public class CuentaBancariaG extends JFrame {
 
         table_cuentas_banco.setModel(tableModel);
 
-        btnAgregarCuenta.addActionListener(new ActionListener() {
+        btn_agregar_cuenta.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AgregarCuentaBanco newframe = new AgregarCuentaBanco(CuentaBancariaG.this);
                 newframe.setVisible(true);
             }
         });
-        consultarMovimientosButton.addActionListener(new ActionListener() {
+        consulta_movimiento_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ConsultarMovimientos newframe = new ConsultarMovimientos();
@@ -83,7 +81,7 @@ public class CuentaBancariaG extends JFrame {
                 dispose();
             }
         });
-        ingresosYGastosButton.addActionListener(new ActionListener() {
+        ingresos_y_gastos_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 IngresoYGastos newframe = new IngresoYGastos();
@@ -91,7 +89,7 @@ public class CuentaBancariaG extends JFrame {
                 dispose();
             }
         });
-        stocksButton.addActionListener(new ActionListener() {
+        stocks_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Stocks newframe = new Stocks();
@@ -99,7 +97,7 @@ public class CuentaBancariaG extends JFrame {
                 dispose();
             }
         });
-        tarjetasDeCreditoButton.addActionListener(new ActionListener() {
+        tarjetas_creditos_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Tarjetas newframe = new Tarjetas();
@@ -107,7 +105,7 @@ public class CuentaBancariaG extends JFrame {
                 dispose();
             }
         });
-        prestamosButton.addActionListener(new ActionListener() {
+        prestamos_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Prestamos newframe = new Prestamos();

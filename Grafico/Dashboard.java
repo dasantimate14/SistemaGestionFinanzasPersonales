@@ -1,21 +1,19 @@
 package Grafico;
 
-import sistemagestionfinanzas.Usuario;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Dashboard extends JFrame {
-    private JPanel DashboardPanel;
+    private JPanel dashborad_panel;
     private JButton btnMenu1;
-    private JButton btnCuentaBancaria;
-    private JButton plazosFijosButton;
-    private JButton btnIngresos;
-    private JButton btnStocks;
-    private JButton btnTarjetas;
-    private JButton prestamosButton;
+    private JButton btn_cuenta_bancaria;
+    private JButton plazos_fijos_button;
+    private JButton btn_ingreso;
+    private JButton btn_stocks;
+    private JButton btn_tarjeta;
+    private JButton prestamos_button;
     private JPanel ingresos_gastos_anuales_paneles;
     private JPanel pastel_subclase_panel;
     private JPanel ingresos_gastos_mensuales;
@@ -27,7 +25,7 @@ public class Dashboard extends JFrame {
         setTitle("Menu Principal");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setContentPane(DashboardPanel);
+        setContentPane(dashborad_panel);
 
         BarrasIngresosGastosAnuales panel_graficos_anuales = new BarrasIngresosGastosAnuales();
         ingresos_gastos_anuales_paneles.setLayout(new BorderLayout());
@@ -37,7 +35,7 @@ public class Dashboard extends JFrame {
         ingresos_gastos_mensuales.setLayout(new BorderLayout());
         ingresos_gastos_mensuales.add(grafico_barras_mensual, BorderLayout.CENTER);
 
-        btnCuentaBancaria.addActionListener(new ActionListener() {
+        btn_cuenta_bancaria.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 CuentaBancariaG newframe = new CuentaBancariaG();
@@ -47,7 +45,7 @@ public class Dashboard extends JFrame {
         });
 
         // Añade ActionListeners
-        plazosFijosButton.addActionListener(new ActionListener() {
+        plazos_fijos_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PlazoFijos newframe = new PlazoFijos();
@@ -55,7 +53,7 @@ public class Dashboard extends JFrame {
                 dispose();
             }
         });
-        btnIngresos.addActionListener(new ActionListener() {
+        btn_ingreso.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 IngresoYGastos newframe = new IngresoYGastos();
@@ -63,7 +61,7 @@ public class Dashboard extends JFrame {
                 dispose();
             }
         });
-        btnStocks.addActionListener(new ActionListener() {
+        btn_stocks.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Stocks newframe = new Stocks();
@@ -72,7 +70,7 @@ public class Dashboard extends JFrame {
             }
         });
 
-        btnTarjetas.addActionListener(new ActionListener() {
+        btn_tarjeta.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Tarjetas newframe = new Tarjetas();
@@ -80,7 +78,7 @@ public class Dashboard extends JFrame {
                 dispose();
             }
         });
-        prestamosButton.addActionListener(new ActionListener() {
+        prestamos_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Prestamos newframe = new Prestamos();

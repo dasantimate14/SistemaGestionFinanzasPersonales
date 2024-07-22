@@ -1,32 +1,26 @@
 package Grafico;
 
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
 import sistemagestionfinanzas.BaseDeDatos;
 import sistemagestionfinanzas.CuentaBancaria;
 import sistemagestionfinanzas.Usuario;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Properties;
 import java.sql.ResultSet;
 
 public class ConsultarMovimientos extends JFrame {
-    private JPanel MovPanel;
+    private JPanel movimiento_panel;
     private JComboBox cbNumeroCuenta;
     private JComboBox<String> cbNombreCuenta;
-    private JButton btnBuscar;
-    private JButton Volverbtn;
-    private JTable movimientosTable;
+    private JButton btn_buscar;
+    private JButton volver_btn;
+    private JTable movimientos_table;
     private DefaultTableModel modelo;
 
     public ConsultarMovimientos() {
@@ -35,15 +29,15 @@ public class ConsultarMovimientos extends JFrame {
         setTitle("Consultar Movimiento");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setContentPane(MovPanel);
+        setContentPane(movimiento_panel);
 
         modelo = new DefaultTableModel();
         modelo.setColumnIdentifiers(new String[]{"ID", "Nombre", "Descripción", "Monto", "Tipo", "Fecha"});
-        movimientosTable.setModel(modelo);
+        movimientos_table.setModel(modelo);
 
         actualizarComboBoxes();
 
-        Volverbtn.addActionListener(new ActionListener() {
+        volver_btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 CuentaBancariaG newframe = new CuentaBancariaG();
@@ -52,7 +46,7 @@ public class ConsultarMovimientos extends JFrame {
             }
         });
 
-        btnBuscar.addActionListener(new ActionListener() {
+        btn_buscar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
