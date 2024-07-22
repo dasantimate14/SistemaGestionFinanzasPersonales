@@ -17,12 +17,12 @@ public class Gasto extends FinanceItem {
     public static int cantidad_instancias = 0;
     public static List<Gasto> instancias_gastos = new ArrayList<>();
 
-    public Gasto(String nombre, String descripcion, float montoOriginal, LocalDate fechaInicio,
-                 String acreedor, int frecuencia, String categoriaGasto, CuentaBancaria cuenta) {
-        super(nombre, descripcion, montoOriginal, "Pasivo", 0, fechaInicio);
+    public Gasto(String nombre, String descripcion, float monto_original, LocalDate fecha_incio,
+                 String acreedor, int frecuencia, String categoria_gasto, CuentaBancaria cuenta) {
+        super(nombre, descripcion, monto_original, "Pasivo", 0, fecha_incio);
         this.acreedor = acreedor;
         this.frecuencia = frecuencia;
-        this.categoria_gasto = categoriaGasto;
+        this.categoria_gasto = categoria_gasto;
         if(frecuencia != 0){
             this.estatus = true;
         } else {
@@ -144,7 +144,7 @@ public class Gasto extends FinanceItem {
                     break;
                 }
                 Gasto gasto = new Gasto(getNombre(), getDescripcion(), getMontoOriginal(), fecha_inicio, getAcreedor(), 0, getCategoriaGasto(), getCuenta());
-                cuenta.retirarMonto(gasto.montoOriginal);
+                cuenta.retirarMonto(gasto.monto_original);
 
                 //Se guarda el ingreso repetido en la base de datos
                 gasto.guardarGastoBaseDatos();
@@ -246,9 +246,9 @@ public class Gasto extends FinanceItem {
         float gastos_totales = 0;
         float porcentaje_representacion = 0;
         for(Gasto gsasto : instancias_gastos){
-            gastos_totales += gsasto.montoOriginal;
+            gastos_totales += gsasto.monto_original;
             if(gsasto.getNombre().equals(nombre)){
-                sumatoria_gasto += gsasto.montoOriginal;
+                sumatoria_gasto += gsasto.monto_original;
             }
         }
         //Calcular porcentaje representación

@@ -29,10 +29,10 @@ public class Stock extends FinanceItem{
     public static int cantidad_instancias = 0;
     public static List<Stock> instancias_stocks = new ArrayList<>();
 
-    public Stock(String nombre, String descripcion,  LocalDate fechaInicio,
-                 String nombreEmpresa, String simbolo, int cantidad, float precio_compra, String sector, float dividendo_por_accion, int frecuencia_dividendos){
-        super(nombre, descripcion, (cantidad* precio_compra), "Activo", fechaInicio);
-        this.nombre_empresa = nombreEmpresa;
+    public Stock(String nombre, String descripcion,  LocalDate fecha_inicio,
+                 String nombre_empresa, String simbolo, int cantidad, float precio_compra, String sector, float dividendo_por_accion, int frecuencia_dividendos){
+        super(nombre, descripcion, (cantidad* precio_compra), "Activo", fecha_inicio);
+        this.nombre_empresa = nombre_empresa;
         this.simbolo = simbolo;
         this.cantidad = cantidad;
         this.precio_compra = precio_compra;

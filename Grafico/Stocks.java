@@ -12,7 +12,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -26,33 +25,33 @@ import javax.swing.table.TableColumn;
 import static sistemagestionfinanzas.Usuario.usuario_actual;
 
 public class Stocks extends JFrame {
-    private JPanel StocksPanel;
-    private JButton menuPrincipalButton;
-    private JPanel datePanelContainer;
-    private JButton cuentaBancariaButton;
-    private JButton prestamosButton;
-    private JButton tarjetasDeCreditoButton;
-    private JButton stocksButton;
-    private JButton plazoFijosButton;
-    private JButton ingresosYGastosButton;
-    private JTextField ftCantidad;
-    private JTextField tfNombreEmpresa;
-    private JTextField tfNombre;
+    private JPanel stocks_panel;
+    private JButton menu_principal_button;
+    private JPanel date_panel_container;
+    private JButton cuenta_bancaria_button;
+    private JButton prestamos_button;
+    private JButton tarjetas_credito_button;
+    private JButton stocks_button;
+    private JButton plazos_fijos_button;
+    private JButton ingresos_y_gastos_button;
+    private JTextField fr_cantidad;
+    private JTextField tf_nombre_empresa;
+    private JTextField tf_nombre;
     private JLabel lbNombre;
-    private JTextField tfDividendoAccion;
-    private JButton agregarNuevoStockButton;
-    private JTable tablaStocks;
-    private JTextField tfDescripcion;
-    private JTextField tfSimbolo;
-    private JTextField tfPrecioCompra;
+    private JTextField tf_dividendo_accion;
+    private JButton agregar_nuevo_stock_button;
+    private JTable tabla_stocks;
+    private JTextField tf_descripcion;
+    private JTextField tf_simbolo;
+    private JTextField tf_precio_compra;
     private JComboBox comboBoxSector;
     private JComboBox comboBoxFrecuencia;
     private JPanel tabla_panel;
     private JScrollPane tabla_scroll_panel;
-    private JTextField tfPrecioActual;
+    private JTextField tf_precio_actual;
     private JComboBox<String> cbFrecuenciaIng;
     private JDatePickerImpl date_picker_stock;
-    private DefaultTableModel tableModel;
+    private DefaultTableModel table_model;
 
 
     public Stocks() {
@@ -62,32 +61,32 @@ public class Stocks extends JFrame {
         setTitle("Stocks");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setContentPane(StocksPanel);
+        setContentPane(stocks_panel);
 
         configureNavigationButtons();
 
         //Configuración JTable
-        tableModel = new DefaultTableModel();
-        tablaStocks.setModel(tableModel);
-        tableModel.addColumn("Nombre Acción");
-        tableModel.addColumn("ID");
-        tableModel.addColumn("Descripción");
-        tableModel.addColumn("Nombre Empresa");
-        tableModel.addColumn("Sector");
-        tableModel.addColumn("Símbolo");
-        tableModel.addColumn("Cantidad");
-        tableModel.addColumn("Dividendo Por Acción");
-        tableModel.addColumn("Frecuencia de Pago de Dividendos");
-        tableModel.addColumn("Precio Compra");
-        tableModel.addColumn("Precio Actual");
-        tableModel.addColumn("Monto Original");
-        tableModel.addColumn("Monto Actual");
-        tableModel.addColumn("Cantidad de Ganancia/Perdida");
-        tableModel.addColumn("Porcentaje de Ganancia");
-        tableModel.addColumn("Valor Mensual Promedio");
-        tableModel.addColumn("Valor Anual Promedio");
-        tableModel.addColumn("Fecha Inicio");
-        tableModel.addColumn("Tipo");
+        table_model = new DefaultTableModel();
+        tabla_stocks.setModel(table_model);
+        table_model.addColumn("Nombre Acción");
+        table_model.addColumn("ID");
+        table_model.addColumn("Descripción");
+        table_model.addColumn("Nombre Empresa");
+        table_model.addColumn("Sector");
+        table_model.addColumn("Símbolo");
+        table_model.addColumn("Cantidad");
+        table_model.addColumn("Dividendo Por Acción");
+        table_model.addColumn("Frecuencia de Pago de Dividendos");
+        table_model.addColumn("Precio Compra");
+        table_model.addColumn("Precio Actual");
+        table_model.addColumn("Monto Original");
+        table_model.addColumn("Monto Actual");
+        table_model.addColumn("Cantidad de Ganancia/Perdida");
+        table_model.addColumn("Porcentaje de Ganancia");
+        table_model.addColumn("Valor Mensual Promedio");
+        table_model.addColumn("Valor Anual Promedio");
+        table_model.addColumn("Fecha Inicio");
+        table_model.addColumn("Tipo");
 
         // Configurar el layout del panel de Stocks para agregar el JScrollPane en lugar de la tabla directamente
         tabla_panel.setLayout(new BorderLayout());
@@ -102,8 +101,8 @@ public class Stocks extends JFrame {
         JDatePanelImpl datePanelImpl = new JDatePanelImpl(model, p);
         date_picker_stock = new JDatePickerImpl(datePanelImpl, new DateLabelFormatter());
 
-        datePanelContainer.setLayout(new BorderLayout());
-        datePanelContainer.add(date_picker_stock, BorderLayout.CENTER);
+        date_panel_container.setLayout(new BorderLayout());
+        date_panel_container.add(date_picker_stock, BorderLayout.CENTER);
 
         // Agregar valores a comboBoxSector
         comboBoxSector.addItem("Energía");
@@ -122,7 +121,7 @@ public class Stocks extends JFrame {
             comboBoxFrecuencia.addItem(i);
         }
 
-        agregarNuevoStockButton.addActionListener(new ActionListener() {
+        agregar_nuevo_stock_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -138,7 +137,7 @@ public class Stocks extends JFrame {
     }
 
     private void configureNavigationButtons() {
-        menuPrincipalButton.addActionListener(new ActionListener() {
+        menu_principal_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Dashboard newframe = new Dashboard();
@@ -147,7 +146,7 @@ public class Stocks extends JFrame {
             }
         });
 
-        cuentaBancariaButton.addActionListener(new ActionListener() {
+        cuenta_bancaria_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 CuentaBancariaG newframe = new CuentaBancariaG();
@@ -156,7 +155,7 @@ public class Stocks extends JFrame {
             }
         });
 
-        plazoFijosButton.addActionListener(new ActionListener() {
+        plazos_fijos_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PlazoFijos newframe = new PlazoFijos();
@@ -165,7 +164,7 @@ public class Stocks extends JFrame {
             }
         });
 
-        ingresosYGastosButton.addActionListener(new ActionListener() {
+        ingresos_y_gastos_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 IngresoYGastos newframe = new IngresoYGastos();
@@ -174,7 +173,7 @@ public class Stocks extends JFrame {
             }
         });
 
-        tarjetasDeCreditoButton.addActionListener(new ActionListener() {
+        tarjetas_credito_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Tarjetas newframe = new Tarjetas();
@@ -183,7 +182,7 @@ public class Stocks extends JFrame {
             }
         });
 
-        prestamosButton.addActionListener(new ActionListener() {
+        prestamos_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Prestamos newframe = new Prestamos();
@@ -194,12 +193,12 @@ public class Stocks extends JFrame {
     }
 
     private void validarCampos() throws Exception {
-        String nombreEmpresa = tfNombreEmpresa.getText();
-        String nombre = tfNombre.getText();
-        String simbolo = tfSimbolo.getText();
-        String cantidadStr = ftCantidad.getText();
-        String precioCompraStr = tfPrecioCompra.getText();
-        String dividendoAccionStr = tfDividendoAccion.getText();
+        String nombreEmpresa = tf_nombre_empresa.getText();
+        String nombre = tf_nombre.getText();
+        String simbolo = tf_simbolo.getText();
+        String cantidadStr = fr_cantidad.getText();
+        String precioCompraStr = tf_precio_compra.getText();
+        String dividendoAccionStr = tf_dividendo_accion.getText();
         String frecuenciaDividendos = comboBoxFrecuencia.getSelectedItem().toString();
         String sector = comboBoxSector.getSelectedItem().toString();
 
@@ -267,13 +266,13 @@ public class Stocks extends JFrame {
     }
 
     private void agregarNuevoStock() {
-        String nombre_empresa = tfNombreEmpresa.getText();
-        String simbolo = tfSimbolo.getText();
-        String descripcion = tfDescripcion.getText();
-        int cantidad = Integer.parseInt(ftCantidad.getText().trim());
-        String nombre = tfNombre.getText();
-        float precio_compra = Float.parseFloat(tfPrecioCompra.getText().trim());
-        float dividendo = Float.parseFloat(tfDividendoAccion.getText().trim());
+        String nombre_empresa = tf_nombre_empresa.getText();
+        String simbolo = tf_simbolo.getText();
+        String descripcion = tf_descripcion.getText();
+        int cantidad = Integer.parseInt(fr_cantidad.getText().trim());
+        String nombre = tf_nombre.getText();
+        float precio_compra = Float.parseFloat(tf_precio_compra.getText().trim());
+        float dividendo = Float.parseFloat(tf_dividendo_accion.getText().trim());
         int frecuencia_dividendos = Integer.parseInt(comboBoxFrecuencia.getSelectedItem().toString());
         String sector = comboBoxSector.getSelectedItem().toString();
 
@@ -302,7 +301,7 @@ public class Stocks extends JFrame {
 
         // Agregar datos al modelo de la tabla
         try {
-            tableModel.addRow(new Object[]{
+            table_model.addRow(new Object[]{
                     nombre_empresa,
                     "ID",
                     descripcion,
@@ -333,13 +332,13 @@ public class Stocks extends JFrame {
     }
 
     private void limpiarCampos() {
-        tfNombreEmpresa.setText("");
-        tfNombre.setText("");
-        tfSimbolo.setText("");
-        ftCantidad.setText("");
-        tfPrecioCompra.setText("");
-        tfDividendoAccion.setText("");
-        tfDescripcion.setText("");
+        tf_nombre_empresa.setText("");
+        tf_nombre.setText("");
+        tf_simbolo.setText("");
+        fr_cantidad.setText("");
+        tf_precio_compra.setText("");
+        tf_dividendo_accion.setText("");
+        tf_descripcion.setText("");
     }
 
     @Override
@@ -379,7 +378,7 @@ public class Stocks extends JFrame {
     private void cargarStocksTabla() {
         try {
             for (Stock stock : Stock.instancias_stocks){
-                tableModel.addRow(new Object[]{
+                table_model.addRow(new Object[]{
                         stock.getNombre(),  // Nombre Acción
                         stock.getId(),            // ID (asumiendo que tienes un método getId())
                         stock.getDescripcion(),   // Descripción
@@ -401,7 +400,7 @@ public class Stocks extends JFrame {
                         stock.getTipo()           // Tipo
                 });
             }
-            adjustColumnWidths(tablaStocks);
+            adjustColumnWidths(tabla_stocks);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

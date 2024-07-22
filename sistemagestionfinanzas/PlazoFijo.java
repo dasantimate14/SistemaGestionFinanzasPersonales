@@ -16,8 +16,8 @@ public class PlazoFijo extends FinanceItem {
     static int cantidad_instancias_plazo_fijo;
     public static List<PlazoFijo> instancias_plazos_fijos = new ArrayList<>();
 
-    public PlazoFijo(String nombre,String descripcion,float montoOriginal, float tasa_interes, LocalDate fecha_inicio, int plazo, CuentaBancaria cuenta) {
-        super(nombre, descripcion, montoOriginal, "Activo", tasa_interes, fecha_inicio);
+    public PlazoFijo(String nombre, String descripcion, float monto_original, float tasa_interes, LocalDate fecha_inicio, int plazo, CuentaBancaria cuenta) {
+        super(nombre, descripcion, monto_original, "Activo", tasa_interes, fecha_inicio);
         this.plazo = plazo;
         this.cuenta = cuenta;
         this.fecha_final = fecha_inicio.plusYears(plazo);
@@ -241,8 +241,8 @@ public class PlazoFijo extends FinanceItem {
         String[] parametros = {getId()};
         try {
             BaseDeDatos.establecerConexion();
-            boolean eliminacionExitosa = BaseDeDatos.ejecutarActualizacion(consulta_eliminacion, parametros);
-            if (eliminacionExitosa) {
+            boolean eliminacion_exitosa = BaseDeDatos.ejecutarActualizacion(consulta_eliminacion, parametros);
+            if (eliminacion_exitosa) {
                 System.out.println("Eliminación exitosa del plazo fijo.");
             }
         } catch (SQLException e) {

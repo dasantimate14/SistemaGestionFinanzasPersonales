@@ -20,12 +20,12 @@ public class Prestamo extends FinanceItem {
     public static int cantidad_instancias = 0;
     public static List<Prestamo> instancias_prestamos = new ArrayList<>();
 
-    public Prestamo(String nombre, String descripcion, float montoOriginal, float tasaInteres, LocalDate fechaInicio,
+    public Prestamo(String nombre, String descripcion, float monto_original, float tasa_interes, LocalDate fecha_inicio,
                     String tipo_prestamo, int plazo, CuentaBancaria cuenta_bancaria) {
-        super(nombre, descripcion, montoOriginal, "Pasivo", tasaInteres, fechaInicio);
+        super(nombre, descripcion, monto_original, "Pasivo", tasa_interes, fecha_inicio);
         this.tipo_prestamo = tipo_prestamo;
         this.plazo = plazo;
-        this.fecha_vencimiento = fechaInicio.plusDays(plazo);
+        this.fecha_vencimiento = fecha_inicio.plusMonths(plazo);
         this.estatus = 1;
         this.cuenta_bancaria = cuenta_bancaria;
         instancias_prestamos.add(this);
@@ -79,7 +79,7 @@ public class Prestamo extends FinanceItem {
         this.cuota_mensual = calcularPagoMensual();
         setInteres(calcularInteresAcumulado());
         descontarCuota();
-        if(fechaInicio.equals(LocalDate.now())) {
+        if(fecha_inicio.equals(LocalDate.now())) {
             setEstatus(0);
         }
     }
@@ -185,7 +185,7 @@ public class Prestamo extends FinanceItem {
         LocalDate fecha_actual = LocalDate.now();
 
         // Calcular el número de pagos realizados
-        long mesesTranscurridos = ChronoUnit.MONTHS.between(fechaInicio, fecha_actual);
+        long mesesTranscurridos = ChronoUnit.MONTHS.between(fecha_inicio, fecha_actual);
         int pagosRealizados = (int) Math.min(mesesTranscurridos, numeros_pagos);
 
         // Calcular el saldo pendiente usando la fórmula
@@ -205,7 +205,7 @@ public class Prestamo extends FinanceItem {
     }
 
     public Period calcularTiempoRestante() {
-        return Period.between(fechaInicio, fecha_vencimiento);
+        return Period.between(fecha_inicio, fecha_vencimiento);
     }
 
     public float calcularSaldoPendiente() {

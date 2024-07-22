@@ -17,8 +17,8 @@ public class Ingreso extends FinanceItem{
     public static List<Ingreso> instancias_ingresos = new ArrayList<>();
 
     //Constructor
-    public Ingreso(String nombre, String  descripcion, float montoOriginal, LocalDate fechaInicio, String fuente, CuentaBancaria cuenta_bancaria, int frecuencia) {
-        super(nombre, descripcion, montoOriginal, "Activo", fechaInicio);
+    public Ingreso(String nombre, String  descripcion, float monto_original, LocalDate fecha_inicio, String fuente, CuentaBancaria cuenta_bancaria, int frecuencia) {
+        super(nombre, descripcion, monto_original, "Activo", fecha_inicio);
         this.fuente = fuente;
         this.cuenta_bancaria = cuenta_bancaria;
         this.frecuencia = frecuencia;
@@ -102,7 +102,7 @@ public class Ingreso extends FinanceItem{
                     break;
                 }
                 Ingreso ingreso = new Ingreso(getNombre(), getDescripcion(), getMontoOriginal(), fecha_inicio, getFuente(), getCuentaBancaria());
-                cuenta_bancaria.depositarMonto(ingreso.montoOriginal);
+                cuenta_bancaria.depositarMonto(ingreso.monto_original);
 
                 //Se guarda el ingreso repetido en la base de datos
                 ingreso.guardarIngresoBaseDatos();
@@ -116,9 +116,9 @@ public class Ingreso extends FinanceItem{
         float ingresos_totales = 0;
         float porcentaje_representacion = 0;
         for(Ingreso ingreso : instancias_ingresos){
-            ingresos_totales += ingreso.montoOriginal;
+            ingresos_totales += ingreso.monto_original;
             if(ingreso.getNombre().equals(nombre)){
-                sumatoria_ingreso += ingreso.montoOriginal;
+                sumatoria_ingreso += ingreso.monto_original;
             }
         }
         //Calcular porcentaje representación

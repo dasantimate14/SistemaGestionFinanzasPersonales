@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static sistemagestionfinanzas.Usuario.usuario_actual;
-
+//Clase para probar la parte logica
 public class Pruebas {
     public static void main(String[] args) {
     }

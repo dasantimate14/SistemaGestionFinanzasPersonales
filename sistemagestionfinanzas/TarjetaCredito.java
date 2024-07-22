@@ -8,25 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TarjetaCredito extends FinanceItem {
-    private String tipoTarjeta;
-    private float limiteCredito;
-    private float saldoActual;
+    private String tipo_tarjeta;
+    private float limite_credito;
+    private float saldo_actual;
     private int numero;
-    private float creditoUsado;
-    private CuentaBancaria cuentaBancaria;
+    private float credito_usado;
+    private CuentaBancaria cuenta_bancaria;
     public int cantidad_instancias;
     public static List<TarjetaCredito> instanciasTarjetas = new ArrayList<>();
 
     // Constructor
-    public TarjetaCredito(String nombre, String descripcion, float montoOriginal, LocalDate fechaInicio,
-                          String tipoTarjeta, float limiteCredito, int numero, CuentaBancaria cuentaBancaria) {
-        super(nombre, descripcion, montoOriginal, "Pasivo", 0, fechaInicio);
-        this.tipoTarjeta = tipoTarjeta;
-        this.limiteCredito = limiteCredito;
-        this.saldoActual = limiteCredito;
+    public TarjetaCredito(String nombre, String descripcion, float monto_original, LocalDate fecha_inicio,
+                          String tipo_tarjeta, float limite_credito, int numero, CuentaBancaria cuenta_bancaria) {
+        super(nombre, descripcion, monto_original, "Pasivo", 0, fecha_inicio);
+        this.tipo_tarjeta = tipo_tarjeta;
+        this.limite_credito = limite_credito;
+        this.saldo_actual = limite_credito;
         this.numero = numero;
-        this.cuentaBancaria = cuentaBancaria;
-        this.creditoUsado = calcularCreditoUsado();
+        this.cuenta_bancaria = cuenta_bancaria;
+        this.credito_usado = calcularCreditoUsado();
         instanciasTarjetas.add(this);
         cantidad_instancias++;
         System.out.println("Tarjeta creada: " + this.getNumero());
@@ -34,42 +34,42 @@ public class TarjetaCredito extends FinanceItem {
 
     // Métodos para calcular el crédito usado
     private float calcularCreditoUsado() {
-        return limiteCredito - saldoActual;
+        return limite_credito - saldo_actual;
     }
 
     // Getters y Setters
     public String getTipoTarjeta() {
-        return tipoTarjeta;
+        return tipo_tarjeta;
     }
 
     public void setTipoTarjeta(String tipoTarjeta) {
-        this.tipoTarjeta = tipoTarjeta;
+        this.tipo_tarjeta = tipoTarjeta;
     }
 
     public float getLimiteCredito() {
-        return limiteCredito;
+        return limite_credito;
     }
 
     public void setLimiteCredito(float limiteCredito) {
-        this.limiteCredito = limiteCredito;
-        this.creditoUsado = calcularCreditoUsado();
+        this.limite_credito = limiteCredito;
+        this.credito_usado = calcularCreditoUsado();
     }
 
     public float getSaldoActual() {
-        return saldoActual;
+        return saldo_actual;
     }
 
     public void setSaldoActual(float saldoActual) {
-        this.saldoActual = saldoActual;
-        this.creditoUsado = calcularCreditoUsado();
+        this.saldo_actual = saldoActual;
+        this.credito_usado = calcularCreditoUsado();
     }
 
     public float getTasaInteres() {
-        return tasaInteres;
+        return tasa_interes;
     }
 
     public void setTasaInteres(float tasaInteres) {
-        this.tasaInteres = tasaInteres;
+        this.tasa_interes = tasa_interes;
     }
 
     public int getNumero() {
@@ -81,15 +81,15 @@ public class TarjetaCredito extends FinanceItem {
     }
 
     public float getCreditoUsado() {
-        return creditoUsado;
+        return credito_usado;
     }
 
     public CuentaBancaria getCuentaBancaria() {
-        return cuentaBancaria;
+        return cuenta_bancaria;
     }
 
-    public void setCuentaBancaria(CuentaBancaria cuentaBancaria) {
-        this.cuentaBancaria = cuentaBancaria;
+    public void setCuentaBancaria(CuentaBancaria cuenta_bancaria) {
+        this.cuenta_bancaria = cuenta_bancaria;
     }
 
     // Método para calcular el porcentaje de representación
@@ -120,11 +120,11 @@ public class TarjetaCredito extends FinanceItem {
     @Override
     protected StringBuilder obtenerInformacionSubclase() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Tipo de Tarjeta: ").append(tipoTarjeta).append("\n");
-        sb.append("Límite de Crédito: ").append(limiteCredito).append("\n");
-        sb.append("Saldo Actual: ").append(saldoActual).append("\n");
+        sb.append("Tipo de Tarjeta: ").append(tipo_tarjeta).append("\n");
+        sb.append("Límite de Crédito: ").append(limite_credito).append("\n");
+        sb.append("Saldo Actual: ").append(saldo_actual).append("\n");
         sb.append("Número: ").append(numero).append("\n");
-        sb.append("Crédito Usado: ").append(creditoUsado).append("\n");
+        sb.append("Crédito Usado: ").append(credito_usado).append("\n");
         return sb;
     }
 
@@ -151,26 +151,26 @@ public class TarjetaCredito extends FinanceItem {
     // Método para pagar la tarjeta de crédito
     public void pagarTarjeta(float monto) throws SQLException {
         LocalDate fecha_hoy = LocalDate.now();
-        if (cuentaBancaria != null && cuentaBancaria.getMontoActual() >= monto) {
+        if (cuenta_bancaria != null && cuenta_bancaria.getMontoActual() >= monto) {
             // Retirar monto de la cuenta bancaria
-            cuentaBancaria.retirarMonto(monto);
+            cuenta_bancaria.retirarMonto(monto);
 
             // Descontar el monto del saldo de la tarjeta de crédito
-            this.saldoActual -= monto;
+            this.saldo_actual -= monto;
 
             // Si el saldo actual es menor o igual a cero, ajustar valores
-            if (this.saldoActual <= 0) {
-                this.saldoActual = 0;
-                this.creditoUsado = 0;
-                System.out.println("Crédito disponible: " + limiteCredito);
-                System.out.println("Crédito usado: " + creditoUsado);
+            if (this.saldo_actual <= 0) {
+                this.saldo_actual = 0;
+                this.credito_usado = 0;
+                System.out.println("Crédito disponible: " + limite_credito);
+                System.out.println("Crédito usado: " + credito_usado);
             } else {
-                this.creditoUsado = calcularCreditoUsado();
+                this.credito_usado = calcularCreditoUsado();
             }
 
             // Registrar el pago como un gasto en la base de datos
-            cuentaBancaria.retirarMonto(monto);
-            Gasto pago_tarjeta = new Gasto("Pago Tarejta de Credito", "Se pagó la tarjeta con la terminación " + getNumero(), getCreditoUsado(), fecha_hoy, cuentaBancaria.getBanco(), 0, "Pago Tarjeta", getCuentaBancaria());
+            cuenta_bancaria.retirarMonto(monto);
+            Gasto pago_tarjeta = new Gasto("Pago Tarejta de Credito", "Se pagó la tarjeta con la terminación " + getNumero(), getCreditoUsado(), fecha_hoy, cuenta_bancaria.getBanco(), 0, "Pago Tarjeta", getCuentaBancaria());
             pago_tarjeta.guardarGastoBaseDatos();
 
             System.out.println("Pago de tarjeta realizado con éxito y registrado como gasto.");
@@ -190,8 +190,8 @@ public class TarjetaCredito extends FinanceItem {
                 getTipoTarjeta(),
                 String.valueOf(getLimiteCredito()),
                 String.valueOf(getNumero()),
-                cuentaBancaria.getIdUsuario(),
-                cuentaBancaria.getId()
+                cuenta_bancaria.getIdUsuario(),
+                cuenta_bancaria.getId()
         };
 
         try {

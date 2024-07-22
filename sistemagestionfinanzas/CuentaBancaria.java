@@ -17,12 +17,12 @@ public class CuentaBancaria extends FinanceItem{
     public static List<CuentaBancaria> intsancias_cuentas_bancarias = new ArrayList<>();
 
     //Constructor
-    public CuentaBancaria(String nombre, String  descripcion, float montoOriginal, float tasaInteres, LocalDate fechaInicio, String banco, String numero_cuenta, String tipo_cuenta, String id_usuario) {
-        super(nombre, descripcion, montoOriginal, "Activo", tasaInteres, fechaInicio);
+    public CuentaBancaria(String nombre, String  descripcion, float monto_original, float tasaInteres, LocalDate fecha_inicio, String banco, String numero_cuenta, String tipo_cuenta, String id_usuario) {
+        super(nombre, descripcion, monto_original, "Activo", tasaInteres, fecha_inicio);
         this.banco = banco;
         this.numero_cuenta = numero_cuenta;
         this.tipo_cuenta = tipo_cuenta;
-        this.montoActual = montoOriginal;
+        this.monto_actual = monto_original;
         this.id_usuario = id_usuario;
         intsancias_cuentas_bancarias.add(this);
         cantidad_instancias++;
