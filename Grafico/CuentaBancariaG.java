@@ -22,7 +22,6 @@ public class CuentaBancariaG extends JFrame {
     private JButton cuentas_bancarias_button;
     private JButton btnAgregarCuenta;
     private JButton consultarMovimientosButton;
-    private JPanel pastelitoPanel;
     private JTable table_cuentas_banco;
     private JScrollPane spCuentaBanco;
     private DefaultTableModel tableModel;

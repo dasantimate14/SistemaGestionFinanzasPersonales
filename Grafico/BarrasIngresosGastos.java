@@ -54,6 +54,14 @@ public class BarrasIngresosGastos extends JPanel {
         // Asumiendo que las listas contienen los datos de los últimos 12 meses en orden cronológico
         int num_meses = ingresos_ultimos_meses.size();
 
+        // Agregar gastos al dataset
+        for (int i = 0; i < num_meses; i++) {
+            // Calcular el mes correspondiente para el gasto actual
+            int mes = (mes_actual - i - 1 + 12) % 12 + 1;
+            String nombre_mes = LocalDate.of(2024, mes, 1).getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault());
+            dataset.addValue(gastos_ultimos_meses.get(i), "Gasto", nombre_mes);
+        }
+
         // Agregar ingresos al dataset
         for (int i = 0; i < num_meses; i++) {
             System.out.println(ingresos_ultimos_meses.get(i));
@@ -61,14 +69,6 @@ public class BarrasIngresosGastos extends JPanel {
             int mes = (mes_actual - i - 1 + 12) % 12 + 1;
             String nombre_mes = LocalDate.of(2024, mes, 1).getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault());
             dataset.addValue(ingresos_ultimos_meses.get(i), "Ingreso", nombre_mes);
-        }
-
-        // Agregar gastos al dataset
-        for (int i = 0; i < num_meses; i++) {
-            // Calcular el mes correspondiente para el gasto actual
-            int mes = (mes_actual - i - 1 + 12) % 12 + 1;
-            String nombre_mes = LocalDate.of(2024, mes, 1).getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault());
-            dataset.addValue(gastos_ultimos_meses.get(i), "Gasto", nombre_mes);
         }
 
         return dataset;

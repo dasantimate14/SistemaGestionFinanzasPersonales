@@ -58,8 +58,9 @@ public class BarrasIngresosGastosAnuales extends JPanel{
             int anio = anio_actual - (ingresos_ultimos_cinco_anos.size() - 1 - i);
 
             // Agregar ingresos y gastos al dataset
-            dataset.addValue(ingresos_ultimos_cinco_anos.get(i), "Ingreso", String.valueOf(anio));
             dataset.addValue(gastos_ultimos_cinco_anos.get(i), "Gasto", String.valueOf(anio));
+            dataset.addValue(ingresos_ultimos_cinco_anos.get(i), "Ingreso", String.valueOf(anio));
+
         }
 
         return dataset;

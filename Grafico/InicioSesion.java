@@ -230,7 +230,6 @@ public class InicioSesion extends JFrame {
                 JOptionPane.showMessageDialog(this, "Por favor, ingrese datos válidos. " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-
         }
 
     public static void main(String[] args) {

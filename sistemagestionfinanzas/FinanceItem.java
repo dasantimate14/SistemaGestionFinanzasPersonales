@@ -10,26 +10,26 @@ public abstract class FinanceItem {
     //Atributos de la superclase
     protected String nombre;
     protected String descripcion;
-    protected float montoOriginal;
+    protected float monto_original;
     protected String tipo;
-    protected float porcentajeGanancia;
-    protected float ganaciaPerdida;
+    protected float porcentaje_ganancia;
+    protected float ganancia_perdida;
     protected String id;
-    protected float tasaInteres;
+    protected float tasa_interes;
     protected float interes;
-    protected LocalDate fechaInicio;
-    protected float montoActual;
-    protected float promedioMensual;
+    protected LocalDate fecha_inicio;
+    protected float monto_actual;
+    protected float promedio_mensual;
 
     //Constructor de la superclase
-    public FinanceItem(String nombre, String descripcion, float montoOriginal, String tipo,
-                       float tasaInteres, LocalDate fechaInicio) {
+    public FinanceItem(String nombre, String descripcion, float monto_original, String tipo,
+                       float tasa_interes, LocalDate fecha_inicio) {
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.montoOriginal = montoOriginal;
+        this.monto_original = monto_original;
         this.tipo = tipo;
-        this.tasaInteres = tasaInteres;
-        this.fechaInicio = fechaInicio;
+        this.tasa_interes = tasa_interes;
+        this.fecha_inicio = fecha_inicio;
     }
     // Segundo constructor sin tasaInteres, asignando un valor por defecto
     public FinanceItem(String nombre, String descripcion, float montoOriginal, String tipo,
@@ -39,41 +39,40 @@ public abstract class FinanceItem {
     //Metodos get y set de la superclase
     public String getNombre() {return nombre;}
     public String getDescripcion() {return descripcion;}
-    public float getMontoOriginal() {return montoOriginal;}
+    public float getMontoOriginal() {return monto_original;}
     public String getTipo() {return tipo;}
-    public float getPorcentajeGanancia() {return porcentajeGanancia; }
+    public float getPorcentajeGanancia() {return porcentaje_ganancia; }
     public String getId() {return id;}
-    public float getTasaInteres() {return tasaInteres;}
+    public float getTasaInteres() {return tasa_interes;}
     public float getInteres() {return interes;}
-    public LocalDate getFechaInicio() {return fechaInicio;}
-    public float getMontoActual() {return montoActual;}
-    public float getPromedioMensual() {return promedioMensual;}
-
-    public float getGanaciaPerdida() {return ganaciaPerdida;}
+    public LocalDate getFechaInicio() {return fecha_inicio;}
+    public float getMontoActual() {return monto_actual;}
+    public float getPromedioMensual() {return promedio_mensual;}
+    public float getGanaciaPerdida() {return ganancia_perdida;}
 
     public void setNombre(String nombre) {this.nombre = nombre;}
     public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
-    public void setMontoOriginal(float montoOriginal) {this.montoOriginal = montoOriginal;}
+    public void setMontoOriginal(float monto_original) {this.monto_original = monto_original;}
     public void setTipo(String tipo) {this.tipo = tipo;}
-    public void setPorcentajeGanancia(float procentajeGanancia){this.porcentajeGanancia = procentajeGanancia;}
+    public void setPorcentajeGanancia(float porcentaje_ganancia){this.porcentaje_ganancia = porcentaje_ganancia;}
     public void setId(String id) {this.id = id;}
-    public void setTasaInteres(float tasaInteres) {this.tasaInteres = tasaInteres;}
+    public void setTasaInteres(float tasa_interes) {this.tasa_interes = tasa_interes;}
     public void setInteres(float interes) {this.interes = interes;}
-    public void setFechaInicio(LocalDate fechaInicio) {this.fechaInicio = fechaInicio;}
-    public void setMontoActual(float montoActual) {this.montoActual = montoActual;}
-    public void setPromedioMensual(float promedioMensual) {this.promedioMensual = promedioMensual;}
-    public void setGanaciaPerdida(float ganaciaPerdida){this.ganaciaPerdida = ganaciaPerdida;}
+    public void setFechaInicio(LocalDate fecha_inicio) {this.fecha_inicio = fecha_inicio;}
+    public void setMontoActual(float monto_actual) {this.monto_actual = monto_actual;}
+    public void setPromedioMensual(float promedioMensual) {this.promedio_mensual = promedioMensual;}
+    public void setGanaciaPerdida(float ganancia_perdida){this.ganancia_perdida = ganancia_perdida;}
 
     //Metodos propios de la superclase
     protected abstract float calcularValorActual() throws IOException;
 
     public float calcularGanaciaPerdida() throws IOException {
-        setGanaciaPerdida(redonderCantidad(calcularValorActual() - montoOriginal));
+        setGanaciaPerdida(redonderCantidad(calcularValorActual() - monto_original));
         return getGanaciaPerdida();
     }
 
     protected float calcularPorcentajeGananciaPerdida() throws IOException {
-        return redonderCantidad((calcularGanaciaPerdida()/ montoOriginal) * 100);
+        return redonderCantidad((calcularGanaciaPerdida()/ monto_original) * 100);
     }
 
     //Metodo para imprimir los atributos de la clase
@@ -83,14 +82,14 @@ public abstract class FinanceItem {
         sb.append("ID: ").append(id).append("\n");
         sb.append("Descripcion: ").append(descripcion).append("\n");
         sb.append("Tipo: ").append(tipo).append("\n");
-        sb.append("Monto Original: ").append(montoOriginal).append("\n");
+        sb.append("Monto Original: ").append(monto_original).append("\n");
         sb.append("Interes: ").append(interes).append("\n");
-        sb.append("Tasa interes: ").append(tasaInteres).append("%\n");
-        sb.append("Cantidad de Ganancia/Perdida: ").append(ganaciaPerdida).append("\n");
-        sb.append("Porcentaje de ganancia: ").append(porcentajeGanancia).append("%\n");
-        sb.append("Monto Actual: ").append(montoActual).append("\n");
-        sb.append("Valor Mensual Promedio: ").append(promedioMensual).append("\n");
-        sb.append("Fecha inicio: ").append(fechaInicio).append("\n");
+        sb.append("Tasa interes: ").append(tasa_interes).append("%\n");
+        sb.append("Cantidad de Ganancia/Perdida: ").append(ganancia_perdida).append("\n");
+        sb.append("Porcentaje de ganancia: ").append(porcentaje_ganancia).append("%\n");
+        sb.append("Monto Actual: ").append(monto_actual).append("\n");
+        sb.append("Valor Mensual Promedio: ").append(promedio_mensual).append("\n");
+        sb.append("Fecha inicio: ").append(fecha_inicio).append("\n");
         return sb;
     }
 
@@ -101,7 +100,7 @@ public abstract class FinanceItem {
     public final void obtenerInformacionCompleta(){
         StringBuilder informacionGeneral = obtenerInformacionGeneral();
         StringBuilder informacionSubclase = obtenerInformacionSubclase();
-        System.out.println(informacionGeneral.toString());
+        System.out.print(informacionGeneral.toString());
         System.out.println(informacionSubclase.toString());
 
     }
@@ -115,16 +114,8 @@ public abstract class FinanceItem {
 
     protected abstract float calcularPromedioAnual() throws IOException;
 
-    protected void generarGrafica(){
-        return;
-    }
-
-    protected JTable generarTabla(){
-        return null;
-    }
-
     protected float calcularInteres(){
-        setInteres(montoOriginal *(tasaInteres/100));
+        setInteres(monto_original *(tasa_interes/100));
         return getInteres();
     }
 
