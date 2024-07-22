@@ -1,49 +1,64 @@
 package Grafico;
 
 import sistemagestionfinanzas.CuentaBancaria;
+import sistemagestionfinanzas.TarjetaCredito;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 
 public class Tarjetas extends JFrame {
-    private JButton btMenu;
-    private JButton cuentasBancariasButton;
-    private JButton préstamoButton;
-    private JButton plazosFijosButton;
-    private JButton tarjetasDeCreditoButton;
-    private JButton stocksButton;
-    private JButton ingresosYGastosButton;
-    private JPanel TarjetaPanel;
-    private JComboBox<String> comboBox1;
-    private JTextField tfLimiteCredito;
-    private JTextField tfSaldoActual;
-    private JTextField tfNumeroTarjeta;
-    private JComboBox<String> cbCuentaBancaria;
-    private JButton agregarButton;
+    private JButton bt_menu;
+    private JButton cuentas_bancarias_button;
+    private JButton prestamo_button;
+    private JButton plazos_fijos_button;
+    private JButton tarjetas_de_credito_button;
+    private JButton stocks_button;
+    private JButton ingresos_y_gastos_button;
+    private JPanel tarjeta_panel;
+    private JComboBox<String> cb_tipo_tarjeta;
+    private JTextField tf_limite_credito;
+    private JTextField tf_saldo_actual;
+    private JTextField tf_numero_tarjeta;
+    private JComboBox<String> cb_cuenta_bancaria;
+    private JButton agregar_button;
+    private JTable tarjetas_table;
+    private JScrollPane sp_tarjetas;
 
     public Tarjetas() {
-        // Configuración de la ventana
         setSize(930, 920);
         setTitle("Tarjetas");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setContentPane(TarjetaPanel);
+        setContentPane(tarjeta_panel);
+
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Tipo");
+        model.addColumn("Límite de Crédito");
+        model.addColumn("Saldo Actual");
+        model.addColumn("Número de Tarjeta");
+        model.addColumn("Cuenta Bancaria");
+        tarjetas_table.setModel(model);
 
         cargarCuentasBancarias();
+        cargarDatosTarjetas();
 
-        agregarButton.addActionListener(new ActionListener() {
+        agregar_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     validarCampos();
+                    agregarTarjeta();
                     JOptionPane.showMessageDialog(null, "Tarjeta agregada correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-        btMenu.addActionListener(new ActionListener() {
+
+        bt_menu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Dashboard newframe = new Dashboard();
@@ -51,7 +66,8 @@ public class Tarjetas extends JFrame {
                 dispose();
             }
         });
-        cuentasBancariasButton.addActionListener(new ActionListener() {
+
+        cuentas_bancarias_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 CuentaBancariaG newframe = new CuentaBancariaG();
@@ -59,7 +75,8 @@ public class Tarjetas extends JFrame {
                 dispose();
             }
         });
-        plazosFijosButton.addActionListener(new ActionListener() {
+
+        plazos_fijos_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PlazoFijos newframe = new PlazoFijos();
@@ -67,7 +84,8 @@ public class Tarjetas extends JFrame {
                 dispose();
             }
         });
-        ingresosYGastosButton.addActionListener(new ActionListener() {
+
+        ingresos_y_gastos_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 IngresoYGastos newframe = new IngresoYGastos();
@@ -75,7 +93,8 @@ public class Tarjetas extends JFrame {
                 dispose();
             }
         });
-        stocksButton.addActionListener(new ActionListener() {
+
+        stocks_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Stocks newframe = new Stocks();
@@ -83,7 +102,8 @@ public class Tarjetas extends JFrame {
                 dispose();
             }
         });
-        préstamoButton.addActionListener(new ActionListener() {
+
+        prestamo_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Prestamos newframe = new Prestamos();
@@ -102,71 +122,120 @@ public class Tarjetas extends JFrame {
     }
 
     private void cargarCuentasBancarias() {
-        cbCuentaBancaria.removeAllItems();
-        for(CuentaBancaria cuenta: CuentaBancaria.intsancias_cuentas_bancarias){
-            cbCuentaBancaria.addItem(cuenta.getNumeroCuenta() + " " + cuenta.getNombre());
+        cb_cuenta_bancaria.removeAllItems();
+        for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
+            cb_cuenta_bancaria.addItem(cuenta.getNumeroCuenta() + " " + cuenta.getNombre());
         }
     }
 
-    private void validarCampos() throws Exception {
-        String tipoTarjeta = (String) comboBox1.getSelectedItem();
-        String limiteCredito = tfLimiteCredito.getText().trim();
-        String saldoActual = tfSaldoActual.getText().trim();
-        String numeroTarjeta = tfNumeroTarjeta.getText().trim();
-        String cuentaBancaria = (String) cbCuentaBancaria.getSelectedItem();
+    private void cargarDatosTarjetas() {
+        try {
+            DefaultTableModel model = (DefaultTableModel) tarjetas_table.getModel();
+            model.setRowCount(0);
+            for (TarjetaCredito tarjeta : TarjetaCredito.instanciasTarjetas) {
+                model.addRow(new Object[]{
+                        tarjeta.getTipo(),
+                        tarjeta.getLimiteCredito(),
+                        tarjeta.getSaldoActual(),
+                        tarjeta.getNumero(),
+                        tarjeta.getCuentaBancaria().getNumeroCuenta() + " " + tarjeta.getCuentaBancaria().getNombre()
+                });
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al cargar datos de tarjetas: " + e.getMessage());
+        }
+    }
 
-        if (tipoTarjeta == null || tipoTarjeta.isEmpty() || tipoTarjeta.equals("Selecciona una opción")) {
+    private void agregarTarjeta() throws Exception {
+        validarCampos();
+
+        String tipo_tarjeta = (String) cb_tipo_tarjeta.getSelectedItem();
+        float limite_credito = (float) Double.parseDouble(tf_limite_credito.getText().trim());
+        float saldo_actual = (float) Double.parseDouble(tf_saldo_actual.getText().trim());
+        String numero_tarjeta_str = tf_numero_tarjeta.getText().trim();
+        int numero_tarjeta = Integer.parseInt(numero_tarjeta_str);
+        String cuenta_bancaria_seleccionada = (String) cb_cuenta_bancaria.getSelectedItem();
+        String nombre = "Nombre de la tarjeta"; // Ajustar según sea necesario
+        String descripcion = "Descripción de la tarjeta"; // Ajustar según sea necesario
+        float monto_original = 0; // Ajustar según sea necesario
+        LocalDate fecha_inicio = LocalDate.now();
+
+        CuentaBancaria cuenta_vinculada = null;
+        for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
+            String cuenta_buscada = cuenta.getNumeroCuenta() + " " + cuenta.getNombre();
+            if (cuenta_buscada.equals(cuenta_bancaria_seleccionada)) {
+                cuenta_vinculada = cuenta;
+                break;
+            }
+        }
+        if (cuenta_vinculada == null) {
+            JOptionPane.showMessageDialog(this, "Cuenta bancaria seleccionada no encontrada.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        TarjetaCredito nuevaTarjeta = new TarjetaCredito(nombre, descripcion, monto_original, fecha_inicio, tipo_tarjeta, limite_credito, numero_tarjeta, cuenta_vinculada);
+        //nuevaTarjeta.guardarTarjetaBaseDatos();
+        cargarDatosTarjetas(); // Recargar los datos de la tabla después de agregar una nueva tarjeta
+    }
+
+
+    private void validarCampos() throws Exception {
+        String tipo_tarjeta = (String) cb_tipo_tarjeta.getSelectedItem();
+        String limite_credito = tf_limite_credito.getText().trim();
+        String saldo_actual = tf_saldo_actual.getText().trim();
+        String numero_tarjeta = tf_numero_tarjeta.getText().trim();
+        String cuenta_bancaria = (String) cb_cuenta_bancaria.getSelectedItem();
+
+        if (tipo_tarjeta == null || tipo_tarjeta.isEmpty() || tipo_tarjeta.equals("Selecciona una opción")) {
             throw new Exception("Debe seleccionar un tipo de tarjeta.");
         }
 
-        if (limiteCredito.isEmpty()) {
+        if (limite_credito.isEmpty()) {
             throw new Exception("Debe ingresar el límite de crédito.");
         }
-        if (!limiteCredito.matches("\\d+(\\.\\d{1,2})?")) {
-            throw new Exception("El límite de crédito solo debe contener números con hasta dos decimales.");
+        if (!limite_credito.matches("\\d+(\\.\\d{1,2})?")) {
+            throw new Exception("El límite de crédito solo debe contener números y con hasta dos decimales.");
         }
 
         try {
-            Double.parseDouble(limiteCredito);
+            Double.parseDouble(limite_credito);
         } catch (NumberFormatException e) {
             throw new Exception("El límite de crédito debe ser un número válido.");
         }
 
-        if (saldoActual.isEmpty()) {
+        if (saldo_actual.isEmpty()) {
             throw new Exception("Debe ingresar el saldo actual.");
         }
-        if (!saldoActual.matches("\\d+(\\.\\d{1,2})?")) {
-            throw new Exception("El saldo actual solo debe contener números con hasta dos decimales.");
+        if (!saldo_actual.matches("\\d+(\\.\\d{1,2})?")) {
+            throw new Exception("El saldo actual solo debe contener números y con hasta dos decimales.");
         }
 
         try {
-            Double.parseDouble(saldoActual);
+            Double.parseDouble(saldo_actual);
         } catch (NumberFormatException e) {
             throw new Exception("El saldo actual debe ser un número válido.");
         }
 
-        if (numeroTarjeta.isEmpty()) {
-            throw new Exception("Debe ingresar el número de tarjeta.");
+        if (numero_tarjeta.isEmpty()) {
+            throw new Exception("Debe ingresar los 4 números de la terminación del número de tarjeta.");
         }
-        if (!numeroTarjeta.matches("\\d{1,22}")) {
-            throw new Exception("El número de tarjeta solo puede contener números de hasta 22 dígitos.");
+        if (!numero_tarjeta.matches("\\d+")) {
+            throw new Exception("El número de tarjeta debe contener solo números.");
+        }
+        if (numero_tarjeta.length() != 4 || !numero_tarjeta.matches("\\d{4}")) {
+            throw new Exception("La terminación del número de tarjeta debe tener exactamente 4 dígitos.");
         }
 
-        if (cuentaBancaria == null || cuentaBancaria.isEmpty() || cuentaBancaria.equals("Selecciona una opción")) {
+
+        if (cuenta_bancaria == null || cuenta_bancaria.isEmpty() || cuenta_bancaria.equals("Selecciona una opción")) {
             throw new Exception("Debe seleccionar una cuenta bancaria.");
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                JFrame frame = new JFrame("Tarjetas");
-                frame.setContentPane(new Tarjetas().TarjetaPanel);
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.pack();
-                frame.setVisible(true);
-            }
+        SwingUtilities.invokeLater(() -> {
+            Tarjetas frame = new Tarjetas();
+            frame.setVisible(true);
         });
     }
 }
