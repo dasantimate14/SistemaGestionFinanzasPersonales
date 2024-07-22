@@ -17,10 +17,14 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+
 import sistemagestionfinanzas.Prestamo;
 import sistemagestionfinanzas.CuentaBancaria;
 
-public class Prestamos extends JFrame{
+public class Prestamos extends JFrame {
 
     public static List<Prestamo> instanciasPrestamos = new ArrayList<>();
 
@@ -31,22 +35,21 @@ public class Prestamos extends JFrame{
     private JButton stocksButton;
     private JButton tarjetasDeCreditoButton;
     private JButton prestamosButton;
-    private JPanel fecha_de_vencimiento_panel;
     private JPanel PrestamosPanel;
     private JTextField tf_descripcion;
     private JTextField tf_nombre;
-    private JComboBox cb_tipo;
+    private JComboBox<String> cb_tipo;
     private JTextField tf_monto_original;
     private JTextField tf_plazo;
-    private JTextField tf_cuota_mensual;
     private JPanel fecha_inicio_panel;
-    private JComboBox cbEstatus;
-    private JButton btnAgregarPrestamo;
+    private JComboBox<String> cb_estatus;
+    private JButton btn_agregar_prestamo;
     private JTable tabla_prestamos;
-    private JComboBox cb_cuentabancaria;
+    private JComboBox<String> cb_cuentabancaria;
+    private JScrollPane j_scroll_pane_prestamos;
+    private JTextField tf_taza_interes;
     private DefaultTableModel modelo_tabla_prestamos;
     private JDatePickerImpl datePicker;
-
 
     public Prestamos() {
         // Configuración de la ventana
@@ -63,59 +66,86 @@ public class Prestamos extends JFrame{
         pInicio.put("text.month", "Mes");
         pInicio.put("text.year", "Año");
         JDatePanelImpl datePanelImplInicio = new JDatePanelImpl(modelInicio, pInicio);
-        JDatePickerImpl datePickerInicio = new JDatePickerImpl(datePanelImplInicio, new DateLabelFormatter());
+        datePicker = new JDatePickerImpl(datePanelImplInicio, new DateLabelFormatter());
 
         fecha_inicio_panel.setLayout(new BorderLayout());
-        fecha_inicio_panel.add(datePickerInicio, BorderLayout.CENTER);
-
-        // Implementación del JDatePicker para fecha de vencimiento
-        UtilDateModel modelVencimiento = new UtilDateModel();
-        Properties pVencimiento = new Properties();
-        pVencimiento.put("text.today", "Hoy");
-        pVencimiento.put("text.month", "Mes");
-        pVencimiento.put("text.year", "Año");
-        JDatePanelImpl datePanelImplVencimiento = new JDatePanelImpl(modelVencimiento, pVencimiento);
-        JDatePickerImpl datePickerVencimiento = new JDatePickerImpl(datePanelImplVencimiento, new DateLabelFormatter());
-
-        fecha_de_vencimiento_panel.setLayout(new BorderLayout());
-        fecha_de_vencimiento_panel.add(datePickerVencimiento, BorderLayout.CENTER);
+        fecha_inicio_panel.add(datePicker, BorderLayout.CENTER);
 
         // Actualizar el JComboBox de cuentas bancarias
         actualizarComboBoxCuentas();
-
-
 
         // Configuración de la tabla
         String[] columnNames = {"ID", "Nombre", "Descripción", "Monto Original", "Fecha Inicio", "Tipo Préstamo", "Plazo", "Fecha Vencimiento", "Cuota Mensual", "Cuenta Bancaria", "Tasa de Interés", "Estatus"};
         modelo_tabla_prestamos = new DefaultTableModel(columnNames, 0);
         tabla_prestamos.setModel(modelo_tabla_prestamos);
 
+        // Configurar renderizador personalizado para formatear números
+
+
         // Acción del botón de agregar préstamo
-        btnAgregarPrestamo.addActionListener(new ActionListener() {
+        btn_agregar_prestamo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     // Obtener datos del formulario
                     String nombre = tf_nombre.getText();
+                    if (nombre.isEmpty()) {
+                        throw new IllegalArgumentException("El nombre no puede estar vacío.");
+                    }
+
                     String descripcion = tf_descripcion.getText();
+                    if (descripcion.isEmpty()) {
+                        throw new IllegalArgumentException("La descripción no puede estar vacía.");
+                    }
+
                     String tipoPrestamo = (String) cb_tipo.getSelectedItem();
-                    float montoOriginal = Float.parseFloat(tf_monto_original.getText());
-                    float tasaInteres = 0; // Necesitarás obtener este valor de algún lugar o definirlo
-                    // Convertir fechas
-                    java.util.Date date_inicio = (java.util.Date) datePickerInicio.getModel().getValue();
+                    if (tipoPrestamo == null) {
+                        throw new NullPointerException("Debe seleccionar un tipo de préstamo.");
+                    }
+
+                    float montoOriginal;
+                    try {
+                        montoOriginal = Float.parseFloat(tf_monto_original.getText());
+                    } catch (NumberFormatException ex) {
+                        throw new NumberFormatException("Monto original debe ser un número válido.");
+                    }
+
+                    float tasaInteres;
+                    try {
+                        tasaInteres = Float.parseFloat(tf_taza_interes.getText());
+                    } catch (NumberFormatException ex) {
+                        throw new NumberFormatException("Tasa de interés debe ser un número válido.");
+                    }
+
+                    java.util.Date date_inicio = (java.util.Date) datePicker.getModel().getValue();
+                    if (date_inicio == null) {
+                        throw new NullPointerException("Debe seleccionar una fecha de inicio.");
+                    }
                     LocalDate fechaInicio = date_inicio.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
 
-                    java.util.Date date_vencimiento = (java.util.Date) datePickerVencimiento.getModel().getValue();
-                    LocalDate fechaVencimiento = date_vencimiento.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate(); float cuotaMensual = Float.parseFloat(tf_cuota_mensual.getText());
-                    int plazo = Integer.parseInt(tf_plazo.getText());
+                    int plazo;
+                    try {
+                        plazo = Integer.parseInt(tf_plazo.getText());
+                    } catch (NumberFormatException ex) {
+                        throw new NumberFormatException("Plazo debe ser un número entero válido.");
+                    }
+
                     String cuentaSeleccionada = (String) cb_cuentabancaria.getSelectedItem();
+                    if (cuentaSeleccionada == null) {
+                        throw new NullPointerException("Debe seleccionar una cuenta bancaria.");
+                    }
 
-
+                    // Obtener estatus seleccionado y mapear a entero
+                    String estatus = (String) cb_estatus.getSelectedItem();
+                    if (estatus == null) {
+                        throw new NullPointerException("Debe seleccionar un estatus.");
+                    }
+                    int estatusInt = estatus.equals("Activo") ? 1 : 0;
 
                     // Encontrar la cuenta bancaria seleccionada
                     CuentaBancaria cuentaVinculada = null;
                     for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
-                        String cuentaBuscada = cuenta.getNumeroCuenta()+" "+cuenta.getNombre();
+                        String cuentaBuscada = cuenta.getNumeroCuenta() + " " + cuenta.getNombre();
                         if (cuentaBuscada.equals(cuentaSeleccionada)) {
                             cuentaVinculada = cuenta;
                             break;
@@ -123,28 +153,40 @@ public class Prestamos extends JFrame{
                     }
 
                     if (cuentaVinculada == null) {
-                        JOptionPane.showMessageDialog(Prestamos.this, "Cuenta bancaria seleccionada no encontrada.", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
+                        throw new IllegalArgumentException("Cuenta bancaria seleccionada no encontrada.");
                     }
 
                     // Crear el objeto Prestamo con los datos capturados
-                    Prestamo nuevoPrestamo = new Prestamo(nombre, descripcion, montoOriginal, tasaInteres, fechaInicio, tipoPrestamo, plazo, fechaVencimiento, cuentaVinculada);
+                    Prestamo nuevoPrestamo = new Prestamo(nombre, descripcion, montoOriginal, tasaInteres, fechaInicio, tipoPrestamo, plazo, cuentaVinculada);
+
+                    // Asignar estatus al préstamo
+                    nuevoPrestamo.setEstatus(estatusInt);
 
                     // Guardar el préstamo en la base de datos
-                    nuevoPrestamo.guardarPrestamoBaseDatos();
+                    // nuevoPrestamo.guardarPrestamoBaseDatos();
 
-                    // Opcional: Actualizar la tabla o mostrar mensaje de éxito
+                    // Cargar los préstamos en la tabla
+                    cargarPrestamos();
+
+                    // Mostrar mensaje de éxito
                     JOptionPane.showMessageDialog(Prestamos.this, "Préstamo creado exitosamente.");
+
+                    // Limpiar campos del formulario
+                    limpiarCamposFormulario();
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(Prestamos.this, "Error de formato: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (NullPointerException ex) {
+                    JOptionPane.showMessageDialog(Prestamos.this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(Prestamos.this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(Prestamos.this, "Error al crear el préstamo: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
 
-        // Cargar los préstamos en la tabla
-        cargarPrestamos();
 
-
+        // Otros botones
         paginaPrincipalButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -154,14 +196,6 @@ public class Prestamos extends JFrame{
             }
         });
 
-        paginaPrincipalButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            Dashboard newframe = new Dashboard();
-                newframe.setVisible(true);
-                dispose();
-            }
-        });
         cuentasBancariasButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -170,6 +204,7 @@ public class Prestamos extends JFrame{
                 dispose();
             }
         });
+
         plazosFijosButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -178,6 +213,7 @@ public class Prestamos extends JFrame{
                 dispose();
             }
         });
+
         ingresosYGastosButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -186,6 +222,7 @@ public class Prestamos extends JFrame{
                 dispose();
             }
         });
+
         stocksButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -194,6 +231,7 @@ public class Prestamos extends JFrame{
                 dispose();
             }
         });
+
         tarjetasDeCreditoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -202,7 +240,6 @@ public class Prestamos extends JFrame{
                 dispose();
             }
         });
-
     }
 
     @Override
@@ -210,54 +247,53 @@ public class Prestamos extends JFrame{
         super.setVisible(visible);
     }
 
-
     private void actualizarComboBoxCuentas() {
         cb_cuentabancaria.removeAllItems();
-        for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias){
-            cb_cuentabancaria.addItem(cuenta.getNumeroCuenta().toString()+" "+cuenta.getNombre().toString());
+        for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
+            cb_cuentabancaria.addItem(cuenta.getNumeroCuenta().toString() + " " + cuenta.getNombre().toString());
         }
     }
 
     private void cargarPrestamos() {
-        modelo_tabla_prestamos.setRowCount(0); // Limpiar la tabla antes de cargar nuevos datos
+        // Limpiar la tabla antes de cargar nuevos datos
+        modelo_tabla_prestamos.setRowCount(0);
 
-        // Aquí deberías establecer el ID del usuario adecuado. Por ejemplo, puedes usar un valor fijo o dinámico
-        String idUsuario = "1"; // Asegúrate de ajustar este valor según sea necesario
-
-        // Agregar cada préstamo a la tabla
+        // Recorrer la lista de préstamos e insertar cada uno en la tabla
         for (Prestamo prestamo : Prestamo.instanciasPrestamos) {
-            Object[] rowData = {
-                    prestamo.getId(),
-                    prestamo.getNombre(),
-                    prestamo.getDescripcion(),
-                    prestamo.getMontoOriginal(),
-                    prestamo.getFechaInicio(), // Asegúrate de que este campo sea de tipo Date o similar
-                    prestamo.getTipoPrestamo(),
-                    prestamo.getPlazo(),
-                    prestamo.getFechaVencimiento(), // Asegúrate de que este campo sea de tipo Date o similar
-                    prestamo.calcularPagoMensual(),
-                    prestamo.getCuentaBancaria(),
-                    prestamo.getTasaInteres(),
-                    prestamo.getEstatus()
-            };
-            modelo_tabla_prestamos.addRow(rowData);
+            Object[] fila = new Object[12];
+            fila[0] = prestamo.getId();
+            fila[1] = prestamo.getNombre();
+            fila[2] = prestamo.getDescripcion();
+            fila[3] = prestamo.getMontoOriginal();
+            fila[4] = prestamo.getFechaInicio();
+            fila[5] = prestamo.getTipoPrestamo();
+            fila[6] = prestamo.getPlazo();
+            fila[7] = prestamo.getFechaVencimiento();
+            fila[8] = prestamo.calcularPagoMensual();
+            fila[9] = prestamo.getCuentaBancaria().getNumeroCuenta() + " " + prestamo.getCuentaBancaria().getNombre();
+            fila[10] = prestamo.getTasaInteres();
+            fila[11] = prestamo.getEstatus() == 1 ? "Activo" : "Inactivo";
+            modelo_tabla_prestamos.addRow(fila);
+            adjustColumnWidths(tabla_prestamos);
         }
     }
 
-
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Prestamos frame = new Prestamos();
-                frame.setVisible(true);
-            }
-        });
+    private void limpiarCamposFormulario() {
+        tf_nombre.setText("");
+        tf_descripcion.setText("");
+        cb_tipo.setSelectedIndex(-1);
+        tf_monto_original.setText("");
+        tf_plazo.setText("");
+        cb_estatus.setSelectedIndex(-1);
+        cb_cuentabancaria.setSelectedIndex(-1);
+        tf_taza_interes.setText("");
+        datePicker.getModel().setValue(null);
     }
 
-    public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
-        private String datePattern = "dd/MM/yyyy";
+
+
+    private class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
+        private String datePattern = "yyyy-MM-dd";
         private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
 
         @Override
@@ -266,7 +302,7 @@ public class Prestamos extends JFrame{
         }
 
         @Override
-        public String valueToString(Object value) throws ParseException {
+        public String valueToString(Object value) {
             if (value != null) {
                 Calendar cal = (Calendar) value;
                 return dateFormatter.format(cal.getTime());
@@ -275,6 +311,39 @@ public class Prestamos extends JFrame{
         }
     }
 
+    public static void main(String[] args) {
+        // Crear y mostrar la ventana
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Prestamos ventana = new Prestamos();
+                ventana.setVisible(true);
+            }
+        });
+    }
+
+    private static void adjustColumnWidths(JTable table) {
+        TableColumnModel columnModel = table.getColumnModel();
+        TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+
+        for (int i = 0; i < columnModel.getColumnCount(); i++) {
+            TableColumn column = columnModel.getColumn(i);
+
+            int maxWidth = headerRenderer.getTableCellRendererComponent(table, column.getHeaderValue(), false, false, 0, i).getPreferredSize().width;
+
+            // Calculate the maximum width based on cell contents
+            for (int j = 0; j < table.getRowCount(); j++) {
+                Object value = table.getValueAt(j, i);
+                int cellWidth = table.getCellRenderer(j, i).getTableCellRendererComponent(table, value, false,
+                        false, j, i).getPreferredSize().width;
+                maxWidth = Math.max(maxWidth, cellWidth);
+            }
+
+            // Set the preferred width
+            column.setPreferredWidth(maxWidth + 5); // Add some padding
+        }
+    }
 }
+
 
 
