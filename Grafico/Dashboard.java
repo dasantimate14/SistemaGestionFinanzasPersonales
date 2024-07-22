@@ -1,12 +1,11 @@
 package Grafico;
 
 import sistemagestionfinanzas.*;
-import sistemagestionfinanzas.Stock;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 public class Dashboard extends JFrame {
     private Usuario usuario;
@@ -28,6 +27,11 @@ public class Dashboard extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setContentPane(DashboardPanel);
+
+        // Crear y añadir el panel del gráfico al Dashboard
+        BarrasIngresosGastos panel_grafico_barras = new BarrasIngresosGastos();
+        DashboardPanel.setLayout(new BorderLayout());  // Usar BorderLayout para posicionar el gráfico
+        DashboardPanel.add(panel_grafico_barras, BorderLayout.CENTER);
 
         btnCuentaBancaria.addActionListener(new ActionListener() {
             @Override
