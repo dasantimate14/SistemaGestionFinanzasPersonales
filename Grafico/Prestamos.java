@@ -259,7 +259,7 @@ public class Prestamos extends JFrame {
         modelo_tabla_prestamos.setRowCount(0);
 
         // Recorrer la lista de préstamos e insertar cada uno en la tabla
-        for (Prestamo prestamo : Prestamo.instanciasPrestamos) {
+        for (Prestamo prestamo : Prestamo.instancias_prestamos) {
             Object[] fila = new Object[12];
             fila[0] = prestamo.getId();
             fila[1] = prestamo.getNombre();

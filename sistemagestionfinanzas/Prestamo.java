@@ -9,57 +9,57 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Prestamo extends FinanceItem {
-    private String tipoPrestamo;
-    private float saldoPendiente;
+    private String tipo_prestamo;
+    private float saldo_pendiente;
     private int plazo;
-    private LocalDate fechaVencimiento;
+    private LocalDate fecha_vencimiento;
     private int estatus;
-    private float cuotaMensual;
+    private float cuota_mensual;
     private CuentaBancaria cuenta_bancaria;
-    public static int cantidadInstancias = 0;
-    public static List<Prestamo> instanciasPrestamos = new ArrayList<>();
+    public static int cantidad_instancias = 0;
+    public static List<Prestamo> instancias_prestamos = new ArrayList<>();
 
     public Prestamo(String nombre, String descripcion, float montoOriginal, float tasaInteres, LocalDate fechaInicio,
-                    String tipoPrestamo, int plazo, CuentaBancaria cuenta_bancaria) {
+                    String tipo_prestamo, int plazo, CuentaBancaria cuenta_bancaria) {
         super(nombre, descripcion, montoOriginal, "Pasivo", tasaInteres, fechaInicio);
-        this.tipoPrestamo = tipoPrestamo;
+        this.tipo_prestamo = tipo_prestamo;
         this.plazo = plazo;
-        this.fechaVencimiento = fechaInicio.plusDays(plazo);
+        this.fecha_vencimiento = fechaInicio.plusDays(plazo);
         this.estatus = 1;
         this.cuenta_bancaria = cuenta_bancaria;
-        instanciasPrestamos.add(this);
-        cantidadInstancias ++;
+        instancias_prestamos.add(this);
+        cantidad_instancias++;
     }
 
     @Override
     protected float calcularValorActual() throws IOException {
-        return saldoPendiente - (cuotaMensual * (LocalDate.now().until(fechaVencimiento, ChronoUnit.MONTHS)));
+        return saldo_pendiente - (cuota_mensual * (LocalDate.now().until(fecha_vencimiento, ChronoUnit.MONTHS)));
     }
 
     @Override
     protected StringBuilder obtenerInformacionSubclase() {
         StringBuilder info = new StringBuilder();
-        info.append("Tipo de Préstamo: ").append(tipoPrestamo).append("\n");
-        info.append("Saldo Pendiente: ").append(saldoPendiente).append("\n");
+        info.append("Tipo de Préstamo: ").append(tipo_prestamo).append("\n");
+        info.append("Saldo Pendiente: ").append(saldo_pendiente).append("\n");
         info.append("Plazo: ").append(plazo).append("\n");
-        info.append("Fecha de Vencimiento: ").append(fechaVencimiento).append("\n");
+        info.append("Fecha de Vencimiento: ").append(fecha_vencimiento).append("\n");
         info.append("Estatus: ").append(estatus).append("\n");
-        info.append("Cuota Mensual: ").append(cuotaMensual).append("\n");
+        info.append("Cuota Mensual: ").append(cuota_mensual).append("\n");
         info.append("Cuenta bancaria: ").append(cuenta_bancaria.getId()).append("\n");
         return info;
     }
 
     public static float calcularPorcentajeRepresentacionSubclase(List<FinanceItem> activosPasivos) {
-        float totalPasivos = 0;
-        float totalPrestamos = 0;
+        float total_pasivos = 0;
+        float total_prestamos = 0;
         for (FinanceItem item : activosPasivos) {
-            totalPasivos += item.getMontoActual();
+            total_pasivos += item.getMontoActual();
             if(item instanceof Prestamo) {
                 Prestamo prestamo = (Prestamo) item;
-                totalPrestamos += prestamo.getMontoActual();
+                total_prestamos += prestamo.getMontoActual();
             }
         }
-        float porcentaje = (totalPrestamos / totalPasivos) * 100;
+        float porcentaje = (total_prestamos / total_pasivos) * 100;
         return porcentaje;
     }
 
@@ -75,56 +75,51 @@ public class Prestamo extends FinanceItem {
 
     @Override
     public void actualizarInformacion() throws IOException {
-        this.cuotaMensual = calcularPagoMensual();
+        this.cuota_mensual = calcularPagoMensual();
     }
 
     public String getTipoPrestamo() {
-        return tipoPrestamo;
+        return tipo_prestamo;
     }
 
-    public void setTipoPrestamo(String nuevoTipoPrestamo) {
-        this.tipoPrestamo = nuevoTipoPrestamo;
+    public void setTipoPrestamo(String tipo_prestamo) {
+        this.tipo_prestamo = tipo_prestamo;
     }
 
     public float getSaldoPendiente() {
-        return saldoPendiente;
+        return saldo_pendiente;
     }
 
-    public void setSaldoPendiente(float nuevoSaldoPendiente) {
-        this.saldoPendiente = nuevoSaldoPendiente;
+    public void setSaldoPendiente(float saldo_pendiente) {
+        this.saldo_pendiente = saldo_pendiente;
     }
 
-    public void setCuotaMensual(float cuotaMensual) {this.cuotaMensual = cuotaMensual;}
+    public void setCuotaMensual(float cuota_mensual) {this.cuota_mensual = cuota_mensual;}
 
-    public float getCuotaMensual() {return cuotaMensual;}
+    public float getCuotaMensual() {return cuota_mensual;}
 
     public int getPlazo() {
         return plazo;
     }
 
-    public void setPlazo(int nuevoPlazo) {
-        this.plazo = nuevoPlazo;
-    }
-
-    public LocalDate getFechaDesembolso() {
-        // Suponiendo que la fecha de desembolso es igual a la fecha de inicio
-        return super.getFechaInicio();
+    public void setPlazo(int nuevo_plazo) {
+        this.plazo = nuevo_plazo;
     }
 
     public LocalDate getFechaVencimiento() {
-        return fechaVencimiento;
+        return fecha_vencimiento;
     }
 
-    public void setFechaVencimiento(LocalDate nuevaFechaVencimiento) {
-        this.fechaVencimiento = nuevaFechaVencimiento;
+    public void setFechaVencimiento(LocalDate fecha_vencimiento) {
+        this.fecha_vencimiento = fecha_vencimiento;
     }
 
     public int getEstatus() {
         return estatus;
     }
 
-    public void setEstatus(int nuevoEstatus) {
-        this.estatus = nuevoEstatus;
+    public void setEstatus(int nuevo_estatus) {
+        this.estatus = nuevo_estatus;
     }
 
     public int getFrecuenciaPago() {
@@ -140,36 +135,36 @@ public class Prestamo extends FinanceItem {
 
     public float calcularPagoMensual() {
         float saldo_pendiente = calcularSaldoPendiente();
-        float tasaInteresMensual = super.getTasaInteres() / 12 / 100;
-        int numeroPagos = plazo * 12;
-        return (saldo_pendiente * tasaInteresMensual) / (1 - (float)Math.pow(1 + tasaInteresMensual, -numeroPagos));
+        float tasa_interes_mensual = super.getTasaInteres() / 12 / 100;
+        int numeros_pagos = plazo * 12;
+        return (saldo_pendiente * tasa_interes_mensual) / (1 - (float)Math.pow(1 + tasa_interes_mensual, -numeros_pagos));
     }
 
     public float calcularTiempoRestante() {
-        return saldoPendiente * (super.getTasaInteres() / 100);
+        return saldo_pendiente * (super.getTasaInteres() / 100);
     }
 
     public float calcularSaldoPendiente() {
-        return saldoPendiente - (cuotaMensual * plazo);
+        return saldo_pendiente - (cuota_mensual * plazo);
     }
 
     public float calcularInteresAcumulado() {
-        float interesMensual = super.getTasaInteres() / 12 / 100;
-        int numeroPagos = plazo * 12;
-        return numeroPagos * cuotaMensual * interesMensual;
+        float interes_mensual = super.getTasaInteres() / 12 / 100;
+        int numeros_pagos = plazo * 12;
+        return numeros_pagos * cuota_mensual * interes_mensual;
     }
 
     public float calcularInteresPendiente() {
-        float interesMensual = super.getTasaInteres() / 12 / 100;
-        return saldoPendiente * interesMensual * (plazo - (LocalDate.now().until(fechaVencimiento, ChronoUnit.MONTHS)));
+        float interes_mensual = super.getTasaInteres() / 12 / 100;
+        return saldo_pendiente * interes_mensual * (plazo - (LocalDate.now().until(fecha_vencimiento, ChronoUnit.MONTHS)));
     }
 
     public void calcularPorcentajeRepresentacionPrestamo() {
-        float totalPrestamos = 0;
-        for (Prestamo prestamo : instanciasPrestamos) {
-            totalPrestamos += prestamo.getMontoActual();
+        float total_prestamos = 0;
+        for (Prestamo prestamo : instancias_prestamos) {
+            total_prestamos += prestamo.getMontoActual();
         }
-        float porcentaje = (getMontoActual() / totalPrestamos) * 100;
+        float porcentaje = (getMontoActual() / total_prestamos) * 100;
         System.out.println("Porcentaje de Representación: " + porcentaje + "%");
     }
 
@@ -178,7 +173,7 @@ public class Prestamo extends FinanceItem {
         String consulta_registro = "INSERT INTO prestamos (id, nombre, descripcion, montoOriginal, fechaInicio, tipoPrestamo, plazo, fechaVencimiento, estatus, cuotaMensual, idUsuario, idCuentaBancaria, tasaInteres) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         //Arreglo con los parametros de la consulta
-        String[] parametros = {getNombre(), getDescripcion(), String.valueOf(getMontoOriginal()), String.valueOf(getFechaInicio()), getTipoPrestamo(), String.valueOf(getPlazo()), String.valueOf(fechaVencimiento),String.valueOf(estatus), String.valueOf(cuotaMensual) ,cuenta_bancaria.getIdUsuario(), cuenta_bancaria.getId(), String.valueOf(getTasaInteres())};
+        String[] parametros = {getNombre(), getDescripcion(), String.valueOf(getMontoOriginal()), String.valueOf(getFechaInicio()), getTipoPrestamo(), String.valueOf(getPlazo()), String.valueOf(fecha_vencimiento),String.valueOf(estatus), String.valueOf(cuota_mensual) ,cuenta_bancaria.getIdUsuario(), cuenta_bancaria.getId(), String.valueOf(getTasaInteres())};
 
         //Registro en la base de datos
         try{
@@ -215,7 +210,6 @@ public class Prestamo extends FinanceItem {
                 LocalDate fecha_inicio = rs.getDate("fechaInicio").toLocalDate();
                 String tipo_prestamo = rs.getString("tipoPrestamo");
                 int plazo = rs.getInt("plazo");
-                LocalDate fecha_vencimiento = rs.getDate("fechaVencimiento").toLocalDate();
                 int estatus = rs.getInt("estatus");
                 float cuota_mensual = rs.getFloat("cuotaMensual");
                 String id_cuenta_bancaria = rs.getString("idCuentaBancaria");

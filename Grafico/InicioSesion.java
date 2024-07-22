@@ -121,7 +121,7 @@ public class InicioSesion extends JFrame {
 
         try{
             Prestamo.obtenerPrestamosBaseDatos(id_usuario);
-            List<Prestamo> prestamos_actuales = new ArrayList<>(Prestamo.instanciasPrestamos);
+            List<Prestamo> prestamos_actuales = new ArrayList<>(Prestamo.instancias_prestamos);
             if(!prestamos_actuales.isEmpty()){
                 for (Prestamo prestamo : prestamos_actuales) {
                     prestamo.actualizarInformacion();
@@ -183,7 +183,7 @@ public class InicioSesion extends JFrame {
         for(Stock stock : Stock.instancias_stocks){
             usuario_actual.agregarFinanceItem(stock);
         }
-        for(Prestamo prestamo : Prestamo.instanciasPrestamos){
+        for(Prestamo prestamo : Prestamo.instancias_prestamos){
             usuario_actual.agregarFinanceItem(prestamo);
         }
         for(TarjetaCredito tarjeta_credito: TarjetaCredito.instanciasTarjetas){
