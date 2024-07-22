@@ -21,7 +21,7 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="e576c" class="javax.swing.JButton" binding="btnMenu2">
+          <component id="e576c" class="javax.swing.JButton" binding="btn_menu2">
             <constraints>
               <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -71,7 +71,7 @@
               <text value="Ingresos y Gastos"/>
             </properties>
           </component>
-          <component id="b7fdc" class="javax.swing.JButton" binding="plazosFijosButton" default-binding="true">
+          <component id="b7fdc" class="javax.swing.JButton" binding="plazos_fijos_button">
             <constraints>
               <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -81,7 +81,7 @@
               <text value="Plazos fijos"/>
             </properties>
           </component>
-          <component id="65df4" class="javax.swing.JButton" binding="cuentasBancariasButton" default-binding="true">
+          <component id="65df4" class="javax.swing.JButton" binding="cuentas_bancarias_button">
             <constraints>
               <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -201,7 +201,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="1ce67" class="javax.swing.JTable" binding="tableCuentasBanco">
+          <component id="1ce67" class="javax.swing.JTable" binding="table_cuentas_banco">
             <constraints/>
             <properties/>
           </component>

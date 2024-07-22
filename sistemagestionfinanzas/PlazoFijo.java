@@ -156,7 +156,7 @@ public class PlazoFijo extends FinanceItem {
     }
 
     @Override
-    protected float calcularPromedioMensual() throws SQLException, IOException {
+    public float calcularPromedioMensual() throws SQLException, IOException {
         setPromedioMensual(redonderCantidad(getMontoOriginal() * ((getTasaInteres() / 100) / 12)));
         return getPromedioMensual();
     }

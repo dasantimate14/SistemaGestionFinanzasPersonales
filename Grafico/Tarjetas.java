@@ -194,7 +194,7 @@ public class Tarjetas extends JFrame {
             throw new Exception("Debe ingresar el límite de crédito.");
         }
         if (!limite_credito.matches("\\d+(\\.\\d{1,2})?")) {
-            throw new Exception("El límite de crédito solo debe contener números con hasta dos decimales.");
+            throw new Exception("El límite de crédito solo debe contener números y con hasta dos decimales.");
         }
 
         try {
@@ -207,7 +207,7 @@ public class Tarjetas extends JFrame {
             throw new Exception("Debe ingresar el saldo actual.");
         }
         if (!saldo_actual.matches("\\d+(\\.\\d{1,2})?")) {
-            throw new Exception("El saldo actual solo debe contener números con hasta dos decimales.");
+            throw new Exception("El saldo actual solo debe contener números y con hasta dos decimales.");
         }
 
         try {

@@ -166,32 +166,6 @@
           <text value=""/>
         </properties>
       </component>
-      <component id="94052" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="2" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Ingresar ID Plazo fijo"/>
-        </properties>
-      </component>
-      <component id="f6d05" class="javax.swing.JTextField" binding="tf_id_plazo">
-        <constraints>
-          <grid row="3" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <text value=""/>
-        </properties>
-      </component>
-      <component id="8c89" class="javax.swing.JButton" binding="btn_eliminar_plazo">
-        <constraints>
-          <grid row="4" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Eliminar Plazo Fijo"/>
-        </properties>
-      </component>
       <component id="9c81d" class="javax.swing.JButton" binding="btn_agregar_plazo">
         <constraints>
           <grid row="6" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>

@@ -32,7 +32,6 @@ public class PlazoFijos extends JFrame {
     private JButton stocks_button;
     private JButton tarjetas_de_creditos_button;
     private JButton prestamos_button;
-    private JTextField tf_id_plazo;
     private JButton btn_eliminar_plazo;
     private JButton btn_agregar_plazo;
     private JTextField tf_nombre;
@@ -141,17 +140,6 @@ public class PlazoFijos extends JFrame {
                 }
             }
         });
-
-        btn_eliminar_plazo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    eliminarPlazoFijo();
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error al eliminar plazo fijo: " + ex.getMessage());
-                }
-            }
-        });
     }
 
     private void inicializarDatePickers() {
@@ -218,18 +206,18 @@ public class PlazoFijos extends JFrame {
             throw new Exception("El plazo solo debe contener números.");
         }
 
-        Date fechaInicio = (Date) datePickerInicio.getModel().getValue();
-        if (fechaInicio == null) {
+        Date fecha_inicio = (Date) datePickerInicio.getModel().getValue();
+        if (fecha_inicio == null) {
             throw new Exception("Debe seleccionar una fecha de inicio.");
         }
 
-        Date fechaFinal = (Date) datePickerFinal.getModel().getValue();
-        if (fechaFinal == null) {
+        Date fecha_final = (Date) datePickerFinal.getModel().getValue();
+        if (fecha_final == null) {
             throw new Exception("Debe seleccionar una fecha de vencimiento.");
         }
 
         // Nueva validación: fecha de inicio no puede ser más reciente que la fecha de vencimiento
-        if (fechaInicio.after(fechaFinal)) {
+        if (fecha_inicio.after(fecha_final)) {
             throw new Exception("La fecha de inicio no puede ser más reciente que la fecha de vencimiento.");
         }
 
@@ -263,7 +251,7 @@ public class PlazoFijos extends JFrame {
                         plazo.calcularInteresAcumulado(),
                         plazo.calcularMontoFinal(),
                         plazo.calcularValorActual(),
-                        plazo.getPromedioMensual(),
+                        plazo.calcularPromedioMensual(),
                         plazo.calcularPromedioAnual()
                 });
             }
@@ -331,24 +319,6 @@ public class PlazoFijos extends JFrame {
         }
     }
 
-    private void eliminarPlazoFijo() throws SQLException {
-        int selectedRow = plazofijo_table.getSelectedRow();
-        if (selectedRow >= 0) {
-            try {
-                String idPlazo = plazofijo_table.getValueAt(selectedRow, 0).toString();
-                PlazoFijo plazoFijo = PlazoFijo.encontrarPlazoFijoPorId(idPlazo);
-                if (plazoFijo != null) {
-                    plazoFijo.eliminarPlazoFijoEnBaseDatos();
-                    PlazoFijo.instancias_plazos_fijos.remove(plazoFijo);
-                    cargarDatosPlazoFijos();
-                }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error al eliminar el plazo fijo: " + e.getMessage());
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Por favor, seleccione un plazo fijo para eliminar.");
-        }
-    }
 
     @Override
     public void setVisible(boolean visible) {
