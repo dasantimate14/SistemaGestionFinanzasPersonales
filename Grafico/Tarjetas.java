@@ -3,6 +3,7 @@ package Grafico;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import sistemagestionfinanzas.CuentaBancaria;
 
 public class Tarjetas extends JFrame {
     private JButton btMenu;
@@ -101,8 +102,8 @@ public class Tarjetas extends JFrame {
 
     private void cargarCuentasBancarias() {
         cbCuentaBancaria.removeAllItems();
-        for (AgregarCuentaBanco.Cuenta cuenta : AgregarCuentaBanco.getCuentas()) {
-            cbCuentaBancaria.addItem(cuenta.getNombre() + " (" + cuenta.getNumero() + ")");
+        for(CuentaBancaria cuenta: CuentaBancaria.intsancias_cuentas_bancarias){
+            cbCuentaBancaria.addItem(cuenta.getNumeroCuenta() + " " + cuenta.getNombre());
         }
     }
 

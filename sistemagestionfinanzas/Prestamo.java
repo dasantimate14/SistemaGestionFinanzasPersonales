@@ -20,21 +20,23 @@ public class Prestamo extends FinanceItem {
     public static List<Prestamo> instanciasPrestamos = new ArrayList<>();
 
     public Prestamo(String nombre, String descripcion, float montoOriginal, float tasaInteres, LocalDate fechaInicio,
-                    String tipoPrestamo, int plazo, LocalDate fechaVencimiento, float cuotaMensual, CuentaBancaria cuenta_bancaria) {
+                    String tipoPrestamo, int plazo, LocalDate fechaVencimiento, CuentaBancaria cuenta_bancaria) {
         super(nombre, descripcion, montoOriginal, "Pasivo", tasaInteres, fechaInicio);
         this.tipoPrestamo = tipoPrestamo;
         this.plazo = plazo;
         this.fechaVencimiento = fechaVencimiento;
         this.estatus = 1;
-        this.cuotaMensual = cuotaMensual;
         this.cuenta_bancaria = cuenta_bancaria;
+        this.saldoPendiente = montoOriginal; // Inicializando saldoPendiente con montoOriginal
+        this.cuotaMensual = calcularPagoMensual(); // Calculando la cuota mensual al inicio
         instanciasPrestamos.add(this);
-        cantidadInstancias ++;
+        cantidadInstancias++;
     }
 
     @Override
     protected float calcularValorActual() throws IOException {
-        return saldoPendiente - (cuotaMensual * (LocalDate.now().until(fechaVencimiento, ChronoUnit.MONTHS)));
+        int mesesRestantes = (int) ChronoUnit.MONTHS.between(LocalDate.now(), fechaVencimiento);
+        return saldoPendiente - (cuotaMensual * mesesRestantes);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class Prestamo extends FinanceItem {
         float totalPrestamos = 0;
         for (FinanceItem item : activosPasivos) {
             totalPasivos += item.getMontoActual();
-            if(item instanceof Prestamo) {
+            if (item instanceof Prestamo) {
                 Prestamo prestamo = (Prestamo) item;
                 totalPrestamos += prestamo.getMontoActual();
             }
@@ -96,6 +98,14 @@ public class Prestamo extends FinanceItem {
         this.saldoPendiente = nuevoSaldoPendiente;
     }
 
+    public void setCuotaMensual(float cuotaMensual) {
+        this.cuotaMensual = cuotaMensual;
+    }
+
+    public float getCuotaMensual() {
+        return cuotaMensual;
+    }
+
     public int getPlazo() {
         return plazo;
     }
@@ -105,7 +115,6 @@ public class Prestamo extends FinanceItem {
     }
 
     public LocalDate getFechaDesembolso() {
-        // Suponiendo que la fecha de desembolso es igual a la fecha de inicio
         return super.getFechaInicio();
     }
 
@@ -132,14 +141,14 @@ public class Prestamo extends FinanceItem {
     public void setFrecuenciaPago(int nuevaFrecuenciaPago) {
     }
 
-    public CuentaBancaria getCuentaBancaria(){
+    public CuentaBancaria getCuentaBancaria() {
         return cuenta_bancaria;
     }
 
     public float calcularPagoMensual() {
         float tasaInteresMensual = super.getTasaInteres() / 12 / 100;
         int numeroPagos = plazo * 12;
-        return (saldoPendiente * tasaInteresMensual) / (1 - (float)Math.pow(1 + tasaInteresMensual, -numeroPagos));
+        return (saldoPendiente * tasaInteresMensual) / (1 - (float) Math.pow(1 + tasaInteresMensual, -numeroPagos));
     }
 
     public float calcularTiempoRestante() {
@@ -170,37 +179,35 @@ public class Prestamo extends FinanceItem {
         System.out.println("Porcentaje de Representación: " + porcentaje + "%");
     }
 
-    public void guardarPrestamoBaseDatos(){
+    public void guardarPrestamoBaseDatos() {
         //Consulta para guardar el objeto prestamo en la base de datos
         String consulta_registro = "INSERT INTO prestamos (id, nombre, descripcion, montoOriginal, fechaInicio, tipoPrestamo, plazo, fechaVencimiento, estatus, cuotaMensual, idUsuario, idCuentaBancaria, tasaInteres) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         //Arreglo con los parametros de la consulta
-        String[] parametros = {getNombre(), getDescripcion(), String.valueOf(getMontoOriginal()), String.valueOf(getFechaInicio()), getTipoPrestamo(), String.valueOf(getPlazo()), String.valueOf(fechaVencimiento),String.valueOf(estatus), String.valueOf(cuotaMensual) ,cuenta_bancaria.getIdUsuario(), cuenta_bancaria.getId(), String.valueOf(getTasaInteres())};
+        String[] parametros = {getNombre(), getDescripcion(), String.valueOf(getMontoOriginal()), String.valueOf(getFechaInicio()), getTipoPrestamo(), String.valueOf(getPlazo()), String.valueOf(fechaVencimiento), String.valueOf(estatus), String.valueOf(cuotaMensual), cuenta_bancaria.getIdUsuario(), cuenta_bancaria.getId(), String.valueOf(getTasaInteres())};
 
         //Registro en la base de datos
-        try{
+        try {
             BaseDeDatos.establecerConexion();
             boolean registro_exitoso = BaseDeDatos.ejecutarActualizacion(consulta_registro, parametros);
-            if (registro_exitoso){
-                System.out.println("Registro exitoso de Prestamo." );
+            if (registro_exitoso) {
+                System.out.println("Registro exitoso de Prestamo.");
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             BaseDeDatos.cerrarConexion();
         }
-
-
     }
 
-    public static void obtenerPrestamosBaseDatos(String id_usuario) throws SQLException{
+    public static void obtenerPrestamosBaseDatos(String id_usuario) throws SQLException {
         Prestamo prestamo = null;
         String consulta = "SELECT * FROM prestamos WHERE idUsuario = ?";
         String[] parametro = {id_usuario};
         try {
             BaseDeDatos.establecerConexion();
             ResultSet rs = BaseDeDatos.realizarConsultaSelect(consulta, parametro);
-            if(rs == null){
+            if (rs == null) {
                 throw new SQLException("No se puede obtener ningun prestamo para este usuario");
             }
             while (rs.next()) {
@@ -219,13 +226,14 @@ public class Prestamo extends FinanceItem {
                 float tasa_interes = rs.getFloat("tasaInteres");
 
                 CuentaBancaria cuenta_viculada = null;
-                for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
-                    if(cuenta.getId().equals(id_cuenta_bancaria)) {
+                for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
+                    if (cuenta.getId().equals(id_cuenta_bancaria)) {
                         cuenta_viculada = cuenta;
-                        //Se crea el objeto con los datos capturados
-                        prestamo = new Prestamo(nombre, descripcion, monto_original, tasa_interes,fecha_inicio, tipo_prestamo, plazo, fecha_vencimiento, cuota_mensual, cuenta_viculada);
+                        // Se crea el objeto con los datos capturados
+                        prestamo = new Prestamo(nombre, descripcion, monto_original, tasa_interes, fecha_inicio, tipo_prestamo, plazo, fecha_vencimiento, cuenta_viculada);
                         prestamo.setId(id);
                         prestamo.setEstatus(estatus);
+                        prestamo.setCuotaMensual(cuota_mensual);
                         break;
                     }
                 }
@@ -236,5 +244,4 @@ public class Prestamo extends FinanceItem {
             BaseDeDatos.cerrarConexion();
         }
     }
-
 }

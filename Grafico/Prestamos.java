@@ -17,10 +17,14 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+
 import sistemagestionfinanzas.Prestamo;
 import sistemagestionfinanzas.CuentaBancaria;
 
-public class Prestamos extends JFrame{
+public class Prestamos extends JFrame {
 
     public static List<Prestamo> instanciasPrestamos = new ArrayList<>();
 
@@ -35,18 +39,18 @@ public class Prestamos extends JFrame{
     private JPanel PrestamosPanel;
     private JTextField tf_descripcion;
     private JTextField tf_nombre;
-    private JComboBox cb_tipo;
+    private JComboBox<String> cb_tipo;
     private JTextField tf_monto_original;
     private JTextField tf_plazo;
-    private JTextField tf_cuota_mensual;
     private JPanel fecha_inicio_panel;
-    private JComboBox cbEstatus;
+    private JComboBox<String> cbEstatus;
     private JButton btnAgregarPrestamo;
     private JTable tabla_prestamos;
-    private JComboBox cb_cuentabancaria;
+    private JComboBox<String> cb_cuentabancaria;
+    private JScrollPane JScrollPane_prestamos;
+    private JTextField tf_taza_interes;
     private DefaultTableModel modelo_tabla_prestamos;
     private JDatePickerImpl datePicker;
-
 
     public Prestamos() {
         // Configuración de la ventana
@@ -83,8 +87,6 @@ public class Prestamos extends JFrame{
         // Actualizar el JComboBox de cuentas bancarias
         actualizarComboBoxCuentas();
 
-
-
         // Configuración de la tabla
         String[] columnNames = {"ID", "Nombre", "Descripción", "Monto Original", "Fecha Inicio", "Tipo Préstamo", "Plazo", "Fecha Vencimiento", "Cuota Mensual", "Cuenta Bancaria", "Tasa de Interés", "Estatus"};
         modelo_tabla_prestamos = new DefaultTableModel(columnNames, 0);
@@ -100,22 +102,25 @@ public class Prestamos extends JFrame{
                     String descripcion = tf_descripcion.getText();
                     String tipoPrestamo = (String) cb_tipo.getSelectedItem();
                     float montoOriginal = Float.parseFloat(tf_monto_original.getText());
-                    float tasaInteres = 0; // Necesitarás obtener este valor de algún lugar o definirlo
+                    float tasaInteres = Float.parseFloat(tf_taza_interes.getText());
+
                     // Convertir fechas
                     java.util.Date date_inicio = (java.util.Date) datePickerInicio.getModel().getValue();
                     LocalDate fechaInicio = date_inicio.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
 
                     java.util.Date date_vencimiento = (java.util.Date) datePickerVencimiento.getModel().getValue();
-                    LocalDate fechaVencimiento = date_vencimiento.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate(); float cuotaMensual = Float.parseFloat(tf_cuota_mensual.getText());
+                    LocalDate fechaVencimiento = date_vencimiento.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
                     int plazo = Integer.parseInt(tf_plazo.getText());
                     String cuentaSeleccionada = (String) cb_cuentabancaria.getSelectedItem();
 
-
+                    // Obtener estatus seleccionado y mapear a entero
+                    String estatus = (String) cbEstatus.getSelectedItem();
+                    int estatusInt = estatus.equals("Activo") ? 1 : 0;
 
                     // Encontrar la cuenta bancaria seleccionada
                     CuentaBancaria cuentaVinculada = null;
                     for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
-                        String cuentaBuscada = cuenta.getNumeroCuenta()+" "+cuenta.getNombre();
+                        String cuentaBuscada = cuenta.getNumeroCuenta() + " " + cuenta.getNombre();
                         if (cuentaBuscada.equals(cuentaSeleccionada)) {
                             cuentaVinculada = cuenta;
                             break;
@@ -128,12 +133,18 @@ public class Prestamos extends JFrame{
                     }
 
                     // Crear el objeto Prestamo con los datos capturados
-                    Prestamo nuevoPrestamo = new Prestamo(nombre, descripcion, montoOriginal, tasaInteres, fechaInicio, tipoPrestamo, plazo, fechaVencimiento, cuotaMensual, cuentaVinculada);
+                    Prestamo nuevoPrestamo = new Prestamo(nombre, descripcion, montoOriginal, tasaInteres, fechaInicio, tipoPrestamo, plazo, fechaVencimiento, cuentaVinculada);
+
+                    // Asignar estatus al préstamo
+                    nuevoPrestamo.setEstatus(estatusInt);
 
                     // Guardar el préstamo en la base de datos
-                    nuevoPrestamo.guardarPrestamoBaseDatos();
+                    // nuevoPrestamo.guardarPrestamoBaseDatos();
 
-                    // Opcional: Actualizar la tabla o mostrar mensaje de éxito
+                    // Cargar los préstamos en la tabla
+                    cargarPrestamos();
+
+                    // Mostrar mensaje de éxito
                     JOptionPane.showMessageDialog(Prestamos.this, "Préstamo creado exitosamente.");
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(Prestamos.this, "Error al crear el préstamo: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -141,10 +152,7 @@ public class Prestamos extends JFrame{
             }
         });
 
-        // Cargar los préstamos en la tabla
-        cargarPrestamos();
-
-
+        // Otros botones
         paginaPrincipalButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -154,14 +162,6 @@ public class Prestamos extends JFrame{
             }
         });
 
-        paginaPrincipalButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            Dashboard newframe = new Dashboard();
-                newframe.setVisible(true);
-                dispose();
-            }
-        });
         cuentasBancariasButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -170,6 +170,7 @@ public class Prestamos extends JFrame{
                 dispose();
             }
         });
+
         plazosFijosButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -178,6 +179,7 @@ public class Prestamos extends JFrame{
                 dispose();
             }
         });
+
         ingresosYGastosButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -186,6 +188,7 @@ public class Prestamos extends JFrame{
                 dispose();
             }
         });
+
         stocksButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -194,6 +197,7 @@ public class Prestamos extends JFrame{
                 dispose();
             }
         });
+
         tarjetasDeCreditoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -202,7 +206,6 @@ public class Prestamos extends JFrame{
                 dispose();
             }
         });
-
     }
 
     @Override
@@ -210,23 +213,20 @@ public class Prestamos extends JFrame{
         super.setVisible(visible);
     }
 
-
-
     private void actualizarComboBoxCuentas() {
         cb_cuentabancaria.removeAllItems();
-        for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias){
-            cb_cuentabancaria.addItem(cuenta.getNumeroCuenta().toString()+" "+cuenta.getNombre().toString());
+        for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
+            cb_cuentabancaria.addItem(cuenta.getNumeroCuenta().toString() + " " + cuenta.getNombre().toString());
         }
     }
 
     private void cargarPrestamos() {
         modelo_tabla_prestamos.setRowCount(0); // Limpiar la tabla antes de cargar nuevos datos
 
-        // Aquí deberías establecer el ID del usuario adecuado. Por ejemplo, puedes usar un valor fijo o dinámico
-        String idUsuario = "1"; // Asegúrate de ajustar este valor según sea necesario
-
         // Agregar cada préstamo a la tabla
         for (Prestamo prestamo : Prestamo.instanciasPrestamos) {
+            String estatus = prestamo.getEstatus() == 1 ? "Activo" : "Inactivo"; // Convertir el estatus a cadena
+
             Object[] rowData = {
                     prestamo.getId(),
                     prestamo.getNombre(),
@@ -236,29 +236,18 @@ public class Prestamos extends JFrame{
                     prestamo.getTipoPrestamo(),
                     prestamo.getPlazo(),
                     prestamo.getFechaVencimiento(), // Asegúrate de que este campo sea de tipo Date o similar
-                    prestamo.calcularPagoMensual(),
-                    prestamo.getCuentaBancaria(),
+                    prestamo.calcularPagoMensual(), // Calcula la cuota mensual usando el método de la clase Prestamo
+                    prestamo.getCuentaBancaria().getNumeroCuenta() + " " + prestamo.getCuentaBancaria().getNombre(),
                     prestamo.getTasaInteres(),
-                    prestamo.getEstatus()
+                    estatus // Asignar el estatus como cadena
             };
             modelo_tabla_prestamos.addRow(rowData);
+            adjustColumnWidths(tabla_prestamos);
         }
     }
 
-
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Prestamos frame = new Prestamos();
-                frame.setVisible(true);
-            }
-        });
-    }
-
-    public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
-        private String datePattern = "dd/MM/yyyy";
+    private class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
+        private String datePattern = "yyyy-MM-dd";
         private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
 
         @Override
@@ -267,7 +256,7 @@ public class Prestamos extends JFrame{
         }
 
         @Override
-        public String valueToString(Object value) throws ParseException {
+        public String valueToString(Object value) {
             if (value != null) {
                 Calendar cal = (Calendar) value;
                 return dateFormatter.format(cal.getTime());
@@ -276,6 +265,39 @@ public class Prestamos extends JFrame{
         }
     }
 
+    public static void main(String[] args) {
+        // Crear y mostrar la ventana
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Prestamos ventana = new Prestamos();
+                ventana.setVisible(true);
+            }
+        });
+    }
+
+    private static void adjustColumnWidths(JTable table) {
+        TableColumnModel columnModel = table.getColumnModel();
+        TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+
+        for (int i = 0; i < columnModel.getColumnCount(); i++) {
+            TableColumn column = columnModel.getColumn(i);
+
+            int maxWidth = headerRenderer.getTableCellRendererComponent(table, column.getHeaderValue(), false, false, 0, i).getPreferredSize().width;
+
+            // Calculate the maximum width based on cell contents
+            for (int j = 0; j < table.getRowCount(); j++) {
+                Object value = table.getValueAt(j, i);
+                int cellWidth = table.getCellRenderer(j, i).getTableCellRendererComponent(table, value, false,
+                        false, j, i).getPreferredSize().width;
+                maxWidth = Math.max(maxWidth, cellWidth);
+            }
+
+            // Set the preferred width
+            column.setPreferredWidth(maxWidth + 5); // Add some padding
+        }
+    }
 }
+
 
 
