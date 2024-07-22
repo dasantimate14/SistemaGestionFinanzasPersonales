@@ -16,16 +16,16 @@ import java.util.Properties;
 import java.util.Calendar;
 
 public class AgregarCuentaBanco extends JFrame {
-    private JPanel AgregarCuentaBancoPanel;
+    private JPanel agregar_cuenta_banco_panel;
     private JComboBox<String> cbTipoCuenta;
-    private JTextField tfNombreCuenta;
-    private JTextField tfNumeroCuenta;
-    private JButton crearButton;
-    private JButton Volverbtn2;
-    private JTextField tfBancoOrigen;
-    private JTextField tfSaldoInicial;
-    private JTextField tfTasaInteres;
-    private JTextField tfDescripcion;
+    private JTextField tf_nombre_cuenta;
+    private JTextField tf_numero_cuenta;
+    private JButton crear_button;
+    private JButton volverbtn2;
+    private JTextField tf_banco_origen;
+    private JTextField tf_saldo_inicial;
+    private JTextField tf_tasa_interes;
+    private JTextField tf_descripcion;
     private JPanel panel_fecha_inicio;
     private JDatePickerImpl datePicker;
     private CuentaBancariaG parentFrame;
@@ -38,7 +38,7 @@ public class AgregarCuentaBanco extends JFrame {
         setTitle("Agregar Cuentas de Banco");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setContentPane(AgregarCuentaBancoPanel);
+        setContentPane(agregar_cuenta_banco_panel);
 
         // Implementación del JDatePicker para fecha de inicio
         UtilDateModel modelInicio = new UtilDateModel();
@@ -53,7 +53,7 @@ public class AgregarCuentaBanco extends JFrame {
         panel_fecha_inicio.add(datePicker, BorderLayout.CENTER);
 
         // Botón para regresar al menú principal de Cuenta de Banco
-        Volverbtn2.addActionListener(new ActionListener() {
+        volverbtn2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 parentFrame.setVisible(true);
@@ -61,7 +61,7 @@ public class AgregarCuentaBanco extends JFrame {
             }
         });
 
-        crearButton.addActionListener(new ActionListener() {
+        crear_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -69,12 +69,12 @@ public class AgregarCuentaBanco extends JFrame {
                     validarDatos();
 
                     // Obtener datos del formulario
-                    String nombreCuenta = tfNombreCuenta.getText();
-                    String numeroCuenta = tfNumeroCuenta.getText();
-                    String bancoOrigen = tfBancoOrigen.getText();
-                    float saldoInicial = Float.parseFloat(tfSaldoInicial.getText());
-                    float tasaInteres = Float.parseFloat(tfTasaInteres.getText());
-                    String descripcion = tfDescripcion.getText();
+                    String nombreCuenta = tf_nombre_cuenta.getText();
+                    String numeroCuenta = tf_numero_cuenta.getText();
+                    String bancoOrigen = tf_banco_origen.getText();
+                    float saldoInicial = Float.parseFloat(tf_saldo_inicial.getText());
+                    float tasaInteres = Float.parseFloat(tf_tasa_interes.getText());
+                    String descripcion = tf_descripcion.getText();
                     String tipoCuenta = (String) cbTipoCuenta.getSelectedItem();
 
                     java.util.Date dateInicio = (java.util.Date) datePicker.getModel().getValue();
@@ -96,12 +96,12 @@ public class AgregarCuentaBanco extends JFrame {
 
                     JOptionPane.showMessageDialog(AgregarCuentaBanco.this, "Cuenta bancaria creada exitosamente.");
 
-                    tfNombreCuenta.setText("");
-                    tfNumeroCuenta.setText("");
-                    tfBancoOrigen.setText("");
-                    tfSaldoInicial.setText("");
-                    tfTasaInteres.setText("");
-                    tfDescripcion.setText("");
+                    tf_nombre_cuenta.setText("");
+                    tf_numero_cuenta.setText("");
+                    tf_banco_origen.setText("");
+                    tf_saldo_inicial.setText("");
+                    tf_tasa_interes.setText("");
+                    tf_descripcion.setText("");
                     cbTipoCuenta.setSelectedIndex(0); // Ajusta según el índice por defecto
                     datePicker.getModel().setValue(null);
                 } catch (NumberFormatException ex) {
@@ -119,13 +119,13 @@ public class AgregarCuentaBanco extends JFrame {
     }
 
     private void validarDatos() throws Exception {
-        String nombre = tfNombreCuenta.getText();
-        String descripcion = tfDescripcion.getText();
+        String nombre = tf_nombre_cuenta.getText();
+        String descripcion = tf_descripcion.getText();
         String tipo_cuenta = (String) cbTipoCuenta.getSelectedItem();
-        String numero = tfNumeroCuenta.getText();
-        String banco_origen = tfBancoOrigen.getText();
-        String saldo_inicial = tfSaldoInicial.getText();
-        String tasa_interes = tfTasaInteres.getText();
+        String numero = tf_numero_cuenta.getText();
+        String banco_origen = tf_banco_origen.getText();
+        String saldo_inicial = tf_saldo_inicial.getText();
+        String tasa_interes = tf_tasa_interes.getText();
         Object fecha_inicio = datePicker.getModel().getValue();
 
         if (nombre == null || nombre.isEmpty()) {
