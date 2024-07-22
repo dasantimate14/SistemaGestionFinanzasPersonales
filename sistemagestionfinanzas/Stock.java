@@ -207,8 +207,8 @@ public class Stock extends FinanceItem{
     }
 
     public float obtenerPrecioActual() throws IOException {
-       String API_KEY = "NAN1GLGHNLYTMDCH";
-       String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + this.simbolo + "&apikey=" + API_KEY;
+       String API_KEY = "TX51VG4HOMO73PGY";
+       String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + getSimbolo() + "&apikey=" + API_KEY;
         HttpURLConnection con = null;
         BufferedReader reader = null;
         StringBuilder response = new StringBuilder();
@@ -240,6 +240,7 @@ public class Stock extends FinanceItem{
 
         // Extraer el precio actual usando regex
         String json_string = response.toString();
+        System.out.println(json_string);
         String valor_precio = extraerPrecioActual(json_string);
         if (valor_precio != null) {
             precio_actual = Float.parseFloat(valor_precio);
@@ -265,7 +266,7 @@ public class Stock extends FinanceItem{
 
     private List<Float> obtenerPreciosMensuales() throws IOException {
         List<Float> precios_mensuales = new ArrayList<>();
-        String API_KEY = "NAN1GLGHNLYTMDCH";
+        String API_KEY = "TX51VG4HOMO73PGY";
         String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + this.simbolo + "&apikey=" + API_KEY;
         HttpURLConnection con = null;
         BufferedReader reader = null;
@@ -329,7 +330,7 @@ public class Stock extends FinanceItem{
 
     private List<Float> obtenerPreciosAnuales()throws IOException {
         List<Float> precios_anuales = new ArrayList<>();
-        String API_KEY = "NAN1GLGHNLYTMDCH";
+        String API_KEY = "TX51VG4HOMO73PGY";
         String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + this.simbolo + "&apikey=" + API_KEY;
         HttpURLConnection con = null;
         BufferedReader reader = null;

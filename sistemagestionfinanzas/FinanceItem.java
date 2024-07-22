@@ -137,7 +137,7 @@ public abstract class FinanceItem {
     }
 
     //Metodo que usa todos los otros metodos que calculan valores que cambian con el tiempo y se actualizen al momento actual
-    protected abstract void actualizarInformacion() throws IOException;
+    protected abstract void actualizarInformacion() throws IOException, SQLException;
 
     //Metodo para redondear la cantidad de dinero a dos decimales
     protected float redonderCantidad(float cantidad){

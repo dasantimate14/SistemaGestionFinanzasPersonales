@@ -4,6 +4,7 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 import sistemagestionfinanzas.CuentaBancaria;
+import sistemagestionfinanzas.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,7 +81,7 @@ public class AgregarCuentaBanco extends JFrame {
                     java.util.Date dateInicio = (java.util.Date) datePicker.getModel().getValue();
                     LocalDate fechaInicio = dateInicio.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
 
-                    CuentaBancaria nuevaCuenta = new CuentaBancaria(
+                    CuentaBancaria nueva_cuenta = new CuentaBancaria(
                             nombreCuenta,
                             descripcion,
                             saldoInicial,
@@ -89,10 +90,11 @@ public class AgregarCuentaBanco extends JFrame {
                             bancoOrigen,
                             numeroCuenta,
                             tipoCuenta,
-                            "1"
+                            Usuario.getIdUsuarioActual()
                     );
-                    //nuevaCuenta.actualizarInformacion();
-                    parentFrame.getTableModel().addRow(new Object[]{nombreCuenta, descripcion, tipoCuenta, numeroCuenta, bancoOrigen, saldoInicial, tasaInteres, fechaInicio,   nuevaCuenta.calcularPromedioMensual(), nuevaCuenta.calcularPromedioAnual(), nuevaCuenta.calcularBalanceActual(), nuevaCuenta.getInteres()});
+                    nueva_cuenta.guardarCuentaBancariaBaseDatos();
+                    nueva_cuenta.actualizarInformacion();
+                    parentFrame.getTableModel().addRow(new Object[]{nombreCuenta, descripcion, tipoCuenta, numeroCuenta, bancoOrigen, saldoInicial, tasaInteres, fechaInicio,   nueva_cuenta.calcularPromedioMensual(), nueva_cuenta.calcularPromedioAnual(), nueva_cuenta.calcularBalanceActual(), nueva_cuenta.getInteres()});
 
                     JOptionPane.showMessageDialog(AgregarCuentaBanco.this, "Cuenta bancaria creada exitosamente.");
 
@@ -174,6 +176,9 @@ public class AgregarCuentaBanco extends JFrame {
         if (fecha_inicio == null) {
             throw new Exception("Debe seleccionar una fecha de inicio.");
         }
+        if(CuentaBancaria.cuentaExiste(Usuario.getIdUsuarioActual())){
+            throw new Exception("El número de cuenta que trata de registrar ya existe");
+        }
     }
 
     public static void main(String[] args) {
@@ -207,4 +212,5 @@ public class AgregarCuentaBanco extends JFrame {
             return "";
         }
     }
+
 }

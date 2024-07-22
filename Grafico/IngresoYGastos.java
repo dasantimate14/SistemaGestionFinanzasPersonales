@@ -32,8 +32,6 @@ public class IngresoYGastos extends JFrame {
     private JButton btn_ingresos_gastos;
     private JComboBox cb_cuenta_banco_ingreso;
     private JComboBox cb_frecuencia_gasto;
-    private JTextField tf_ingreso_id;
-    private JTextField tf_gasto_id;
     private JScrollPane sp_ingreso;
     private JTable table_ingreso;
     private JButton btn_agregar_ingr;
@@ -56,7 +54,6 @@ public class IngresoYGastos extends JFrame {
     private JPanel fecha_gastos_panel;
     private JTable table_gasto;
     private JPanel panel_tabla_ingr;
-    private JButton btn_eliminar_gasto;
     private JPanel gasto_tabla_panel;
     private JScrollPane sp_gasto;
     private DefaultTableModel ingreso_modelo;
@@ -161,9 +158,10 @@ public class IngresoYGastos extends JFrame {
                         JOptionPane.showMessageDialog(IngresoYGastos.this, "Cuenta bancaria seleccionada no encontrada.", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
-                    Ingreso ingreso = new Ingreso(nombre, descripcion, montoOriginal, fechaInicio, fuente, cuentaVinculada, frecuencia);
 
+                    Ingreso ingreso = new Ingreso(nombre, descripcion, montoOriginal, fechaInicio, fuente, cuentaVinculada, frecuencia);
                     ingreso.guardarIngresoBaseDatos();
+                    ingreso.actualizarInformacion();
 
                     Object[] fila_ingreso = {ingreso.getId(), ingreso.getNombre(), ingreso.getDescripcion(), ingreso.getFuente(), ingreso.getCuentaBancaria().getNombre() +" "+ ingreso.getCuentaBancaria().getNumeroCuenta(), ingreso.getFrecuencia(), ingreso.getFechaInicio(), ingreso.getMontoOriginal(), };
 
@@ -208,8 +206,9 @@ public class IngresoYGastos extends JFrame {
                     }
 
                     Gasto gasto = new Gasto(nombre, descripcion, montoOriginal, fechaInicio, acreedor, frecuencia, categoriaGasto, cuentaVinculada);
-
                     gasto.guardarGastoBaseDatos();
+                    gasto.actualizarInformacion();
+
                     Object[] fila_gasto = {gasto.getId(), gasto.getNombre(), gasto.getAcreedor(), gasto.getDescripcion(), gasto.getCuenta().getNumeroCuenta()+ " " + gasto.getCuenta().getNombre(), gasto.getFrecuencia(), gasto.getFechaInicio(), gasto.getMontoOriginal(), gasto.getCategoriaGasto(), gasto.getEstatus()};
 
                     gasto_modelo.addRow(fila_gasto);
@@ -221,18 +220,6 @@ public class IngresoYGastos extends JFrame {
             }
         });
 
-        //Botones para navegar atraves del Menú
-        btn_eliminar_ing.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // Código para eliminar ingreso aquí
-                    JOptionPane.showMessageDialog(null, "Ingreso eliminado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
         btn_menu_principal.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

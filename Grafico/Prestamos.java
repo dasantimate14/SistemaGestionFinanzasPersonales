@@ -5,6 +5,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ public class Prestamos extends JFrame {
 
     public Prestamos() {
         // Configuración de la ventana
-        setSize(930, 920);
+        setSize(930, 1000);
         setTitle("Prestamos");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -75,7 +77,7 @@ public class Prestamos extends JFrame {
         actualizarComboBoxCuentas();
 
         // Configuración de la tabla
-        String[] columnNames = {"ID", "Nombre", "Descripción", "Monto Original", "Fecha Inicio", "Tipo Préstamo", "Plazo", "Fecha Vencimiento", "Cuota Mensual", "Cuenta Bancaria", "Tasa de Interés", "Estatus"};
+        String[] columnNames = {"ID", "Nombre", "Descripción", "Monto Original", "Fecha Inicio", "Tipo Préstamo", "Plazo", "Fecha Vencimiento", "Cuota Mensual", "Cuenta Bancaria", "Tasa de Interés", "Estatus", "Tiempo Restante", "Interes Acumulado", "Interes Total", "Interes Pendiente", "Monto Pendiente"};
         modelo_tabla_prestamos = new DefaultTableModel(columnNames, 0);
         tabla_prestamos.setModel(modelo_tabla_prestamos);
 
@@ -157,13 +159,11 @@ public class Prestamos extends JFrame {
                     }
 
                     // Crear el objeto Prestamo con los datos capturados
-                    Prestamo nuevoPrestamo = new Prestamo(nombre, descripcion, montoOriginal, tasaInteres, fechaInicio, tipoPrestamo, plazo, cuentaVinculada);
-
-                    // Asignar estatus al préstamo
-                    nuevoPrestamo.setEstatus(estatusInt);
+                    Prestamo nuevo_prestamo = new Prestamo(nombre, descripcion, montoOriginal, tasaInteres, fechaInicio, tipoPrestamo, plazo, cuentaVinculada);
 
                     // Guardar el préstamo en la base de datos
-                    // nuevoPrestamo.guardarPrestamoBaseDatos();
+                    nuevo_prestamo.guardarPrestamoBaseDatos();
+                    nuevo_prestamo.actualizarInformacion();
 
                     // Cargar los préstamos en la tabla
                     cargarPrestamos();
@@ -179,8 +179,10 @@ public class Prestamos extends JFrame {
                     JOptionPane.showMessageDialog(Prestamos.this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(Prestamos.this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(Prestamos.this, "Error al crear el préstamo: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
             }
         });
@@ -259,8 +261,8 @@ public class Prestamos extends JFrame {
         modelo_tabla_prestamos.setRowCount(0);
 
         // Recorrer la lista de préstamos e insertar cada uno en la tabla
-        for (Prestamo prestamo : Prestamo.instanciasPrestamos) {
-            Object[] fila = new Object[12];
+        for (Prestamo prestamo : Prestamo.instancias_prestamos) {
+            Object[] fila = new Object[20];
             fila[0] = prestamo.getId();
             fila[1] = prestamo.getNombre();
             fila[2] = prestamo.getDescripcion();
@@ -273,6 +275,11 @@ public class Prestamos extends JFrame {
             fila[9] = prestamo.getCuentaBancaria().getNumeroCuenta() + " " + prestamo.getCuentaBancaria().getNombre();
             fila[10] = prestamo.getTasaInteres();
             fila[11] = prestamo.getEstatus() == 1 ? "Activo" : "Inactivo";
+            fila[12] = prestamo.calcularTiempoRestante();
+            fila[13] = prestamo.calcularInteresAcumulado();
+            fila[14] = prestamo.calcularInteresTotal();
+            fila[15] = prestamo.calcularInteresPendiente();
+            fila[16] = prestamo.calcularMontoPendiente();
             modelo_tabla_prestamos.addRow(fila);
             adjustColumnWidths(tabla_prestamos);
         }

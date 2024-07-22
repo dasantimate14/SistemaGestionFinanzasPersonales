@@ -2,11 +2,14 @@ package Grafico;
 
 import sistemagestionfinanzas.CuentaBancaria;
 import sistemagestionfinanzas.PlazoFijo;
+import sistemagestionfinanzas.Usuario;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class CuentaBancariaG extends JFrame {
     private JPanel CuentaBancoPanel;
@@ -113,6 +116,8 @@ public class CuentaBancariaG extends JFrame {
                 dispose();
             }
         });
+
+        cargarCuentasBancarias();
     }
 
 
@@ -134,37 +139,19 @@ public class CuentaBancariaG extends JFrame {
                 frame.setVisible(true);
             }
         });
+
     }
 
-    private void validarDatosAgregarCuenta() throws Exception {
-        String nombreCuenta = "nombreCuentaEjemplo";
-        String numeroCuenta = "numeroCuentaEjemplo";
-
-        if (nombreCuenta.isEmpty() || nombreCuenta == null) {
-            throw new Exception("Debe ingresar el nombre de la cuenta.");
-        }
-
-        if (numeroCuenta.isEmpty() || numeroCuenta == null) {
-            throw new Exception("Debe ingresar el número de la cuenta.");
-        }
-        if (!numeroCuenta.matches("[0-9-]+")) {
-            throw new Exception("El número de cuenta solo puede contener números y guiones.");
-        }
-        if (numeroCuenta.length() > 20) {
-            throw new Exception("El número de cuenta no puede tener más de 20 caracteres.");
+    private void cargarCuentasBancarias(){
+        try{
+            for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias){
+                tableModel.addRow(new Object[]{cuenta.getNombre(), cuenta.getDescripcion(), cuenta.getTipoCuenta(), cuenta.getNumeroCuenta(), cuenta.getBanco(), cuenta.getMontoOriginal(), cuenta.getTasaInteres(), cuenta.getFechaInicio(), cuenta.calcularPromedioAnual(), cuenta.calcularBalanceActual(), cuenta.getInteres()});
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void validarDatosConsultarMovimientos() throws Exception {
-        String numeroCuenta = "numeroCuentaEjemplo";
-        if (numeroCuenta.isEmpty() || numeroCuenta == null) {
-            throw new Exception("Debe ingresar el número de la cuenta.");
-        }
-        if (!numeroCuenta.matches("[0-9-]+")) {
-            throw new Exception("El número de cuenta solo puede contener números y guiones.");
-        }
-        if (numeroCuenta.length() > 20) {
-            throw new Exception("El número de cuenta no puede tener más de 20 caracteres.");
-        }
-    }
 }
