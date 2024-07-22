@@ -35,7 +35,6 @@ public class Prestamos extends JFrame {
     private JButton stocksButton;
     private JButton tarjetasDeCreditoButton;
     private JButton prestamosButton;
-    private JPanel fecha_de_vencimiento_panel;
     private JPanel PrestamosPanel;
     private JTextField tf_descripcion;
     private JTextField tf_nombre;
@@ -43,11 +42,11 @@ public class Prestamos extends JFrame {
     private JTextField tf_monto_original;
     private JTextField tf_plazo;
     private JPanel fecha_inicio_panel;
-    private JComboBox<String> cbEstatus;
-    private JButton btnAgregarPrestamo;
+    private JComboBox<String> cb_estatus;
+    private JButton btn_agregar_prestamo;
     private JTable tabla_prestamos;
     private JComboBox<String> cb_cuentabancaria;
-    private JScrollPane JScrollPane_prestamos;
+    private JScrollPane j_scroll_pane_prestamos;
     private JTextField tf_taza_interes;
     private DefaultTableModel modelo_tabla_prestamos;
     private JDatePickerImpl datePicker;
@@ -72,18 +71,6 @@ public class Prestamos extends JFrame {
         fecha_inicio_panel.setLayout(new BorderLayout());
         fecha_inicio_panel.add(datePickerInicio, BorderLayout.CENTER);
 
-        // Implementación del JDatePicker para fecha de vencimiento
-        UtilDateModel modelVencimiento = new UtilDateModel();
-        Properties pVencimiento = new Properties();
-        pVencimiento.put("text.today", "Hoy");
-        pVencimiento.put("text.month", "Mes");
-        pVencimiento.put("text.year", "Año");
-        JDatePanelImpl datePanelImplVencimiento = new JDatePanelImpl(modelVencimiento, pVencimiento);
-        JDatePickerImpl datePickerVencimiento = new JDatePickerImpl(datePanelImplVencimiento, new DateLabelFormatter());
-
-        fecha_de_vencimiento_panel.setLayout(new BorderLayout());
-        fecha_de_vencimiento_panel.add(datePickerVencimiento, BorderLayout.CENTER);
-
         // Actualizar el JComboBox de cuentas bancarias
         actualizarComboBoxCuentas();
 
@@ -92,8 +79,11 @@ public class Prestamos extends JFrame {
         modelo_tabla_prestamos = new DefaultTableModel(columnNames, 0);
         tabla_prestamos.setModel(modelo_tabla_prestamos);
 
+        // Configurar renderizador personalizado para formatear números
+
+
         // Acción del botón de agregar préstamo
-        btnAgregarPrestamo.addActionListener(new ActionListener() {
+        btn_agregar_prestamo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -108,13 +98,11 @@ public class Prestamos extends JFrame {
                     java.util.Date date_inicio = (java.util.Date) datePickerInicio.getModel().getValue();
                     LocalDate fechaInicio = date_inicio.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
 
-                    java.util.Date date_vencimiento = (java.util.Date) datePickerVencimiento.getModel().getValue();
-                    LocalDate fechaVencimiento = date_vencimiento.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
                     int plazo = Integer.parseInt(tf_plazo.getText());
                     String cuentaSeleccionada = (String) cb_cuentabancaria.getSelectedItem();
 
                     // Obtener estatus seleccionado y mapear a entero
-                    String estatus = (String) cbEstatus.getSelectedItem();
+                    String estatus = (String) cb_estatus.getSelectedItem();
                     int estatusInt = estatus.equals("Activo") ? 1 : 0;
 
                     // Encontrar la cuenta bancaria seleccionada
@@ -133,7 +121,7 @@ public class Prestamos extends JFrame {
                     }
 
                     // Crear el objeto Prestamo con los datos capturados
-                    Prestamo nuevoPrestamo = new Prestamo(nombre, descripcion, montoOriginal, tasaInteres, fechaInicio, tipoPrestamo, plazo, fechaVencimiento, cuentaVinculada);
+                    Prestamo nuevoPrestamo = new Prestamo(nombre, descripcion, montoOriginal, tasaInteres, fechaInicio, tipoPrestamo, plazo, cuentaVinculada);
 
                     // Asignar estatus al préstamo
                     nuevoPrestamo.setEstatus(estatusInt);
@@ -235,7 +223,7 @@ public class Prestamos extends JFrame {
                     prestamo.getFechaInicio(), // Asegúrate de que este campo sea de tipo Date o similar
                     prestamo.getTipoPrestamo(),
                     prestamo.getPlazo(),
-                    prestamo.getFechaVencimiento(), // Asegúrate de que este campo sea de tipo Date o similar
+                    prestamo.getFechaVencimiento(),
                     prestamo.calcularPagoMensual(), // Calcula la cuota mensual usando el método de la clase Prestamo
                     prestamo.getCuentaBancaria().getNumeroCuenta() + " " + prestamo.getCuentaBancaria().getNombre(),
                     prestamo.getTasaInteres(),

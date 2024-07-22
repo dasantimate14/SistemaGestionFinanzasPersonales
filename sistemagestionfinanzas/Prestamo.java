@@ -20,11 +20,11 @@ public class Prestamo extends FinanceItem {
     public static List<Prestamo> instanciasPrestamos = new ArrayList<>();
 
     public Prestamo(String nombre, String descripcion, float montoOriginal, float tasaInteres, LocalDate fechaInicio,
-                    String tipoPrestamo, int plazo, LocalDate fechaVencimiento, CuentaBancaria cuenta_bancaria) {
+                    String tipoPrestamo, int plazo, CuentaBancaria cuenta_bancaria) {
         super(nombre, descripcion, montoOriginal, "Pasivo", tasaInteres, fechaInicio);
         this.tipoPrestamo = tipoPrestamo;
         this.plazo = plazo;
-        this.fechaVencimiento = fechaVencimiento;
+        this.fechaVencimiento = fechaInicio.plusMonths(plazo);
         this.estatus = 1;
         this.cuenta_bancaria = cuenta_bancaria;
         this.saldoPendiente = montoOriginal; // Inicializando saldoPendiente con montoOriginal
@@ -230,7 +230,7 @@ public class Prestamo extends FinanceItem {
                     if (cuenta.getId().equals(id_cuenta_bancaria)) {
                         cuenta_viculada = cuenta;
                         // Se crea el objeto con los datos capturados
-                        prestamo = new Prestamo(nombre, descripcion, monto_original, tasa_interes, fecha_inicio, tipo_prestamo, plazo, fecha_vencimiento, cuenta_viculada);
+                        prestamo = new Prestamo(nombre, descripcion, monto_original, tasa_interes, fecha_inicio, tipo_prestamo, plazo,  cuenta_viculada);
                         prestamo.setId(id);
                         prestamo.setEstatus(estatus);
                         prestamo.setCuotaMensual(cuota_mensual);
