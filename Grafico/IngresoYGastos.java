@@ -34,7 +34,6 @@ public class IngresoYGastos extends JFrame {
     private JComboBox cb_frecuencia_gasto;
     private JTextField tf_ingreso_id;
     private JTextField tf_gasto_id;
-    private JButton btn_eliminar_gasto;
     private JScrollPane sp_ingreso;
     private JTable table_ingreso;
     private JButton btn_agregar_ingr;
@@ -56,10 +55,11 @@ public class IngresoYGastos extends JFrame {
     private JComboBox<Boolean> cb_estatus;
     private JDatePickerImpl date_picker_gastos;
     private JPanel fecha_gastos_panel;
-    private JPanel panel_tabla_ingr;
-    private JScrollPane sp_gasto;
     private JTable table_gasto;
+    private JPanel panel_tabla_ingr;
+    private JButton btn_eliminar_gasto;
     private JPanel gasto_tabla_panel;
+    private JScrollPane sp_gasto;
     private DefaultTableModel ingreso_modelo;
     private DefaultTableModel gasto_modelo;
 
@@ -100,24 +100,36 @@ public class IngresoYGastos extends JFrame {
 
         //Configuración de la tabla ingreso
         ingreso_modelo = new DefaultTableModel();
-        ingreso_modelo.setColumnIdentifiers(new String[] {"ID","Nombre", "Descripción", "Fuente", "Cuenta de banco", "Frecuencia", "Fecha", "monto"});
+        ingreso_modelo.setColumnIdentifiers(new String[] {"ID","Nombre", "Descripción", "Fuente", "Cuenta de banco", "Frecuencia", "Fecha", "monto",});
         table_ingreso.setModel(ingreso_modelo);
         table_ingreso.getTableHeader().setReorderingAllowed(false);
-        table_ingreso.getColumnModel().getColumn(0).setPreferredWidth(200);
-        table_ingreso.getColumnModel().getColumn(1).setPreferredWidth(200);
-        table_ingreso.getColumnModel().getColumn(2).setPreferredWidth(200);
-        table_ingreso.getColumnModel().getColumn(3).setPreferredWidth(200);
-        table_ingreso.getColumnModel().getColumn(4).setPreferredWidth(200);
-        table_ingreso.getColumnModel().getColumn(5).setPreferredWidth(200);
-        table_ingreso.getColumnModel().getColumn(6).setPreferredWidth(200);
-        table_ingreso.getColumnModel().getColumn(7).setPreferredWidth(200);
+        table_ingreso.getColumnModel().getColumn(0).setPreferredWidth(50);
+        table_ingreso.getColumnModel().getColumn(1).setPreferredWidth(100);
+        table_ingreso.getColumnModel().getColumn(2).setPreferredWidth(100);
+        table_ingreso.getColumnModel().getColumn(3).setPreferredWidth(100);
+        table_ingreso.getColumnModel().getColumn(4).setPreferredWidth(100);
+        table_ingreso.getColumnModel().getColumn(5).setPreferredWidth(70);
+        table_ingreso.getColumnModel().getColumn(6).setPreferredWidth(80);
+        table_ingreso.getColumnModel().getColumn(7).setPreferredWidth(100);
         sp_ingreso.setViewportView(table_ingreso);
 
         //Configuración de la tabla Gasto
         gasto_modelo = new DefaultTableModel();
-        gasto_modelo.setColumnIdentifiers(new String[] {"ID","Nombre", "Acreedor", "Descripción", "Fuente", "Cuenta de banco", "Frecuencia", "Fecha", "monto"});
+        gasto_modelo.setColumnIdentifiers(new String[] {"ID","Nombre", "Acreedor", "Descripción", "Cuenta de banco", "Frecuencia", "Fecha", "monto","Categoría","Estatus"});
         table_gasto.setModel(gasto_modelo);
         table_ingreso.getTableHeader().setReorderingAllowed(false);
+        table_gasto.getColumnModel().getColumn(0).setPreferredWidth(50);
+        table_gasto.getColumnModel().getColumn(1).setPreferredWidth(100);
+        table_gasto.getColumnModel().getColumn(2).setPreferredWidth(100);
+        table_gasto.getColumnModel().getColumn(3).setPreferredWidth(100);
+        table_gasto.getColumnModel().getColumn(4).setPreferredWidth(100);
+        table_gasto.getColumnModel().getColumn(5).setPreferredWidth(100);
+        table_gasto.getColumnModel().getColumn(6).setPreferredWidth(100);
+        table_gasto.getColumnModel().getColumn(7).setPreferredWidth(100);
+        table_gasto.getColumnModel().getColumn(8).setPreferredWidth(100);
+        table_gasto.getColumnModel().getColumn(9).setPreferredWidth(100);
+
+
 
 
         btn_agregar_ingr.addActionListener(new ActionListener() {
@@ -175,7 +187,7 @@ public class IngresoYGastos extends JFrame {
                     Date date_gasto = (Date) date_picker_gastos.getModel().getValue();
                     LocalDate fechaInicio = date_gasto.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     String acreedor = tf_acreedor_gast.getText();
-                    int frecuencia = (int) cb_frecuencia_ing.getSelectedItem();
+                    int frecuencia = Integer.parseInt(cb_frecuencia_ing.getSelectedItem().toString());
                     String categoriaGasto = (String) cb_Categoria.getSelectedItem();
                     CuentaBancaria cuenta = (CuentaBancaria) cb_cuenta_gasto.getSelectedItem();
                     boolean estatus = (boolean) cb_estatus.getSelectedItem();
@@ -184,6 +196,9 @@ public class IngresoYGastos extends JFrame {
                     Gasto gasto = new Gasto(nombre, descripcion, montoOriginal, fechaInicio, acreedor, frecuencia, categoriaGasto, cuenta);
 
                     gasto.guardarGastoBaseDatos();
+                    Object[] fila_gasto = {gasto.getId(), gasto.getNombre(), gasto.getAcreedor(), gasto.getDescripcion(), gasto.getCuenta(), gasto.getFrecuencia(), gasto.getFechaInicio(), gasto.getMontoOriginal(), gasto.getCategoriaGasto(), gasto.getEstatus()};
+
+                    gasto_modelo.addRow(fila_gasto);
 
                     JOptionPane.showMessageDialog(null, "Gasto agregado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
@@ -192,7 +207,7 @@ public class IngresoYGastos extends JFrame {
             }
         });
 
-        //Botones para navegar a traves del Menú
+        //Botones para navegar atraves del Menú
         btn_eliminar_ing.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -260,11 +275,11 @@ public class IngresoYGastos extends JFrame {
 
             ingreso_modelo.addRow(fila_ingreso);
         }
-        //for (Gasto gasto: Ingreso.instancias_ingresos){
-         //   Object[] fila_ingreso = {gasto.getId(), gasto.getNombre(), ingreso.getDescripcion(), ingreso.getFuente(), ingreso.getCuentaBancaria(), ingreso.getFrecuencia(), ingreso.getFechaInicio(), ingreso.getMontoOriginal()};
+        for (Gasto gasto: Gasto.instancias_gastos){
+           Object[] fila_gasto = {gasto.getId(), gasto.getNombre(), gasto.getAcreedor(), gasto.getDescripcion(), gasto.getCuenta(), gasto.getFrecuencia(), gasto.getFechaInicio(), gasto.getMontoOriginal(), gasto.getCategoriaGasto(), gasto.getEstatus()};
 
-          //  ingreso_modelo.addRow(fila_ingreso);
-        //}
+           gasto_modelo.addRow(fila_gasto);
+        }
     }
     // Formatter para que la librería se extienda
     public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
