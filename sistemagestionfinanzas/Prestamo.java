@@ -169,7 +169,6 @@ public class Prestamo extends FinanceItem {
             }
             //Se crea el objeto que registra el ingreso automaticamente por el programa
             Gasto gasto = new Gasto("Pago Mensual de Prestamo", "Pago de Cuota Mensual del Prestamo " + getNombre(), getCuotaMensual(), fecha_inicio, cuenta_bancaria.getBanco(), 0, "Pago Prestamo", getCuentaBancaria());
-            cuenta_bancaria.retirarMonto(gasto.montoOriginal);
 
             //Se guarda el ingreso repetido en la base de datos
             gasto.guardarGastoBaseDatos();

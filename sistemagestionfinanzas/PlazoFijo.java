@@ -82,7 +82,6 @@ public class PlazoFijo extends FinanceItem {
             }
             //Se crea el objeto que registra el ingreso automaticamente por el programa
             Ingreso ingreso = new Ingreso("Interes del plazo fijo ", "Interes generado por el plazo fijo " + getNombre(), calcularPromedioMensual(), fecha_inicio, cuenta.getBanco(), cuenta);
-            cuenta.depositarMonto(ingreso.montoOriginal);
 
             //Se guarda el ingreso repetido en la base de datos
             ingreso.guardarIngresoBaseDatos();
