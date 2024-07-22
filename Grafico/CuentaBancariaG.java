@@ -8,6 +8,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class CuentaBancariaG extends JFrame {
     private JPanel CuentaBancoPanel;
@@ -114,6 +116,8 @@ public class CuentaBancariaG extends JFrame {
                 dispose();
             }
         });
+
+        cargarCuentasBancarias();
     }
 
 
@@ -135,6 +139,19 @@ public class CuentaBancariaG extends JFrame {
                 frame.setVisible(true);
             }
         });
+
+    }
+
+    private void cargarCuentasBancarias(){
+        try{
+            for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias){
+                tableModel.addRow(new Object[]{cuenta.getNombre(), cuenta.getDescripcion(), cuenta.getTipoCuenta(), cuenta.getNumeroCuenta(), cuenta.getBanco(), cuenta.getMontoOriginal(), cuenta.getTasaInteres(), cuenta.getFechaInicio(), cuenta.calcularPromedioAnual(), cuenta.calcularBalanceActual(), cuenta.getInteres()});
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

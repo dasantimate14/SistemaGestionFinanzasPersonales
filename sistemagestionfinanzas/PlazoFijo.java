@@ -90,7 +90,7 @@ public class PlazoFijo extends FinanceItem {
 
     public float calcularInteresAcumulado() {
         LocalDate fecha_actual = LocalDate.now();
-        long dias_transcurridos = ChronoUnit.DAYS.between(getFechaInicio(), getFechaFinal());
+        long dias_transcurridos = ChronoUnit.DAYS.between(getFechaInicio(), fecha_actual);
         return redonderCantidad((float) (getMontoOriginal() * (getTasaInteres()/100) * (dias_transcurridos / 365.0)));
     }
 

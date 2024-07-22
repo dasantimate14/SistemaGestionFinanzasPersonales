@@ -205,7 +205,7 @@ public class PlazoFijos extends JFrame {
     private void cargarCuentasBancarias() {
         cb_cuenta_banco.removeAllItems();
         for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
-            cb_cuenta_banco.addItem(cuenta.getNombre() + " " + cuenta.getNombre());
+            cb_cuenta_banco.addItem(cuenta.getNumeroCuenta() + " " + cuenta.getNombre());
         }
     }
 
@@ -256,7 +256,7 @@ public class PlazoFijos extends JFrame {
 
             CuentaBancaria cuenta_vinculada = null;
             for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
-                String cuenta_buscada = cuenta.getNombre() + " " + cuenta.getNombre();
+                String cuenta_buscada = cuenta.getNumeroCuenta() + " " + cuenta.getNombre();
                 if (cuenta_buscada.equals(cuenta_selecinada)) {
                     cuenta_vinculada = cuenta;
                     break;

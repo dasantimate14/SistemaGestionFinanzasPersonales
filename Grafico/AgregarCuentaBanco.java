@@ -212,4 +212,5 @@ public class AgregarCuentaBanco extends JFrame {
             return "";
         }
     }
+
 }

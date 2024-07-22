@@ -313,8 +313,9 @@ public class Stocks extends JFrame {
                     dividendo,
                     frecuencia_dividendos,
                     precio_compra,
+                    nuevo_stock.getPrecioActual(),
                     nuevo_stock.getMontoOriginal(),
-                    nuevo_stock.getMontoActual(),
+                    nuevo_stock.obtenerPrecioActual(),
                     nuevo_stock.calcularGanaciaPerdida(),
                     nuevo_stock.getPorcentajeGanancia(),
                     nuevo_stock.calcularPromedioMensual(),
@@ -389,7 +390,7 @@ public class Stocks extends JFrame {
                         stock.getDividendoPorAccion(), // Dividendo Por Acción
                         stock.getFrecuenciaDividendos(), // Frecuencia de Pago de Dividendos
                         stock.getPrecioCompra(),  // Precio Compra
-                        stock.getPrecioActual(),  // Precio Actual
+                        stock.obtenerPrecioActual(),  // Precio Actual
                         stock.getMontoOriginal(), // Monto Original
                         stock.getMontoActual(),   // Monto Actual
                         stock.calcularGanaciaPerdida(), // Cantidad de Ganancia/Perdida

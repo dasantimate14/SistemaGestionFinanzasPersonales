@@ -208,7 +208,7 @@ public class Stock extends FinanceItem{
 
     public float obtenerPrecioActual() throws IOException {
        String API_KEY = "NAN1GLGHNLYTMDCH";
-       String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + this.simbolo + "&apikey=" + API_KEY;
+       String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + getSimbolo() + "&apikey=" + API_KEY;
         HttpURLConnection con = null;
         BufferedReader reader = null;
         StringBuilder response = new StringBuilder();
