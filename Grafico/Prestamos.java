@@ -5,6 +5,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ public class Prestamos extends JFrame {
 
     public Prestamos() {
         // Configuración de la ventana
-        setSize(930, 920);
+        setSize(930, 1000);
         setTitle("Prestamos");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -177,8 +179,10 @@ public class Prestamos extends JFrame {
                     JOptionPane.showMessageDialog(Prestamos.this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(Prestamos.this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(Prestamos.this, "Error al crear el préstamo: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
             }
         });
@@ -258,7 +262,7 @@ public class Prestamos extends JFrame {
 
         // Recorrer la lista de préstamos e insertar cada uno en la tabla
         for (Prestamo prestamo : Prestamo.instancias_prestamos) {
-            Object[] fila = new Object[12];
+            Object[] fila = new Object[20];
             fila[0] = prestamo.getId();
             fila[1] = prestamo.getNombre();
             fila[2] = prestamo.getDescripcion();

@@ -205,8 +205,7 @@ public class Prestamo extends FinanceItem {
     }
 
     public Period calcularTiempoRestante() {
-        Period diferencia = Period.between(fechaInicio, fecha_vencimiento);
-        return diferencia;
+        return Period.between(fechaInicio, fecha_vencimiento);
     }
 
     public float calcularSaldoPendiente() {
