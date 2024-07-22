@@ -15,21 +15,19 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Properties;
 import java.sql.ResultSet;
 
 public class ConsultarMovimientos extends JFrame {
-    private JPanel datePanelContainer;
     private JPanel MovPanel;
     private JComboBox cbNumeroCuenta;
     private JComboBox<String> cbNombreCuenta;
-    private JTextField tfNumeroCuenta; //se está usando el que no es probablemente
     private JButton btnBuscar;
     private JButton Volverbtn;
     private JTable movimientosTable;
     private DefaultTableModel modelo;
-    private JDatePickerImpl datePicker;
 
     public ConsultarMovimientos() {
         // Configuración de la ventana
@@ -38,18 +36,6 @@ public class ConsultarMovimientos extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setContentPane(MovPanel);
-
-        // Implementación del JDatePicker dentro del GUI
-        UtilDateModel model = new UtilDateModel();
-        Properties p = new Properties();
-        p.put("text.today", "Hoy");
-        p.put("text.month", "Mes");
-        p.put("text.year", "Año");
-        JDatePanelImpl datePanelImpl = new JDatePanelImpl(model, p);
-        datePicker = new JDatePickerImpl(datePanelImpl, new DateLabelFormatter());
-
-        datePanelContainer.setLayout(new BorderLayout());
-        datePanelContainer.add(datePicker, BorderLayout.CENTER);
 
         modelo = new DefaultTableModel();
         modelo.setColumnIdentifiers(new String[]{"ID", "Nombre", "Descripción", "Monto", "Tipo", "Fecha"});
@@ -71,9 +57,29 @@ public class ConsultarMovimientos extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     validarDatos();
-                    // Aquí puedes agregar el código para buscar movimientos
+                    String numeroCuenta = String.valueOf(cbNumeroCuenta.getSelectedItem());
+                    try {
+                        BaseDeDatos.establecerConexion();
+                        ResultSet movimientos = BaseDeDatos.realizarConsultaSelect("SELECT id, nombre, descripcion, montoOriginal, tipo, fechaInicio, frecuencia, idCuentaBancaria " +
+                                        "FROM ingresos " +
+                                        "WHERE idUsuario = ? AND numeroCuenta = ?" +
+                                        "UNION " +
+                                        "SELECT id, nombre, descripcion, montoOriginal, tipo, fechaInicio, frecuencia, idCuentaBancaria " +
+                                        "FROM gastos " +
+                                        "WHERE idUsuario = ? AND numeroCuenta = ?",
+                                new String[]{Usuario.usuario_actual.getId(), numeroCuenta, Usuario.usuario_actual.getId(), numeroCuenta});
+
+                        while(movimientos.next()){
+                            Object[] movimiento = {movimientos.getString("id"), movimientos.getString("nombre"), movimientos.getString("descripcion"), movimientos.getFloat("montoOriginal"), movimientos.getString("tipo"), movimientos.getString("fechaInicio"), movimientos.getString("frecuencia"), movimientos.getString("idCuentaBancaria")};
+                            modelo.addRow(movimiento);
+                        }
+                    } catch (Exception exc) {
+                        System.out.println(exc.getMessage());
+                    }
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(ConsultarMovimientos.this, "Por favor, ingrese datos válidos. " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } finally {
+                    BaseDeDatos.cerrarConexion();
                 }
             }
         });
@@ -85,6 +91,7 @@ public class ConsultarMovimientos extends JFrame {
             public void run() {
                 ConsultarMovimientos frame = new ConsultarMovimientos();
                 frame.setVisible(true);
+
             }
         });
     }
@@ -99,14 +106,7 @@ public class ConsultarMovimientos extends JFrame {
     }
 
     private void validarDatos() throws Exception {
-        // Validar número de cuenta
-        String numeroCuenta = tfNumeroCuenta.getText();
-        if (numeroCuenta == null || numeroCuenta.isEmpty()) {
-            throw new Exception("Debe introducir un número de cuenta.");
-        }
-        if (!numeroCuenta.matches("[0-9-]+")) {
-            throw new Exception("El número de cuenta solo puede contener números y guiones.");
-        }
+
 
         // Validar nombre de cuenta
         String nombreCuenta = (String) cbNombreCuenta.getSelectedItem();
@@ -114,31 +114,11 @@ public class ConsultarMovimientos extends JFrame {
             throw new Exception("Debe seleccionar un nombre de cuenta.");
         }
 
-        // Validar fecha
-        Calendar selectedDate = (Calendar) datePicker.getModel().getValue();
-        if (selectedDate == null) {
-            throw new Exception("Debe seleccionar una fecha.");
-        }
 
         // Validar tipo de cuenta
         String tipoCuenta = (String) cbNumeroCuenta.getSelectedItem();
         if (tipoCuenta == null || tipoCuenta.equals("Selecciona una opción")) {
             throw new Exception("Debe seleccionar un tipo de cuenta.");
-        }
-
-        // Validar banco de origen
-        String bancoOrigen = (String) cbNombreCuenta.getSelectedItem();
-        if (bancoOrigen == null || bancoOrigen.equals("Selecciona una opción")) {
-            throw new Exception("Debe seleccionar un banco de origen.");
-        }
-
-        // Validar saldo inicial
-        String saldoInicial = tfNumeroCuenta.getText();
-        if (saldoInicial.isEmpty() || saldoInicial == null) {
-            throw new Exception("Debe ingresar el saldo inicial.");
-        }
-        if (!saldoInicial.matches("\\d+(\\.\\d{1,2})?")) {
-            throw new Exception("El saldo inicial solo puede contener números y un máximo de dos decimales.");
         }
     }
 
@@ -162,25 +142,7 @@ public class ConsultarMovimientos extends JFrame {
         }
 
         public void buscarMovimientos() throws SQLException {
-            try {
-                ResultSet movimientos = BaseDeDatos.realizarConsultaSelect("SELECT id, nombre, descripcion, montoOriginal, tipo, fechaInicio, frecuencia, idCuentaBancaria " +
-                                "FROM ingresos " +
-                                "WHERE idUsuario = ? " +
-                                "UNION " +
-                                "SELECT id, nombre, descripcion, montoOriginal, tipo, fechaInicio, frecuencia, idCuentaBancaria " +
-                                "FROM gastos " +
-                                "WHERE idUsuario = ?",
-                        new String[]{Usuario.usuario_actual.getId(), Usuario.usuario_actual.getId()});
 
-                while(movimientos.next()){
-                    Object[] movimiento = {movimientos.getString("id"), movimientos.getString("nombre"), movimientos.getString("descripcion"), movimientos.getFloat("montoOriginal"), movimientos.getString("tipo"), movimientos.getString("fechaInicio"), movimientos.getString("frecuencia"), movimientos.getString("idCuentaBancaria")};
-                    modelo.addRow(movimiento);
-                }
-            }
-            catch (Exception e)
-            {
-                System.out.println(e.getMessage());
-            }
 
 
         }
