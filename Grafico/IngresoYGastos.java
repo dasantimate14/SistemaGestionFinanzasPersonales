@@ -52,7 +52,6 @@ public class IngresoYGastos extends JFrame {
     private JTextField tf_monto_gasto;
     private JTextField tf_acreedor_gast;
     private JComboBox<String> cb_Categoria;
-    private JComboBox<Boolean> cb_estatus;
     private JDatePickerImpl date_picker_gastos;
     private JPanel fecha_gastos_panel;
     private JTable table_gasto;
@@ -100,7 +99,7 @@ public class IngresoYGastos extends JFrame {
 
         //Configuración de la tabla ingreso
         ingreso_modelo = new DefaultTableModel();
-        ingreso_modelo.setColumnIdentifiers(new String[] {"ID","Nombre", "Descripción", "Fuente", "Cuenta de banco", "Frecuencia", "Fecha", "monto",});
+        ingreso_modelo.setColumnIdentifiers(new String[] {"ID","Nombre", "Descripción", "Fuente", "Cuenta de banco", "Frecuencia", "Fecha", "monto"});
         table_ingreso.setModel(ingreso_modelo);
         table_ingreso.getTableHeader().setReorderingAllowed(false);
         table_ingreso.getColumnModel().getColumn(0).setPreferredWidth(50);
@@ -128,13 +127,13 @@ public class IngresoYGastos extends JFrame {
         table_gasto.getColumnModel().getColumn(7).setPreferredWidth(100);
         table_gasto.getColumnModel().getColumn(8).setPreferredWidth(100);
         table_gasto.getColumnModel().getColumn(9).setPreferredWidth(100);
-
-
+        sp_gasto.setViewportView(table_gasto);
 
 
         btn_agregar_ingr.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 try {
                     String nombre = tf_nombre_ingresos.getText();
                     String descripcion = tf_descripcion_ingr.getText();
@@ -147,10 +146,11 @@ public class IngresoYGastos extends JFrame {
                     String cuentaSeleccionada = (String) cb_cuenta_gasto.getSelectedItem();
                     int frecuencia = Integer.parseInt(cb_frecuencia_ing.getSelectedItem().toString());
 
+
                     // Encontrar la cuenta bancaria seleccionada
                     CuentaBancaria cuentaVinculada = null;
                     for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
-                        String cuentaBuscada = cuenta.getNumeroCuenta()+" "+cuenta.getNombre();
+                        String cuentaBuscada = cuenta.getNumeroCuenta().toString()+" "+cuenta.getNombre().toString();
                         if (cuentaBuscada.equals(cuentaSeleccionada)) {
                             cuentaVinculada = cuenta;
                             break;
@@ -165,9 +165,10 @@ public class IngresoYGastos extends JFrame {
 
                     ingreso.guardarIngresoBaseDatos();
 
-                    Object[] fila_ingreso = {ingreso.getId(), ingreso.getNombre(), ingreso.getDescripcion(), ingreso.getFuente(), ingreso.getCuentaBancaria(), ingreso.getFrecuencia(), ingreso.getFechaInicio(), ingreso.getMontoOriginal()};
+                    Object[] fila_ingreso = {ingreso.getId(), ingreso.getNombre(), ingreso.getDescripcion(), ingreso.getFuente(), ingreso.getCuentaBancaria().getNombre() +" "+ ingreso.getCuentaBancaria().getNumeroCuenta(), ingreso.getFrecuencia(), ingreso.getFechaInicio(), ingreso.getMontoOriginal(), };
 
                     ingreso_modelo.addRow(fila_ingreso);
+
 
                     JOptionPane.showMessageDialog(null, "Ingreso agregado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
@@ -187,22 +188,35 @@ public class IngresoYGastos extends JFrame {
                     Date date_gasto = (Date) date_picker_gastos.getModel().getValue();
                     LocalDate fechaInicio = date_gasto.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     String acreedor = tf_acreedor_gast.getText();
-                    int frecuencia = Integer.parseInt(cb_frecuencia_ing.getSelectedItem().toString());
-                    String categoriaGasto = (String) cb_Categoria.getSelectedItem();
-                    CuentaBancaria cuenta = (CuentaBancaria) cb_cuenta_gasto.getSelectedItem();
-                    boolean estatus = (boolean) cb_estatus.getSelectedItem();
-                    int estatus_gasto = estatus ? 1 : 0;
+                    String categoriaGasto = (String) cb_Categoria.getSelectedItem().toString();
+                    String cuentaSeleccionada = (String) cb_cuenta_gasto.getSelectedItem();
+                    int frecuencia = Integer.parseInt(cb_frecuencia_gasto.getSelectedItem().toString());
 
-                    Gasto gasto = new Gasto(nombre, descripcion, montoOriginal, fechaInicio, acreedor, frecuencia, categoriaGasto, cuenta);
+                    // Encontrar la cuenta bancaria seleccionada
+                    CuentaBancaria cuentaVinculada = null;
+                    for (CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias) {
+                        String cuentaBuscada = cuenta.getNumeroCuenta()+" "+cuenta.getNombre();
+                        if (cuentaBuscada.equals(cuentaSeleccionada)) {
+                            cuentaVinculada = cuenta;
+                            break;
+                        }
+                    }
+
+                    if (cuentaVinculada == null) {
+                        JOptionPane.showMessageDialog(IngresoYGastos.this, "Cuenta bancaria seleccionada no encontrada.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    Gasto gasto = new Gasto(nombre, descripcion, montoOriginal, fechaInicio, acreedor, frecuencia, categoriaGasto, cuentaVinculada);
 
                     gasto.guardarGastoBaseDatos();
-                    Object[] fila_gasto = {gasto.getId(), gasto.getNombre(), gasto.getAcreedor(), gasto.getDescripcion(), gasto.getCuenta(), gasto.getFrecuencia(), gasto.getFechaInicio(), gasto.getMontoOriginal(), gasto.getCategoriaGasto(), gasto.getEstatus()};
+                    Object[] fila_gasto = {gasto.getId(), gasto.getNombre(), gasto.getAcreedor(), gasto.getDescripcion(), gasto.getCuenta().getNumeroCuenta()+ " " + gasto.getCuenta().getNombre(), gasto.getFrecuencia(), gasto.getFechaInicio(), gasto.getMontoOriginal(), gasto.getCategoriaGasto(), gasto.getEstatus()};
 
                     gasto_modelo.addRow(fila_gasto);
 
                     JOptionPane.showMessageDialog(null, "Gasto agregado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error, no se pudo ingresar el gasto", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error, no se pudo ingresar el gasto", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -276,9 +290,9 @@ public class IngresoYGastos extends JFrame {
             ingreso_modelo.addRow(fila_ingreso);
         }
         for (Gasto gasto: Gasto.instancias_gastos){
-           Object[] fila_gasto = {gasto.getId(), gasto.getNombre(), gasto.getAcreedor(), gasto.getDescripcion(), gasto.getCuenta(), gasto.getFrecuencia(), gasto.getFechaInicio(), gasto.getMontoOriginal(), gasto.getCategoriaGasto(), gasto.getEstatus()};
+            Object[] fila_gasto = {gasto.getId(), gasto.getNombre(), gasto.getAcreedor(), gasto.getDescripcion(), gasto.getCuenta(), gasto.getFrecuencia(), gasto.getFechaInicio(), gasto.getMontoOriginal(), gasto.getCategoriaGasto(), gasto.getEstatus()};
 
-           gasto_modelo.addRow(fila_gasto);
+            gasto_modelo.addRow(fila_gasto);
         }
     }
     // Formatter para que la librería se extienda
