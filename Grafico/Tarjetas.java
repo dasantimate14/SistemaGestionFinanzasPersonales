@@ -124,6 +124,8 @@ public class Tarjetas extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int tarjeta_seleccionada = (int) tarjeta_pago_combob.getSelectedItem();
+
+                //Encontrar la tarjeta que se debe pagar
                 TarjetaCredito tarjeta_a_pagar = null;
                 for(TarjetaCredito tarjeta : TarjetaCredito.instanciasTarjetas){
                     if(tarjeta_seleccionada == tarjeta.getNumero()){
@@ -131,17 +133,10 @@ public class Tarjetas extends JFrame {
                         break;
                     }
                 }
-                Gasto gasto = null;
+                //Pago de la tarjeta usando el método de la clase
                 try {
-                    if(tarjeta_a_pagar.getCreditoUsado() < tarjeta_a_pagar.getCuentaBancaria().calcularBalanceActual()){
-                        gasto = new Gasto("Pago de Tarjeta", "Últimos dígios de la tarjeta " + tarjeta_a_pagar.getNumero(),
-                                tarjeta_a_pagar.getCreditoUsado(),LocalDate.now(), tarjeta_a_pagar.getCuentaBancaria().getBanco(),
-                                0, "Deuda", tarjeta_a_pagar.getCuentaBancaria());
-                        tarjeta_a_pagar.getCuentaBancaria().retirarMonto(tarjeta_a_pagar.getCreditoUsado());
-                        gasto.guardarGastoBaseDatos();
-                    } else {
-                        throw new Exception("No se puede usar la cuenta "+ cuenta_bancaria_pago_combob + "para pagar la tarjeta con la terminación " + tarjeta_seleccionada + ".\nNo hay suficientes fondos en la cuenta");
-                    }
+                    tarjeta_a_pagar.pagarTarjeta();
+                    JOptionPane.showMessageDialog(null, "Se logró pagar la tarjeta correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 } catch (Exception ex){

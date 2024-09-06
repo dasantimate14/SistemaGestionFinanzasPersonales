@@ -149,14 +149,15 @@ public class TarjetaCredito extends FinanceItem {
     }
 
     // Método para pagar la tarjeta de crédito
-    public void pagarTarjeta(float monto) throws SQLException {
+    public void pagarTarjeta() throws Exception {
         LocalDate fecha_hoy = LocalDate.now();
-        if (cuenta_bancaria != null && cuenta_bancaria.getMontoActual() >= monto) {
-            // Retirar monto de la cuenta bancaria
-            cuenta_bancaria.retirarMonto(monto);
+        if (cuenta_bancaria != null && cuenta_bancaria.getMontoActual() >= getSaldoActual()) {
+            // Registrar el pago como un gasto en la base de datos
+            Gasto pago_tarjeta = new Gasto("Pago Tarejta de Credito", "Se pagó la tarjeta con la terminación " + getNumero(), getSaldoActual(), fecha_hoy, cuenta_bancaria.getBanco(), 0, "Pago Tarjeta", getCuentaBancaria());
+            pago_tarjeta.guardarGastoBaseDatos();
 
-            // Descontar el monto del saldo de la tarjeta de crédito
-            this.saldo_actual -= monto;
+            // Retirar monto de la cuenta bancaria
+            cuenta_bancaria.retirarMonto(getSaldoActual());
 
             // Si el saldo actual es menor o igual a cero, ajustar valores
             if (this.saldo_actual <= 0) {
@@ -168,14 +169,9 @@ public class TarjetaCredito extends FinanceItem {
                 this.credito_usado = calcularCreditoUsado();
             }
 
-            // Registrar el pago como un gasto en la base de datos
-            cuenta_bancaria.retirarMonto(monto);
-            Gasto pago_tarjeta = new Gasto("Pago Tarejta de Credito", "Se pagó la tarjeta con la terminación " + getNumero(), getCreditoUsado(), fecha_hoy, cuenta_bancaria.getBanco(), 0, "Pago Tarjeta", getCuentaBancaria());
-            pago_tarjeta.guardarGastoBaseDatos();
-
             System.out.println("Pago de tarjeta realizado con éxito y registrado como gasto.");
         } else {
-            System.out.println("Fondos insuficientes en la cuenta bancaria para realizar el pago.");
+            throw new Exception("No se puede usar la cuenta "+ getCuentaBancaria().getNumeroCuenta() + " "+ getCuentaBancaria().getNombre()+ "para pagar la tarjeta con la terminación " + getNumero() + ".\nNo hay suficientes fondos en la cuenta");
         }
     }
 
