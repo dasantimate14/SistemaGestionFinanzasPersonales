@@ -76,16 +76,6 @@
               <grid row="18" column="8" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
           </hspacer>
-          <component id="293e3" class="javax.swing.JTextField" binding="tf_banco_origen">
-            <constraints>
-              <grid row="13" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-            </constraints>
-            <properties>
-              <text value=""/>
-            </properties>
-          </component>
           <component id="fc45a" class="javax.swing.JLabel">
             <constraints>
               <grid row="16" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
@@ -229,6 +219,25 @@
               </grid>
             </constraints>
             <properties/>
+          </component>
+          <component id="6e4a1" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+            <constraints>
+              <grid row="13" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <model>
+                <item value="Selecciona una opción"/>
+                <item value="Banco General"/>
+                <item value="Banitsmo"/>
+                <item value="Banco Nacional"/>
+                <item value="Credicorp"/>
+                <item value="Global Bank"/>
+                <item value="Coopeve"/>
+                <item value="BAC"/>
+                <item value="Caja de Ahorros"/>
+                <item value="Multibank"/>
+              </model>
+            </properties>
           </component>
         </children>
       </grid>

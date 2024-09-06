@@ -142,6 +142,7 @@ public class CuentaBancariaG extends JFrame {
     private void cargarCuentasBancarias(){
         try{
             for(CuentaBancaria cuenta : CuentaBancaria.intsancias_cuentas_bancarias){
+                cuenta.calcularInteresAcumulado();
                 tableModel.addRow(new Object[]{cuenta.getNombre(), cuenta.getDescripcion(), cuenta.getTipoCuenta(), cuenta.getNumeroCuenta(), cuenta.getBanco(), cuenta.getMontoOriginal(), cuenta.getTasaInteres(), cuenta.getFechaInicio(), cuenta.calcularPromedioAnual(), cuenta.calcularBalanceActual(), cuenta.getInteres()});
             }
         } catch (IOException e) {

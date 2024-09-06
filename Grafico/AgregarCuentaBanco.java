@@ -28,6 +28,7 @@ public class AgregarCuentaBanco extends JFrame {
     private JTextField tf_tasa_interes;
     private JTextField tf_descripcion;
     private JPanel panel_fecha_inicio;
+    private JComboBox comboBox1;
     private JDatePickerImpl datePicker;
     private CuentaBancariaG parentFrame;
 

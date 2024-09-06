@@ -1,12 +1,14 @@
 package Grafico;
 
 import sistemagestionfinanzas.CuentaBancaria;
+import sistemagestionfinanzas.Gasto;
 import sistemagestionfinanzas.TarjetaCredito;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class Tarjetas extends JFrame {
@@ -26,6 +28,13 @@ public class Tarjetas extends JFrame {
     private JButton agregar_button;
     private JTable tarjetas_table;
     private JScrollPane sp_tarjetas;
+    private JTextField nombreDelCargoTextField;
+    private JTextField montoDelCargoTextField;
+    private JButton agregarCargoButton;
+    private JComboBox tarjeta_cargo_combob;
+    private JComboBox tarjeta_pago_combob;
+    private JComboBox cuenta_bancaria_pago_combob;
+    private JButton pagarTarjetaButton;
 
     public Tarjetas() {
         setSize(930, 920);
@@ -111,6 +120,35 @@ public class Tarjetas extends JFrame {
                 dispose();
             }
         });
+        pagarTarjetaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int tarjeta_seleccionada = (int) tarjeta_pago_combob.getSelectedItem();
+                TarjetaCredito tarjeta_a_pagar = null;
+                for(TarjetaCredito tarjeta : TarjetaCredito.instanciasTarjetas){
+                    if(tarjeta_seleccionada == tarjeta.getNumero()){
+                        tarjeta_a_pagar = tarjeta;
+                        break;
+                    }
+                }
+                Gasto gasto = null;
+                try {
+                    if(tarjeta_a_pagar.getCreditoUsado() < tarjeta_a_pagar.getCuentaBancaria().calcularBalanceActual()){
+                        gasto = new Gasto("Pago de Tarjeta", "Últimos dígios de la tarjeta " + tarjeta_a_pagar.getNumero(),
+                                tarjeta_a_pagar.getCreditoUsado(),LocalDate.now(), tarjeta_a_pagar.getCuentaBancaria().getBanco(),
+                                0, "Deuda", tarjeta_a_pagar.getCuentaBancaria());
+                        tarjeta_a_pagar.getCuentaBancaria().retirarMonto(tarjeta_a_pagar.getCreditoUsado());
+                        gasto.guardarGastoBaseDatos();
+                    } else {
+                        throw new Exception("No se puede usar la cuenta "+ cuenta_bancaria_pago_combob + "para pagar la tarjeta con la terminación " + tarjeta_seleccionada + ".\nNo hay suficientes fondos en la cuenta");
+                    }
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                } catch (Exception ex){
+                    JOptionPane.showMessageDialog(null,"Se ha producido un error " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
 
     @Override
@@ -134,7 +172,7 @@ public class Tarjetas extends JFrame {
             model.setRowCount(0);
             for (TarjetaCredito tarjeta : TarjetaCredito.instanciasTarjetas) {
                 model.addRow(new Object[]{
-                        tarjeta.getTipo(),
+                        tarjeta.getTipoTarjeta(),
                         tarjeta.getLimiteCredito(),
                         tarjeta.getSaldoActual(),
                         tarjeta.getNumero(),
