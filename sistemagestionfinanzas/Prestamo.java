@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -180,17 +179,23 @@ public class Prestamo extends FinanceItem {
     }
 
     public float calcularMontoPendiente(){
+        // Convertir la tasa de interés anual a tasa de interés mensual en valor decimal
         float tasa_interes_mensual = getTasaInteres() / 12 / 100;
-        int numeros_pagos = plazo * 12;
+
+        // El número total de pagos (meses)
+        int numeros_pagos = plazo;
+
+        // Obtener la fecha actual
         LocalDate fecha_actual = LocalDate.now();
 
         // Calcular el número de pagos realizados
-        long mesesTranscurridos = ChronoUnit.MONTHS.between(fecha_inicio, fecha_actual);
-        int pagosRealizados = (int) Math.min(mesesTranscurridos, numeros_pagos);
+        long meses_transcurridos = ChronoUnit.MONTHS.between(fecha_inicio, fecha_actual);
+        int pagos_realizados = (int) Math.min(meses_transcurridos, numeros_pagos);
 
-        // Calcular el saldo pendiente usando la fórmula
-        float saldo_pendiente = getMontoOriginal() * (float) (
-                (Math.pow(1 + tasa_interes_mensual, numeros_pagos) - Math.pow(1 + tasa_interes_mensual, pagosRealizados)) /
+        // Calcular el saldo pendiente usando la fórmula de saldo pendiente
+        float montoOriginal = getMontoOriginal();
+        float saldo_pendiente = montoOriginal * (float) (
+                (Math.pow(1 + tasa_interes_mensual, numeros_pagos) - Math.pow(1 + tasa_interes_mensual, pagos_realizados)) /
                         (Math.pow(1 + tasa_interes_mensual, numeros_pagos) - 1)
         );
 
@@ -198,28 +203,34 @@ public class Prestamo extends FinanceItem {
     }
 
     public float calcularPagoMensual() {
-        float saldo_pendiente = calcularSaldoPendiente();
+        // Convertir la tasa de interés anual a tasa de interés mensual en valor decimal
         float tasa_interes_mensual = super.getTasaInteres() / 12 / 100;
-        int numeros_pagos = plazo * 12;
-        return (saldo_pendiente * tasa_interes_mensual) / (1 - (float)Math.pow(1 + tasa_interes_mensual, - numeros_pagos));
+
+        // El número total de pagos (meses)
+        int numeros_pagos = plazo;
+
+        // Calcular el pago mensual usando la fórmula de amortización
+        float montoOriginal = getMontoOriginal();
+        return redonderCantidad ((montoOriginal * tasa_interes_mensual * (float) Math.pow(1 + tasa_interes_mensual, numeros_pagos)) /
+                ((float) Math.pow(1 + tasa_interes_mensual, numeros_pagos) - 1));
     }
 
-    public Period calcularTiempoRestante() {
-        return Period.between(fecha_inicio, fecha_vencimiento);
+    public long calcularTiempoRestante() {
+        LocalDate fecha_actual = LocalDate.now();
+        return ChronoUnit.MONTHS.between(fecha_actual, getFechaVencimiento());
     }
 
-    public float calcularSaldoPendiente() {
-        return saldo_pendiente - (cuota_mensual * plazo);
-    }
 
     public float calcularInteresAcumulado() {
         LocalDate fecha_actual = LocalDate.now();
-        long dias_transcurridos = ChronoUnit.DAYS.between(getFechaInicio(), fecha_actual);
-        return redonderCantidad((float) (getMontoOriginal() * (getTasaInteres()/100) * (dias_transcurridos / 365.0)));
+        long meses_transcurridos = ChronoUnit.MONTHS.between(getFechaInicio(), fecha_actual);
+
+        float interes_acumulado = (float) (getMontoOriginal() * (getTasaInteres() / 100) * (meses_transcurridos / 12.0));
+        return redonderCantidad(interes_acumulado);
     }
 
     public float calcularInteresTotal(){
-        return redonderCantidad(getMontoOriginal()*(getTasaInteres()/100)* (getPlazo()/12));
+        return redonderCantidad(getMontoOriginal()*(getTasaInteres()/100)*(getPlazo()/12));
     }
 
     public float calcularInteresPendiente() {
@@ -272,7 +283,6 @@ public class Prestamo extends FinanceItem {
             }
             while (rs.next()) {
                 // Leer cada uno de los campos en el ResultSet para manejar la información
-                String id = rs.getString("id");
                 String nombre = rs.getString("nombre");
                 String descripcion = rs.getString("descripcion");
                 float monto_original = rs.getFloat("montoOriginal");
@@ -290,7 +300,6 @@ public class Prestamo extends FinanceItem {
                         cuenta_viculada = cuenta;
                         //Se crea el objeto con los datos capturados
                         prestamo = new Prestamo(nombre, descripcion, monto_original, tasa_interes,fecha_inicio, tipo_prestamo, plazo, cuenta_viculada);
-                        prestamo.setId(id);
                         prestamo.setEstatus(estatus);
                         prestamo.setCuotaMensual(cuota_mensual);
                         break;

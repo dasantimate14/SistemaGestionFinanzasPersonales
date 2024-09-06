@@ -69,7 +69,6 @@ public class Stocks extends JFrame {
         table_model = new DefaultTableModel();
         tabla_stocks.setModel(table_model);
         table_model.addColumn("Nombre Acción");
-        table_model.addColumn("ID");
         table_model.addColumn("Descripción");
         table_model.addColumn("Nombre Empresa");
         table_model.addColumn("Sector");
@@ -303,7 +302,6 @@ public class Stocks extends JFrame {
         try {
             table_model.addRow(new Object[]{
                     nombre_empresa,
-                    "ID",
                     descripcion,
                     nombre_empresa,
                     sector,
@@ -380,7 +378,6 @@ public class Stocks extends JFrame {
             for (Stock stock : Stock.instancias_stocks){
                 table_model.addRow(new Object[]{
                         stock.getNombre(),  // Nombre Acción
-                        stock.getId(),            // ID (asumiendo que tienes un método getId())
                         stock.getDescripcion(),   // Descripción
                         stock.getNombreEmpresa(), // Nombre Empresa
                         stock.getSector(),        // Sector

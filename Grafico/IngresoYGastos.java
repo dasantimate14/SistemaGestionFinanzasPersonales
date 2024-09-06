@@ -96,7 +96,7 @@ public class IngresoYGastos extends JFrame {
 
         //Configuración de la tabla ingreso
         ingreso_modelo = new DefaultTableModel();
-        ingreso_modelo.setColumnIdentifiers(new String[] {"ID","Nombre", "Descripción", "Fuente", "Cuenta de banco", "Frecuencia", "Fecha", "monto"});
+        ingreso_modelo.setColumnIdentifiers(new String[] {"Nombre", "Descripción", "Fuente", "Cuenta de banco", "Frecuencia", "Fecha", "monto"});
         table_ingreso.setModel(ingreso_modelo);
         table_ingreso.getTableHeader().setReorderingAllowed(false);
         table_ingreso.getColumnModel().getColumn(0).setPreferredWidth(50);
@@ -106,12 +106,11 @@ public class IngresoYGastos extends JFrame {
         table_ingreso.getColumnModel().getColumn(4).setPreferredWidth(100);
         table_ingreso.getColumnModel().getColumn(5).setPreferredWidth(70);
         table_ingreso.getColumnModel().getColumn(6).setPreferredWidth(80);
-        table_ingreso.getColumnModel().getColumn(7).setPreferredWidth(100);
         sp_ingreso.setViewportView(table_ingreso);
 
         //Configuración de la tabla Gasto
         gasto_modelo = new DefaultTableModel();
-        gasto_modelo.setColumnIdentifiers(new String[] {"ID","Nombre", "Acreedor", "Descripción", "Cuenta de banco", "Frecuencia", "Fecha", "monto","Categoría","Estatus"});
+        gasto_modelo.setColumnIdentifiers(new String[] {"Nombre", "Acreedor", "Descripción", "Cuenta de banco", "Frecuencia", "Fecha", "monto","Categoría","Estatus"});
         table_gasto.setModel(gasto_modelo);
         table_ingreso.getTableHeader().setReorderingAllowed(false);
         table_gasto.getColumnModel().getColumn(0).setPreferredWidth(50);
@@ -123,7 +122,6 @@ public class IngresoYGastos extends JFrame {
         table_gasto.getColumnModel().getColumn(6).setPreferredWidth(100);
         table_gasto.getColumnModel().getColumn(7).setPreferredWidth(100);
         table_gasto.getColumnModel().getColumn(8).setPreferredWidth(100);
-        table_gasto.getColumnModel().getColumn(9).setPreferredWidth(100);
         sp_gasto.setViewportView(table_gasto);
 
 
@@ -163,7 +161,7 @@ public class IngresoYGastos extends JFrame {
                     ingreso.guardarIngresoBaseDatos();
                     ingreso.actualizarInformacion();
 
-                    Object[] fila_ingreso = {ingreso.getId(), ingreso.getNombre(), ingreso.getDescripcion(), ingreso.getFuente(), ingreso.getCuentaBancaria().getNombre() +" "+ ingreso.getCuentaBancaria().getNumeroCuenta(), ingreso.getFrecuencia(), ingreso.getFechaInicio(), ingreso.getMontoOriginal(), };
+                    Object[] fila_ingreso = {ingreso.getNombre(), ingreso.getDescripcion(), ingreso.getFuente(), ingreso.getCuentaBancaria().getNombre() +" "+ ingreso.getCuentaBancaria().getNumeroCuenta(), ingreso.getFrecuencia(), ingreso.getFechaInicio(), ingreso.getMontoOriginal(), };
 
                     ingreso_modelo.addRow(fila_ingreso);
 
@@ -209,7 +207,7 @@ public class IngresoYGastos extends JFrame {
                     gasto.guardarGastoBaseDatos();
                     gasto.actualizarInformacion();
 
-                    Object[] fila_gasto = {gasto.getId(), gasto.getNombre(), gasto.getAcreedor(), gasto.getDescripcion(), gasto.getCuenta().getNumeroCuenta()+ " " + gasto.getCuenta().getNombre(), gasto.getFrecuencia(), gasto.getFechaInicio(), gasto.getMontoOriginal(), gasto.getCategoriaGasto(), gasto.getEstatus()};
+                    Object[] fila_gasto = {gasto.getNombre(), gasto.getAcreedor(), gasto.getDescripcion(), gasto.getCuenta().getNumeroCuenta()+ " " + gasto.getCuenta().getNombre(), gasto.getFrecuencia(), gasto.getFechaInicio(), gasto.getMontoOriginal(), gasto.getCategoriaGasto(), gasto.getEstatus()};
 
                     gasto_modelo.addRow(fila_gasto);
 

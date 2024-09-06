@@ -56,7 +56,6 @@ public class PlazoFijos extends JFrame {
 
         // Configurar el modelo de la tabla
         DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("ID");
         model.addColumn("Nombre");
         model.addColumn("Monto Original");
         model.addColumn("Tasa de Interés");
@@ -215,7 +214,6 @@ public class PlazoFijos extends JFrame {
             model.setRowCount(0); // Limpiar la tabla antes de cargar los nuevos datos
             for (PlazoFijo plazo : PlazoFijo.instancias_plazos_fijos) {
                 model.addRow(new Object[]{
-                        plazo.getId(),
                         plazo.getNombre(),
                         plazo.getMontoOriginal(),
                         plazo.getTasaInteres(),

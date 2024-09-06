@@ -77,12 +77,12 @@ public class Prestamos extends JFrame {
         actualizarComboBoxCuentas();
 
         // Configuración de la tabla
-        String[] columnNames = {"ID", "Nombre", "Descripción", "Monto Original", "Fecha Inicio", "Tipo Préstamo", "Plazo", "Fecha Vencimiento", "Cuota Mensual", "Cuenta Bancaria", "Tasa de Interés", "Estatus", "Tiempo Restante", "Interes Acumulado", "Interes Total", "Interes Pendiente", "Monto Pendiente"};
+        String[] columnNames = { "Nombre", "Descripción", "Monto Original", "Fecha Inicio", "Tipo Préstamo", "Plazo", "Fecha Vencimiento", "Cuota Mensual", "Cuenta Bancaria", "Tasa de Interés", "Estatus", "Tiempo Restante", "Interes Acumulado", "Interes Total", "Interes Pendiente", "Monto Pendiente"};
         modelo_tabla_prestamos = new DefaultTableModel(columnNames, 0);
         tabla_prestamos.setModel(modelo_tabla_prestamos);
 
-        // Configurar renderizador personalizado para formatear números
-
+        //Cargar datos a la tabla prestamo
+        cargarPrestamos();
 
         // Acción del botón de agregar préstamo
         btn_agregar_prestamo.addActionListener(new ActionListener() {
@@ -164,6 +164,7 @@ public class Prestamos extends JFrame {
                     // Guardar el préstamo en la base de datos
                     nuevo_prestamo.guardarPrestamoBaseDatos();
                     nuevo_prestamo.actualizarInformacion();
+                    System.out.println( "Interes total del prestamo " + nuevo_prestamo.calcularInteresTotal());
 
                     // Cargar los préstamos en la tabla
                     cargarPrestamos();
@@ -263,23 +264,22 @@ public class Prestamos extends JFrame {
         // Recorrer la lista de préstamos e insertar cada uno en la tabla
         for (Prestamo prestamo : Prestamo.instancias_prestamos) {
             Object[] fila = new Object[20];
-            fila[0] = prestamo.getId();
-            fila[1] = prestamo.getNombre();
-            fila[2] = prestamo.getDescripcion();
-            fila[3] = prestamo.getMontoOriginal();
-            fila[4] = prestamo.getFechaInicio();
-            fila[5] = prestamo.getTipoPrestamo();
-            fila[6] = prestamo.getPlazo();
-            fila[7] = prestamo.getFechaVencimiento();
-            fila[8] = prestamo.calcularPagoMensual();
-            fila[9] = prestamo.getCuentaBancaria().getNumeroCuenta() + " " + prestamo.getCuentaBancaria().getNombre();
-            fila[10] = prestamo.getTasaInteres();
-            fila[11] = prestamo.getEstatus() == 1 ? "Activo" : "Inactivo";
-            fila[12] = prestamo.calcularTiempoRestante();
-            fila[13] = prestamo.calcularInteresAcumulado();
-            fila[14] = prestamo.calcularInteresTotal();
-            fila[15] = prestamo.calcularInteresPendiente();
-            fila[16] = prestamo.calcularMontoPendiente();
+            fila[0] = prestamo.getNombre();
+            fila[1] = prestamo.getDescripcion();
+            fila[2] = prestamo.getMontoOriginal();
+            fila[3] = prestamo.getFechaInicio();
+            fila[4] = prestamo.getTipoPrestamo();
+            fila[5] = prestamo.getPlazo();
+            fila[6] = prestamo.getFechaVencimiento();
+            fila[7] = prestamo.calcularPagoMensual();
+            fila[8] = prestamo.getCuentaBancaria().getNumeroCuenta() + " " + prestamo.getCuentaBancaria().getNombre();
+            fila[9] = prestamo.getTasaInteres();
+            fila[10] = prestamo.getEstatus() == 1 ? "Activo" : "Inactivo";
+            fila[11] = prestamo.calcularTiempoRestante();
+            fila[12] = prestamo.calcularInteresAcumulado();
+            fila[13] = prestamo.calcularInteresTotal();
+            fila[14] = prestamo.calcularInteresPendiente();
+            fila[15] = prestamo.calcularMontoPendiente();
             modelo_tabla_prestamos.addRow(fila);
             adjustColumnWidths(tabla_prestamos);
         }
