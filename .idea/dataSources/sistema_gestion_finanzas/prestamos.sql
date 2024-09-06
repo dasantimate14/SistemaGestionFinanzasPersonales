@@ -1,7 +1,6 @@
 create table sistema_gestion_finanzas.prestamos
 (
-    id               char(36)                      not null
-        primary key,
+    id               char(36)                      not null,
     nombre           varchar(225)                  not null,
     descripcion      text                          null,
     montoOriginal    float                         not null,
@@ -12,15 +11,9 @@ create table sistema_gestion_finanzas.prestamos
     fechaVencimiento date                          not null,
     estatus          int          default 0        null,
     cuotaMensual     float                         null,
-    idUsuario        char(36)                      null,
-    idCuentaBancaria char(36)                      null,
-    tasaInteres      float        default 0        null,
-    constraint prestamos_ibfk_1
-        foreign key (idUsuario) references sistema_gestion_finanzas.usuarios (id),
-    constraint prestamos_prestamos__fk
-        foreign key (idCuentaBancaria) references sistema_gestion_finanzas.cuentas_bancarias (id)
-);
-
-create index idUsuario
-    on sistema_gestion_finanzas.prestamos (idUsuario);
+    idUsuario        char(36)                      not null,
+    idCuentaBancaria char(36)                      not null,
+    tasaInteres      float        default 0        null
+)
+    comment 'Table ''sistema_gestion_finanzas.prestamos'' doesn''t exist in engine';
 

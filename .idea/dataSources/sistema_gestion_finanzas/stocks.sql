@@ -1,7 +1,6 @@
 create table sistema_gestion_finanzas.stocks
 (
-    id                   char(36)                      not null
-        primary key,
+    id                   char(36)                      not null,
     nombre               varchar(225)                  not null,
     descripcion          text                          null,
     montoOriginal        float                         not null,
@@ -14,8 +13,7 @@ create table sistema_gestion_finanzas.stocks
     sector               varchar(225)                  not null,
     dividendoPorAccion   float        default 0        null,
     frecuenciaDividendos int          default 0        null,
-    idUsuario            char(36)                      null,
-    constraint fk_stocks_usuarios
-        foreign key (idUsuario) references sistema_gestion_finanzas.usuarios (id)
-);
+    idUsuario            char(36)                      not null
+)
+    comment 'Table ''sistema_gestion_finanzas.stocks'' doesn''t exist in engine';
 

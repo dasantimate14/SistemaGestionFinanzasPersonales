@@ -1,7 +1,6 @@
 create table sistema_gestion_finanzas.cuentas_bancarias
 (
-    id            char(36)                      not null
-        primary key,
+    id            char(36)                      not null,
     nombre        varchar(225)                  not null,
     descripcion   text                          null,
     montoOriginal float                         not null,
@@ -11,15 +10,7 @@ create table sistema_gestion_finanzas.cuentas_bancarias
     banco         varchar(255)                  not null,
     numeroCuenta  varchar(20)                   not null,
     tipoCuenta    varchar(225)                  not null,
-    idUsuario     char(36)                      null,
-    constraint unique_numeroCuenta
-        unique (numeroCuenta),
-    constraint cuentas_bancarias_ibfk_1
-        foreign key (idUsuario) references sistema_gestion_finanzas.usuarios (id),
-    constraint chk_numero_cuenta
-        check (`numeroCuenta` regexp '^[0-9-]+$')
-);
-
-create index idUsuario
-    on sistema_gestion_finanzas.cuentas_bancarias (idUsuario);
+    idUsuario     char(36)                      not null
+)
+    comment 'Table ''sistema_gestion_finanzas.cuentas_bancarias'' doesn''t exist in engine';
 

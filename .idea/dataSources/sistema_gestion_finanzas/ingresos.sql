@@ -1,7 +1,6 @@
 create table sistema_gestion_finanzas.ingresos
 (
-    id               char(36)                      not null
-        primary key,
+    id               char(36)                      not null,
     nombre           varchar(225)                  not null,
     descripcion      text                          null,
     montoOriginal    float                         not null,
@@ -9,17 +8,8 @@ create table sistema_gestion_finanzas.ingresos
     fechaInicio      date                          not null,
     fuente           varchar(225)                  not null,
     frecuencia       int          default 0        null,
-    idUsuario        char(36)                      null,
-    idCuentaBancaria char(36)                      null,
-    constraint ingresos_ibfk_1
-        foreign key (idUsuario) references sistema_gestion_finanzas.usuarios (id),
-    constraint ingresos_ibfk_2
-        foreign key (idCuentaBancaria) references sistema_gestion_finanzas.cuentas_bancarias (id)
-);
-
-create index idCliente
-    on sistema_gestion_finanzas.ingresos (idUsuario);
-
-create index idCuentaBancaria
-    on sistema_gestion_finanzas.ingresos (idCuentaBancaria);
+    idUsuario        char(36)                      not null,
+    idCuentaBancaria char(36)                      not null
+)
+    comment 'Table ''sistema_gestion_finanzas.ingresos'' doesn''t exist in engine';
 
